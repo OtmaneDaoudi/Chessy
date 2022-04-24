@@ -1,5 +1,4 @@
 import pygame
-import os
 
 WIDTH,HEIGHT = 900,500
 BACKGROUND_COLOR = (128,128,128)
