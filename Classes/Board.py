@@ -1,6 +1,6 @@
 #board squares are mapped to list indexes
 #each square has color + rank,column position + piece
-from Classes.Pieces import Bishop, King, Knight, Pawn, Queen, Rook
+from Classes.Pieces import Bishop, King, Knight, Pawn, Piece, Queen, Rook
 class Board:
     #column mapping 
     # mapping = { "a" : 0,
@@ -12,20 +12,7 @@ class Board:
     #             "g" : 6,
     #             "h" : 7 }
 
-    #unicide for pieces
-    BLACK_PAWN = "U265F"
-    BLACK_ROOK = "U265C"
-    BLACK_KNIGHT = "U265E"
-    BLACK_BISHOP = "U265D"
-    BLACK_QUEEN = "U265B"
-    BLACK_KING = "U265A"
-
-    WHITE_PAWN = "U2659"
-    WHITE_ROOK = "\u2656"
-    WHITE_KNIGHT = "U2658"
-    WHITE_BISHOP = "U2657"
-    WHITE_QUEEN = "U+2655"
-    WHITE_KING = "U2654"
+    
 
     def __init__(self):
         #initialise board
@@ -94,4 +81,18 @@ class Board:
         self.board[7][4] = King(7,4,"b")
 
     def printBoard(self):
-        print(f"{Board.WHITE_ROOK}")
+        for line in reversed(range(8)):
+            print("\n  -----------------------------------------")
+            print(f"{line+1} |",end="")
+            for column in range(8):
+                if self.board[line][column] != None:
+                    print(f" {self.board[line][column]}  |",end="")
+                else : 
+                    print("    |",end="")
+
+                    
+        print("\n  -----------------------------------------")
+        print("     A    B    C    D    E    F    G    H") 
+
+    def getPieceByPosition(self) -> Piece:
+        pass
