@@ -86,7 +86,7 @@ class Board:
         print("     A    B    C    D    E    F    G    H")
 
     #move piece and update the position of the piece
-    def move_piece(self, start_pos, end_pos):
+    def move_piece(self, start_pos: tuple, end_pos : tuple):
         if end_pos in self.board[start_pos[0]][start_pos[1]].getPossibleMoves(self.board):
             # move the piece on baord
             self.board[end_pos[0]][end_pos[1]] = self.board[start_pos[0]][start_pos[1]]
@@ -96,5 +96,5 @@ class Board:
         else:
             print("illegal Move")
 
-    def getPieceByPosition(self) -> Piece:
+    def getPieceByPosition(self,position : tuple) -> Piece:
         pass

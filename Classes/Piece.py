@@ -26,5 +26,3 @@ class Piece:
         # print("super: setPos")
         self.rank = newPos[0]
         self.column = newPos[1]
-
-
