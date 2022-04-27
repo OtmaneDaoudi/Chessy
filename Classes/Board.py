@@ -28,7 +28,7 @@ class Board:
         # print(self.board)
 
         #initialise pawns
-        #white pawns 
+        #black pawns 
         self.board[1][0] = Pawn(1,0,"w")
         self.board[1][1] = Pawn(1,1,"w")
         self.board[1][2] = Pawn(1,2,"w")
@@ -38,7 +38,7 @@ class Board:
         self.board[1][6] = Pawn(1,6,"w")
         self.board[1][7] = Pawn(1,7,"w")
 
-        #black pawns
+        #white pawns
         self.board[6][0] = Pawn(6,0,"b")
         self.board[6][1] = Pawn(6,1,"b")
         self.board[6][2] = Pawn(6,2,"b")
@@ -49,40 +49,40 @@ class Board:
         self.board[6][7] = Pawn(6,7,"b")
 
         #initialise rooks
-        #white rooks
+        #black rooks
         self.board[0][0] = Rook(0,0,"w")
         self.board[0][7] = Rook(0,7,"w")
-        #black rooks
+        #white rooks
         self.board[7][0] = Rook(7,0,"b")
         self.board[7][7] = Rook(7,7,"b")
 
 
         #initialise knights
-        #white knights
+        #black knights
         self.board[0][1] = Knight(0,1,"w")
         self.board[0][6] = Knight(0,6,"w")
-        #black knights
+        #white knights
         self.board[7][1] = Knight(7,1,"b")
         self.board[7][6] = Knight(7,6,"b")
 
         #initialise Bishops
-        #white bishops
+        #black bishops
         self.board[0][2] = Bishop(0,2,"w")
         self.board[0][5] = Bishop(0,5,"w")
-        #black bishops
+        #white bishops
         self.board[7][2] = Bishop(7,2,"b")
         self.board[7][5] = Bishop(7,5,"b")
 
         #intialize Queens
-        #white Queen
+        #black Queen
         self.board[0][3] = Queen(0,3,"w")
-        #black queen
+        #white queen
         self.board[7][3] = Queen(7,3,"b")
 
         #initilize kings
-        #white king
-        self.board[0][4] = King(0,4,"w")
         #black king
+        self.board[0][4] = King(0,4,"w")
+        #white king
         self.board[7][4] = King(7,4,"b")
 
     def printBoard(self):
@@ -97,11 +97,15 @@ class Board:
         print("\n  -----------------------------------------")
         print("     A    B    C    D    E    F    G    H") 
 
+
     def move_piece(self,start_pos,end_pos):
-        #move piece in board
-        self.board[end_pos[0]][end_pos[1]] = self.board[start_pos[0]][start_pos[1]]
-        self.board[start_pos[0]][start_pos[1]] = None
-        self.board[end_pos[0]][end_pos[1]].setPosition((end_pos[0],end_pos[1]))
+        if end_pos in self.board[start_pos[0]][start_pos[1]].getPossibleMoves(self.board): 
+            #move the piece on baord
+            self.board[end_pos[0]][end_pos[1]] = self.board[start_pos[0]][start_pos[1]]
+            self.board[start_pos[0]][start_pos[1]] = None
+            #update the piece's internal position
+            self.board[end_pos[0]][end_pos[1]].setPosition((end_pos[0],end_pos[1]))
+        else: print("illegal Move")
 
 
     def getPieceByPosition(self) -> Piece:
