@@ -70,13 +70,19 @@ class Board:
         # initilize kings
         # white king
         self.board[0][4] = King(0, 4, "w")
+        self.white_king_position = (0,4)
         # black king
         self.board[7][4] = King(7, 4, "b")
+        self.black_king_position = (7,4)
+
+        self.white_captures_pieces = []
+        self.black_captures_pieces = []
 
     def printBoard(self):
         for line in reversed(range(8)):
             print("\n  -----------------------------------------")
-            print(f"{line + 1} |", end="")
+            #print(f"{line + 1} |", end="")
+            print(f"{line} |", end="")
             for column in range(8):
                 if self.board[line][column] is not None:
                     print(f" {self.board[line][column]}  |", end="")
@@ -86,7 +92,8 @@ class Board:
         print("     A    B    C    D    E    F    G    H")
 
     #move piece and update the position of the piece
-    def move_piece(self, start_pos: tuple, end_pos : tuple):
+    #when moving a pawn we need to check for promotion 
+    def move_piece(self, start_pos: tuple, end_pos : tuple,turn : str):
         if end_pos in self.board[start_pos[0]][start_pos[1]].getPossibleMoves(self.board):
             # move the piece on baord
             self.board[end_pos[0]][end_pos[1]] = self.board[start_pos[0]][start_pos[1]]
