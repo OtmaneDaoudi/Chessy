@@ -42,7 +42,7 @@ class Board:
         # initialise rooks
         # white rooks
         self.board[0][0] = Rook(0, 0, "w")
-        self.board[4][4] = Rook(4, 4, "w")
+        self.board[0][7] = Rook(0, 7, "w")
         # black rooks
         self.board[7][0] = Rook(7, 0, "b")
         self.board[7][7] = Rook(7, 7, "b")
