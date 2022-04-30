@@ -38,10 +38,6 @@ class Pawn(Piece):
             #check left diagonal
             if self.column > 0 and board[self.rank - 1][self.column - 1] is not None and board[self.rank - 1][self.column - 1].color != self.color:
                     res.append((self.rank - 1,self.column - 1))
-            
-        #include en passant captures
-        # for item in self.getPossibleEnPassantCaptures(board):
-        #     res.append(item)
         return res
 
     def getPossibleEnPassantCaptures(self,board):

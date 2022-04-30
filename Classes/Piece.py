@@ -15,11 +15,10 @@ class Piece:
     BLACK_QUEEN  = "\u2655"
     BLACK_KING   = "\u2654"
 
-    def __init__(self,rank,column,color,image = None,isKilled = False):
+    def __init__(self,rank,column,color,image = None):
         self.rank = rank
         self.column = column
         self.color = color
-        self.isKIlled = isKilled
         self.image = image
 
     def setPosition(self,newPos):
