@@ -2,9 +2,7 @@ from Classes.Board import Board
 
 
 bd = Board()
+bd.move_piece((1,4),(2,4))
+bd.move_piece((0,4),(1,4))
 bd.printBoard()
-bd.move_piece((1,3),(3,3))
-bd.move_piece((0,3),(1,3))
-bd.move_piece((1,3),(2,3))
-print(bd.board[2][3].getPossibleMoves(bd.board))
-bd.printBoard()
+print(bd.board[1][4].getPossibleMoves(bd.board))
