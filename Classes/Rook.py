@@ -14,11 +14,10 @@ class Rook(Piece):
         res = []
         #scan up
         current_rank = self.rank + 1
-        up = 0
-        while((current_rank <= 7 and board[current_rank][self.column] is None)):
+        while(current_rank <= 7 and board[current_rank][self.column] is None):
             res.append((current_rank,self.column))
             current_rank += 1
-        if current_rank<7 and board[current_rank][self.column] is not None and board[current_rank][self.column].color != self.color:
+        if current_rank<=7 and board[current_rank][self.column] is not None and board[current_rank][self.column].color != self.color:
             res.append((current_rank,self.column))
 
         #scan down
@@ -26,7 +25,7 @@ class Rook(Piece):
         while(current_rank >= 0 and board[current_rank][self.column] is None) :
             res.append((current_rank,self.column))
             current_rank -= 1
-        if current_rank>0 and board[current_rank][self.column] is not None and board[current_rank][self.column].color != self.color:
+        if current_rank>=0 and board[current_rank][self.column] is not None and board[current_rank][self.column].color != self.color:
             res.append((current_rank,self.column))
 
         #scan right
@@ -34,14 +33,14 @@ class Rook(Piece):
         while(current_column <= 7 and board[self.rank][current_column] is None) :
             res.append((self.rank,current_column))
             current_column += 1
-        if current_column<7 and board[self.rank][current_column] is not None and board[self.rank][current_column].color != self.color:
+        if current_column<=7 and board[self.rank][current_column] is not None and board[self.rank][current_column].color != self.color:
                     res.append((self.rank,current_column))
         #scan left
         current_column = self.column - 1
         while(current_column >= 0 and board[self.rank][current_column] is None) :
             res.append((self.rank,current_column))
             current_column -= 1
-        if current_column>0 and board[self.rank][current_column] is not None and board[self.rank][current_column].color != self.color:
+        if current_column>=0 and board[self.rank][current_column] is not None and board[self.rank][current_column].color != self.color:
             res.append((self.rank,current_column))
 
         return res 

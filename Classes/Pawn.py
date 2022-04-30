@@ -29,7 +29,7 @@ class Pawn(Piece):
         elif self.color == "b" :#and not self.isPromotable:
             if board[self.rank - 1][self.column] is None:
                 res.append((self.rank - 1, self.column))
-                if self.isFirstMove and board[self.rank - 1][self.column] is None:
+                if self.isFirstMove and board[self.rank - 2][self.column] is None:
                     res.append((self.rank - 2, self.column))
             #check diagonals for possible captures
             #check right diagonal
