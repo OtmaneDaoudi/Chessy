@@ -1,6 +1,7 @@
 # board squares are mapped to list indexes
 # each square has color + rank,column + piece
 # each piece contains a reference to a valid piece subClass instance or None in case of empty
+from xmlrpc.client import Boolean
 from Classes.Piece import Piece
 from Classes.Pawn import Pawn
 from Classes.Rook import Rook
@@ -40,7 +41,7 @@ class Board:
 
         # initialise rooks
         # white rooks
-        self.board[0][0] = Rook(0, 0, "w")
+        self.board[2][7] = Rook(2, 7, "w")
         self.board[0][7] = Rook(0, 7, "w")
         # black rooks
         self.board[7][0] = Rook(7, 0, "b")
@@ -101,7 +102,9 @@ class Board:
     #when moving a pawn we need to check for promotion 
     def move_piece(self, start_pos: tuple, end_pos : tuple): #,turn : str):
         isMoved = False
-        if end_pos in self.board[start_pos[0]][start_pos[1]].getPossibleMoves(self.board):
+        if end_pos in self.board[start_pos[0]][start_pos[1]].getPossibleMoves(self.board):  #is it a valid move
+            #check if the move will lead to a check
+            
             # move the piece on baord
             if self.board[end_pos[0]][end_pos[1]] is not None : #capture detected
                 print("capture") #log all captures
@@ -116,9 +119,9 @@ class Board:
             self.board[start_pos[0]][start_pos[1]] = None
             # update the piece's internal position
             self.board[end_pos[0]][end_pos[1]].setPosition((end_pos[0], end_pos[1]))
-
+    
             self.LastMovedPiece = self.board[end_pos[0]][end_pos[1]]
-            isMoved = True
+            isMoved = True #marks the piece as moved
 
             #check for pawn promotion
             if isinstance(self.board[end_pos[0]][end_pos[1]],Pawn):
@@ -152,6 +155,14 @@ class Board:
 
         if not isMoved : #if no legal move is performaed
             print("illegal Move")
+
+    def MoveCauseCheck(self,start_pos: tuple,end_pos: tuple) -> Boolean:
+        res = False
+        #create new local instance of the board
+        #simulate the move in the new board
+        #loop over all other team pieces and see if my king is in thier possible moves
+        #return res
+        return res
 
     def getPieceByPosition(self,position : tuple) -> Piece:
         pass
