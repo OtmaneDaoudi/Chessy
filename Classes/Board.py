@@ -1,7 +1,7 @@
 # board squares are mapped to list indexes
 # each square has color + rank,column + piece
 # each piece contains a reference to a valid piece subClass instance or None in case of empty
-from xmlrpc.client import Boolean
+from turtle import clone
 from Classes.Piece import Piece
 from Classes.Pawn import Pawn
 from Classes.Rook import Rook
@@ -9,6 +9,7 @@ from Classes.Bishop import Bishop
 from Classes.Knight import Knight
 from Classes.Queen import Queen
 from Classes.King import King
+from copy import deepcopy
 
 
 class Board:
@@ -77,8 +78,8 @@ class Board:
         self.board[7][4] = King(7, 4, "b")
         self.black_king_position = (7,4)
 
-        self.white_captures_pieces = []
-        self.black_captures_pieces = []
+        self.white_captures_pieces = ()
+        self.black_captures_pieces = ()
 
         #en passant privilage 
         #if one player playes a move the other looses the right for his en passant
@@ -97,14 +98,21 @@ class Board:
         print("\n  -----------------------------------------")
         #print("     A    B    C    D    E    F    G    H")
         print("     0    1    2    3    4    5    6    7")
+        print("="*43)
+        print(f"white's king position : {self.white_king_position}")
+        print(f"black's king position : {self.black_king_position}")
+        print(f"pieces captured by white : {self.white_captures_pieces}")
+        print(f"pieces captured by black : {self.black_captures_pieces}")
+        print("="*43)
+
 
     #move piece and update the position of the piece
     #when moving a pawn we need to check for promotion 
-    def move_piece(self, start_pos: tuple, end_pos : tuple): #,turn : str):
+    def move_piece(self, start_pos: tuple, end_pos : tuple) -> bool: #,turn : str):
         isMoved = False
-        if end_pos in self.board[start_pos[0]][start_pos[1]].getPossibleMoves(self.board):  #is it a valid move
+        #is it a valid move + the move will not cause me check
+        if end_pos in self.board[start_pos[0]][start_pos[1]].getPossibleMoves(self.board) and not self.MoveCauseCheck(start_pos,end_pos):  
             #check if the move will lead to a check
-            
             # move the piece on baord
             if self.board[end_pos[0]][end_pos[1]] is not None : #capture detected
                 print("capture") #log all captures
@@ -120,7 +128,16 @@ class Board:
             # update the piece's internal position
             self.board[end_pos[0]][end_pos[1]].setPosition((end_pos[0], end_pos[1]))
     
+            #if king is moved update board's king positions
+            if isinstance(self.board[end_pos[0]][end_pos[1]],King):
+                print("king move detected, king indexes updated")
+                if self.board[end_pos[0]][end_pos[1]].color == "b":
+                    self.black_king_position = end_pos
+                else:
+                    self.white_king_position = end_pos
+
             self.LastMovedPiece = self.board[end_pos[0]][end_pos[1]]
+
             isMoved = True #marks the piece as moved
 
             #check for pawn promotion
@@ -153,16 +170,42 @@ class Board:
                     self.LastMovedPiece = self.board[end_pos[0]][end_pos[1]]
                     isMoved = True
 
-        if not isMoved : #if no legal move is performaed
-            print("illegal Move")
+        # if not isMoved : #if no legal move is performaed
+        #     print("illegal Move")
+        return isMoved
 
-    def MoveCauseCheck(self,start_pos: tuple,end_pos: tuple) -> Boolean:
-        res = False
+    def MoveCauseCheck(self,start_pos: tuple,end_pos: tuple) -> bool:
         #create new local instance of the board
+        cloned_board = deepcopy(self)
         #simulate the move in the new board
+        #update the board
+        cloned_board.board[end_pos[0]][end_pos[1]] = cloned_board.board[start_pos[0]][start_pos[1]]
+        cloned_board.board[start_pos[0]][start_pos[1]] = None
+        cloned_board.board[end_pos[0]][end_pos[1]].setPosition((end_pos[0], end_pos[1]))
+
+        #if king is moved update board's king positions
+        if isinstance(cloned_board.board[end_pos[0]][end_pos[1]],King):
+            if cloned_board.board[end_pos[0]][end_pos[1]].color == "b":
+                cloned_board.black_king_position = end_pos
+            else:
+                cloned_board.white_king_position = end_pos
         #loop over all other team pieces and see if my king is in thier possible moves
-        #return res
-        return res
+        my_color = cloned_board.board[end_pos[0]][end_pos[1]].color
+
+        other_teams_possible_moves = []
+        #push all other teams possible moves
+        for line in range(len(cloned_board.board)):
+            for column in range(len(cloned_board.board[line])):
+                if cloned_board.board[line][column] is not None and cloned_board.board[line][column].color != my_color:
+                    other_teams_possible_moves.extend(cloned_board.board[line][column].getPossibleMoves(cloned_board.board))
+
+        # print("cloned board")
+        # cloned_board.printBoard()
+        # print(other_teams_possible_moves)
+        if my_color == "b":
+            return cloned_board.black_king_position in other_teams_possible_moves
+        else:
+            return cloned_board.white_king_position in other_teams_possible_moves
 
     def getPieceByPosition(self,position : tuple) -> Piece:
         pass

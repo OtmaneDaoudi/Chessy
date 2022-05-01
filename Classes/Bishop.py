@@ -60,6 +60,4 @@ class Bishop(Piece):
                 break
             current_rank -= 1
             current_column -= 1
-
-
         return res

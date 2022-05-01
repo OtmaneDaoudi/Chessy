@@ -47,4 +47,8 @@ class King(Piece):
         return res
 
     def checkSquare(self, rank, column, board) -> Boolean:
-        return (board[rank][column] is None or board[rank][column].color != self.color)
+        return (board[rank][column] is None or (board[rank][column].color != self.color and not isinstance(board[rank][column],King)))
+
+    def setPosition(self,newPos):
+        super().setPosition(newPos)
+        
