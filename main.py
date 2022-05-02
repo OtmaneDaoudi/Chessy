@@ -14,4 +14,4 @@ import ast
 
 bd = Board()
 bd.printBoard()
-print(bd.MoveCauseCheck((1,4),(2,4)))
+# print(bd.MoveCauseCheck((3,4),(4,4)))

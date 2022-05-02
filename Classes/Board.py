@@ -183,6 +183,7 @@ class Board:
         cloned_board.board[start_pos[0]][start_pos[1]] = None
         cloned_board.board[end_pos[0]][end_pos[1]].setPosition((end_pos[0], end_pos[1]))
 
+        
         #if king is moved update board's king positions
         if isinstance(cloned_board.board[end_pos[0]][end_pos[1]],King):
             if cloned_board.board[end_pos[0]][end_pos[1]].color == "b":
@@ -199,9 +200,6 @@ class Board:
                 if cloned_board.board[line][column] is not None and cloned_board.board[line][column].color != my_color:
                     other_teams_possible_moves.extend(cloned_board.board[line][column].getPossibleMoves(cloned_board.board))
 
-        # print("cloned board")
-        # cloned_board.printBoard()
-        # print(other_teams_possible_moves)
         if my_color == "b":
             return cloned_board.black_king_position in other_teams_possible_moves
         else:
