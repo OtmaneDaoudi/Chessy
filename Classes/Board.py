@@ -168,6 +168,11 @@ class Board:
                     self.LastMovedPiece = self.board[end_pos[0]][end_pos[1]]
                     isMoved = True
 
+        #detect castling moves
+        # elif isinstance(self.board[start_pos[0]][start_pos[1]],King):
+        #     print("castling move detected")
+            #check if king is in check
+
         return isMoved
 
     def MoveCauseCheck(self,start_pos: tuple,end_pos: tuple) -> bool:
@@ -188,20 +193,20 @@ class Board:
         #loop over all other team pieces and see if my king is in thier possible moves
         my_color = cloned_board.board[end_pos[0]][end_pos[1]].color
 
-        other_teams_possible_moves = []
-        #push all other teams possible moves
-        for line in range(len(cloned_board.board)):
-            for column in range(len(cloned_board.board[line])):
-                if cloned_board.board[line][column] is not None and cloned_board.board[line][column].color != my_color:
-                    other_teams_possible_moves.extend(cloned_board.board[line][column].getPossibleMoves(cloned_board.board))
+        return cloned_board.isCheck(my_color)
 
-        if my_color == "b":
-            return cloned_board.black_king_position in other_teams_possible_moves
-        else:
-            return cloned_board.white_king_position in other_teams_possible_moves
+        # other_teams_possible_moves = []
+        # #push all other teams possible moves
+        # for line in range(len(cloned_board.board)):
+        #     for column in range(len(cloned_board.board[line])):
+        #         if cloned_board.board[line][column] is not None and cloned_board.board[line][column].color != my_color:
+        #             other_teams_possible_moves.extend(cloned_board.board[line][column].getPossibleMoves(cloned_board.board))
 
-    def getPieceByPosition(self,position : tuple) -> Piece:
-        pass
+        # if my_color == "b":
+        #     return cloned_board.black_king_position in other_teams_possible_moves
+        # else:
+        #     return cloned_board.white_king_position in other_teams_possible_moves
+
 
     def promotePawn(self,position : tuple):
         print(f"select which piece to promote pawn at {position} to (k=knight, q=queen, b=bishop, r=rook) >>> ",end="")
@@ -223,3 +228,44 @@ class Board:
         else:
             print("enter valid piece name")
             self.promotePawn(position) #reinvoke in case of invalid move
+
+
+    #checks for king checks + checkmates
+    def isCheck(self,color) -> bool: 
+        #a player is in check mate when he is under check + he has no legal moves that will resolve the check
+        #-1 ==> no check , 0 ==> color team is under check , 1 ==> color teams trapped under checkMate ==> other team wins
+        #check if a given team's king is underCheck
+        #loop over all other teams pieces and return if my king is in thier possible moves
+        other_team_possible_moves = []
+        for line in range(len(self.board)):
+            for column in range(len(self.board[line])):
+                if self.board[line][column] is not None and self.board[line][column].color != color:
+                    other_team_possible_moves.extend(self.board[line][column].getPossibleMoves(self.board))
+
+        return  (color == "w" and self.white_king_position in other_team_possible_moves) or (color == "b" and self.black_king_position in other_team_possible_moves) 
+
+    def isCheckMate(self,color) -> bool:
+        #checkmate = check + no legal moves
+        if self.isCheck(color) :     
+            #check if the player has no legal moves that will resolve the check 
+            for line in range(len(self.board)):
+                for column in range(len(self.board[line])):
+                    if self.board[line][column] is not None and self.board[line][column].color == color:
+                        for move in self.board[line][column].getPossibleMoves(self.board):
+                            if not self.MoveCauseCheck((line,column),move):
+                                return False
+        return True
+        
+    def isStaleMate(self,color) -> bool:
+        #a stalemate happens when 
+        # 1-it's my turn to play --ensured by the caller
+        # 2-my king is not in check  --ensured by the caller
+        # 3-i have no legal moves for any of my pieces
+        available_moves = []
+        for line in range(len(self.board)):
+            for column in range(len(self.board[line])):
+                if self.board[line][column] is not None and self.board[line][column].color == color:
+                    for move in self.board[line][column].getPossibleMoves(self.board):
+                        if not self.MoveCauseCheck((line,column),move):
+                            available_moves.extend(move)
+        return not (len(available_moves) > 0)

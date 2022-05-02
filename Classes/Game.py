@@ -10,16 +10,12 @@ class GameStatus(Enum):
     FORFIET = 4
     STALEMATE = 5
 class Game:
-    def __init__(self,turn="w",game_status = GameStatus.ACTIVE):
+    def __init__(self,turn="w"):
         self.game_board = Board()
         self.turn = turn
-        self.game_status = game_status
-
-    def execute_move(self):
-        pass
+        self.game_status = GameStatus.ACTIVE
 
     def start_game(self):
-        
         while self.game_status == GameStatus.ACTIVE:
             #eval a tuple from user input
             self.game_board.printBoard()
@@ -38,72 +34,29 @@ class Game:
                 end_pos = ast.literal_eval(input(f"Enter end position : "))
             
             if self.turn == "b":
-                res = self.isCheck("w")
-                if res == -1:
-                    #check for stalemate 
-                    if self.isStaleMate("w"):
+                if self.game_board.isCheck("w") :
+                    if self.game_board.isCheckMate("w"):
+                        print("Game is over, black team wins")
+                        self.game_status = GameStatus.BLACK_WIN
+                    else :
+                        print("White king is under check")
+                else:
+                    if self.game_board.isStaleMate("w"):
                         print("Game is over, Stalemate")
                         self.game_status = GameStatus.STALEMATE
-                elif res == 0:
-                    print("White king is under check")
-                elif res == 1:    
-                    print("Game is over , Black team wins")
-                    self.game_status = GameStatus.BLACK_WIN
                 self.turn = "w"
+
             else :
-                res = self.isCheck("b")
-                if res == -1:
-                    #check for stalemate
-                    if self.isStaleMate("b"):
-                        print("Game is over ,Stalemate")
+                if self.game_board.isCheck("b") :
+                    if self.game_board.isCheckMate("b"):
+                        print("Game is over, white team wins")
+                        self.game_status = GameStatus.BLACK_WIN
+                    else :
+                        print("black king is under check")
+                else :
+                    if self.game_board.isStaleMate("b"):
+                        print("Game is over, Stalemate")
                         self.game_status = GameStatus.STALEMATE
-                elif res == 0:
-                    print("Black king is under check")
-                elif res == 1:
-                    print("Game is Over, White team wins")
-                    self.game_status = GameStatus.WHITE_WIN
                 self.turn = "b"
+
         self.game_board.printBoard()
-
-
-    #checks for king checks + checkmates
-    def isCheck(self,color) -> int:
-        #a player is in check mate when he is under check + he has no legal moves that will resolve the check
-        #-1 ==> no check , 0 ==> color team is under check , 1 ==> color teams trapped under checkMate ==> other team wins
-        #check if a given team's king is underCheck
-        #loop over all other teams pieces and return if my king is in thier possible moves
-        other_team_possible_moves = []
-        for line in range(len(self.game_board.board)):
-            for column in range(len(self.game_board.board[line])):
-                if self.game_board.board[line][column] is not None and self.game_board.board[line][column].color != color:
-                    other_team_possible_moves.extend(self.game_board.board[line][column].getPossibleMoves(self.game_board.board))
-
-        if not ((color == "w" and self.game_board.white_king_position in other_team_possible_moves) or (color == "b" and self.game_board.black_king_position in other_team_possible_moves)):
-            return -1
-        
-        #check if the player has no legal moves that will resolve the check 
-        for line in range(len(self.game_board.board)):
-            for column in range(len(self.game_board.board[line])):
-                if self.game_board.board[line][column] is not None and self.game_board.board[line][column].color == color:
-                    for move in self.game_board.board[line][column].getPossibleMoves(self.game_board.board):
-                        if not self.game_board.MoveCauseCheck((line,column),move):
-                            return 0
-        return 1 
-
-        
-    def isStaleMate(self,color) -> bool:
-        #a stalemate happens when 
-        # 1-it's my turn to play --ensured by the caller
-        # 2-my king is not in check  --ensured by the caller
-        # 3-i have no legal moves for any of my pieces
-
-        available_moves = []
-        for line in range(len(self.game_board.board)):
-            for column in range(len(self.game_board.board[line])):
-                # print(f"line = {line}, colu = {column}")
-                if self.game_board.board[line][column] is not None and self.game_board.board[line][column].color == color:
-                    for move in self.game_board.board[line][column].getPossibleMoves(self.game_board.board):
-                        if not self.game_board.MoveCauseCheck((line,column),move):
-                            available_moves.extend(move)
-            
-        return (False if len(available_moves)>0 else True)

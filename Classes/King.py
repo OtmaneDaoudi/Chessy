@@ -2,8 +2,9 @@ from Classes.Piece import Piece
 
 
 class King(Piece):
-    def __init__(self,rank,column,color,image = None) : 
+    def __init__(self,rank,column,color,image = None,isMoved=False) : 
         super().__init__(rank,column,color,image)
+        self.isMoved = isMoved
 
     def __str__(self):
         if  (self.color == "w"): return f"{Piece.WHITE_KING}"
@@ -47,3 +48,8 @@ class King(Piece):
 
     def checkSquare(self, rank, column, board) -> bool:
         return (board[rank][column] is None or (board[rank][column].color != self.color))# and not isinstance(board[rank][column],King)))
+
+    def setPosition(self, newPos):
+        super().setPosition(newPos)
+        if self.isMoved == False:
+            self.isMoved = True

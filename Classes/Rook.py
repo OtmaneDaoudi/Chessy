@@ -2,8 +2,9 @@ from Classes.Piece import Piece
 
 
 class Rook(Piece):
-    def __init__(self,rank,column,color,image = None) : 
+    def __init__(self,rank,column,color,image = None,isMoved=False) : 
         super().__init__(rank,column,color,image)
+        self.isMoved = isMoved
 
     def __str__(self):
         if  (self.color == "w"): return f"{Piece.WHITE_ROOK}"
@@ -44,3 +45,8 @@ class Rook(Piece):
             res.append((self.rank,current_column))
 
         return res 
+
+    def setPosition(self, newPos):
+        super().setPosition(newPos)
+        if self.isMoved == False:
+            self.isMoved = True
