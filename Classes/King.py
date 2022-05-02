@@ -51,5 +51,5 @@ class King(Piece):
 
     def setPosition(self, newPos):
         super().setPosition(newPos)
-        if self.isMoved == False:
+        if self.isMoved == False:   
             self.isMoved = True

@@ -20,24 +20,24 @@ class Board:
 
         # initialise pawns
         # white pawns
-        self.board[1][0] = Pawn(1, 0, "w")
-        self.board[1][1] = Pawn(1, 1, "w")
-        self.board[1][2] = Pawn(1, 2, "w")
-        self.board[1][3] = Pawn(1, 3, "w")
-        self.board[1][4] = Pawn(1, 4, "w")
-        self.board[1][5] = Pawn(1, 5, "w")
-        self.board[1][6] = Pawn(1, 6, "w")
-        self.board[1][7] = Pawn(1, 7, "w")
+        # self.board[1][0] = Pawn(1, 0, "w")
+        # self.board[1][1] = Pawn(1, 1, "w")
+        # self.board[1][2] = Pawn(1, 2, "w")
+        # self.board[1][3] = Pawn(1, 3, "w")
+        # self.board[1][4] = Pawn(1, 4, "w")
+        # self.board[1][5] = Pawn(1, 5, "w")
+        # self.board[1][6] = Pawn(1, 6, "w")
+        # self.board[1][7] = Pawn(1, 7, "w")
 
-        # # black pawns
-        self.board[6][0] = Pawn(6, 0, "b")
-        self.board[6][1] = Pawn(6, 1, "b")
-        self.board[6][2] = Pawn(6, 2, "b")
-        self.board[6][3] = Pawn(6, 3, "b")
-        self.board[6][4] = Pawn(6, 4, "b")
-        self.board[6][5] = Pawn(6, 5, "b")
-        self.board[6][6] = Pawn(6, 6, "b")
-        self.board[6][7] = Pawn(6, 7, "b")
+        # # # black pawns
+        # self.board[6][0] = Pawn(6, 0, "b")
+        # self.board[6][1] = Pawn(6, 1, "b")
+        # self.board[6][2] = Pawn(6, 2, "b")
+        # self.board[6][3] = Pawn(6, 3, "b")
+        # self.board[6][4] = Pawn(6, 4, "b")
+        # self.board[6][5] = Pawn(6, 5, "b")
+        # self.board[6][6] = Pawn(6, 6, "b")
+        # self.board[6][7] = Pawn(6, 7, "b")
 
         # initialise rooks
         # white rooks
@@ -169,10 +169,50 @@ class Board:
                     isMoved = True
 
         #detect castling moves
-        # elif isinstance(self.board[start_pos[0]][start_pos[1]],King):
-        #     print("castling move detected")
-            #check if king is in check
+        elif isinstance(self.board[start_pos[0]][start_pos[1]],King):
+            if end_pos in self.getPossibleCastleMoves(self.board[start_pos[0]][start_pos[1]].color):
+                print("castel move detected")
+                #swap king and rook
+                if end_pos[1] == 6: #king side castling
+                    if self.board[start_pos[0]][start_pos[1]].color == "w": #white king side castling
+                        self.board[0][6] = self.board[start_pos[0]][start_pos[1]]
+                        self.board[start_pos[0]][start_pos[1]] = None
+                        self.board[0][6].setPosition((0,6))
+                        self.white_king_position = (0,6)
 
+                        self.board[0][5] = self.board[0][7]
+                        self.board[0][7] = None
+                        self.board[0][5].setPosition((0,5))                        
+                    else : #black king side castling
+                        self.board[7][6] = self.board[start_pos[0]][start_pos[1]]
+                        self.board[start_pos[0]][start_pos[1]] = None
+                        self.board[7][6].setPosition((7,6))
+                        self.black_king_position = (7,6)
+
+                        self.board[7][5] = self.board[7][7]
+                        self.board[7][7] = None
+                        self.board[7][5].setPosition((7,5))
+                else:
+                    if self.board[start_pos[0]][start_pos[1]].color == "w": #white queen side castling
+                        self.board[0][2] = self.board[start_pos[0]][start_pos[1]]
+                        self.board[start_pos[0]][start_pos[1]] = None
+                        self.board[0][0].setPosition((0,2))
+                        self.white_king_position = (0,2)
+
+                        self.board[0][3] = self.board[0][0]
+                        self.board[0][0] = None
+                        self.board[0][3].setPosition((0,3))
+                    else :
+                        self.board[7][2] = self.board[start_pos[0]][start_pos[1]]
+                        self.board[start_pos[0]][start_pos[1]] = None
+                        self.board[7][0].setPosition((7,2))
+                        self.black_king_position = (7,2)
+
+                        self.board[7][3] = self.board[7][0]
+                        self.board[7][0] = None
+                        self.board[7][3].setPosition((7,3))
+                isMoved = True       
+                    
         return isMoved
 
     def MoveCauseCheck(self,start_pos: tuple,end_pos: tuple) -> bool:
@@ -195,19 +235,6 @@ class Board:
 
         return cloned_board.isCheck(my_color)
 
-        # other_teams_possible_moves = []
-        # #push all other teams possible moves
-        # for line in range(len(cloned_board.board)):
-        #     for column in range(len(cloned_board.board[line])):
-        #         if cloned_board.board[line][column] is not None and cloned_board.board[line][column].color != my_color:
-        #             other_teams_possible_moves.extend(cloned_board.board[line][column].getPossibleMoves(cloned_board.board))
-
-        # if my_color == "b":
-        #     return cloned_board.black_king_position in other_teams_possible_moves
-        # else:
-        #     return cloned_board.white_king_position in other_teams_possible_moves
-
-
     def promotePawn(self,position : tuple):
         print(f"select which piece to promote pawn at {position} to (k=knight, q=queen, b=bishop, r=rook) >>> ",end="")
         selection = input("")
@@ -228,7 +255,6 @@ class Board:
         else:
             print("enter valid piece name")
             self.promotePawn(position) #reinvoke in case of invalid move
-
 
     #checks for king checks + checkmates
     def isCheck(self,color) -> bool: 
@@ -269,3 +295,64 @@ class Board:
                         if not self.MoveCauseCheck((line,column),move):
                             available_moves.extend(move)
         return not (len(available_moves) > 0)
+
+    #if a move is returned ==> all clear to castle
+    def getPossibleCastleMoves(self,color):
+        res = []
+        if color == "w":
+            if not self.board[self.white_king_position[0]][self.white_king_position[1]].isMoved and not self.isCheck("w"): #king not in check and hasen't moved yet
+                #check king side castling availability
+                if self.board[0][7] is not None and not self.board[0][7].isMoved: #if the king side rook hasen't moved yet too
+                    if self.board[0][5] is None and self.board[0][6] is None : #if every thing is clear
+                        #check if crossing the squares will not raise a check
+                        if not self.MoveCauseCheck(self.white_king_position,(0,5)): #if the first square crossed is fine
+                            cloned_board = deepcopy(self)
+                            #move king in cloned board
+                            cloned_board.board[0][5] = cloned_board.board[0][4]
+                            cloned_board.board[0][4] = None
+                            # update the piece's internal position
+                            cloned_board.board[0][5].setPosition((0,5))
+                            if not cloned_board.MoveCauseCheck((0,5),(0,6)) : #all clear
+                                res.append((0,6))
+                #check Queen side csatling availability
+                if self.board[0][0] is not None and not self.board[0][0].isMoved: #queen side rook hasen't moved
+                    if self.board[0][3] is None and self.board[0][2] is None : #all clear to move
+                        #check if the crossing squres will not cause 
+                        if not self.MoveCauseCheck(self.white_king_position,(0,3)): #if the first square crossed is fine
+                            cloned_board = deepcopy(self)
+                            #move king in cloned board
+                            cloned_board.board[0][3] = cloned_board.board[0][4]
+                            cloned_board.board[0][4] = None
+                            # update the piece's internal position
+                            cloned_board.board[0][3].setPosition((0,3))
+                            if not cloned_board.MoveCauseCheck((0,3),(0,2)) : #all clear
+                                res.append((0,2))
+        else :
+            if not self.board[self.black_king_position[0]][self.black_king_position[1]].isMoved and not self.isCheck("b"): #king not in check and hasen't moved yet
+                #check king side castling availability
+                if self.board[7][7] is not None and not self.board[7][7].isMoved: #if the king side rook hasen't moved yet too
+                    if self.board[7][5] is None and self.board[7][6] is None : #if every thing is clear
+                        #check if crossing the squares will not raise a check
+                        if not self.MoveCauseCheck(self.black_king_position,(7,5)): #if the first square crossed is fine
+                            cloned_board = deepcopy(self)
+                            #move king in cloned board
+                            cloned_board.board[7][5] = cloned_board.board[7][4]
+                            cloned_board.board[7][4] = None
+                            # update the piece's internal position
+                            cloned_board.board[7][5].setPosition((7,5))
+                            if not cloned_board.MoveCauseCheck((7,5),(7,6)) : #all clear
+                                res.append((7,6))
+                #check Queen side csatling availability
+                if self.board[7][0] is not None and not self.board[7][0].isMoved: #queen side rook hasen't moved
+                    if self.board[7][3] is  None and self.board[7][2] is  None : #all clear to move
+                        #check if the crossing squres will not cause 
+                        if not self.MoveCauseCheck(self.black_king_position,(7,3)): #if the first square crossed is fine
+                            cloned_board = deepcopy(self)
+                            #move king in cloned board
+                            cloned_board.board[7][3] = cloned_board.board[7][4]
+                            cloned_board.board[7][4] = None
+                            # update the piece's internal position
+                            cloned_board.board[7][3].setPosition((7,3))
+                            if not cloned_board.MoveCauseCheck((7,3),(7,2)) : #all clear
+                                res.append((7,2))
+        return res
