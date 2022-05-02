@@ -7,8 +7,6 @@ class GameStatus(Enum):
     ACTIVE = 1
     BLACK_WIN = 2
     WHITE_WIN = 3
-    # BLACK_KING_CHECKED = 4
-    # WHITE_KING_CHECKED = 5
     FORFIET = 4
     STALEMATE = 5
 class Game:
@@ -41,7 +39,12 @@ class Game:
             
             if self.turn == "b":
                 res = self.isCheck("w")
-                if res == 0:
+                if res == -1:
+                    #check for stalemate 
+                    if self.isStaleMate("w"):
+                        print("Game is over, Stalemate")
+                        self.game_status = GameStatus.STALEMATE
+                elif res == 0:
                     print("White king is under check")
                 elif res == 1:    
                     print("Game is over , Black team wins")
@@ -49,7 +52,12 @@ class Game:
                 self.turn = "w"
             else :
                 res = self.isCheck("b")
-                if res == 0:
+                if res == -1:
+                    #check for stalemate
+                    if self.isStaleMate("b"):
+                        print("Game is over ,Stalemate")
+                        self.game_status = GameStatus.STALEMATE
+                elif res == 0:
                     print("Black king is under check")
                 elif res == 1:
                     print("Game is Over, White team wins")
@@ -83,8 +91,19 @@ class Game:
         return 1 
 
         
-    def isStaleMate(self,color):
-        pass
+    def isStaleMate(self,color) -> bool:
+        #a stalemate happens when 
+        # 1-it's my turn to play --ensured by the caller
+        # 2-my king is not in check  --ensured by the caller
+        # 3-i have no legal moves for any of my pieces
 
-
-    
+        available_moves = []
+        for line in range(len(self.game_board.board)):
+            for column in range(len(self.game_board.board[line])):
+                # print(f"line = {line}, colu = {column}")
+                if self.game_board.board[line][column] is not None and self.game_board.board[line][column].color == color:
+                    for move in self.game_board.board[line][column].getPossibleMoves(self.game_board.board):
+                        if not self.game_board.MoveCauseCheck((line,column),move):
+                            available_moves.extend(move)
+            
+        return (False if len(available_moves)>0 else True)

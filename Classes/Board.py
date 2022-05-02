@@ -29,7 +29,7 @@ class Board:
         self.board[1][6] = Pawn(1, 6, "w")
         self.board[1][7] = Pawn(1, 7, "w")
 
-        # black pawns
+        # # black pawns
         self.board[6][0] = Pawn(6, 0, "b")
         self.board[6][1] = Pawn(6, 1, "b")
         self.board[6][2] = Pawn(6, 2, "b")
@@ -223,6 +223,3 @@ class Board:
         else:
             print("enter valid piece name")
             self.promotePawn(position) #reinvoke in case of invalid move
-
-
-    
