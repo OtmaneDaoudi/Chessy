@@ -9,8 +9,8 @@ class Pawn(Piece):
         self.countMoves = 0 #used to update the value of isFirstMove
         self.forwardMoveOffset = 0 #this attribute is used to detect en passant captures
 
-
     # retrieve all possible moves including captures
+    # all moves should not cause team's king ti be under check 
     def getPossibleMoves(self, board) -> list:
         res = []
         if self.color == "w" :#and not self.isPromotable:

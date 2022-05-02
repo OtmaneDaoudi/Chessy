@@ -1,4 +1,3 @@
-from xmlrpc.client import Boolean
 from Classes.Piece import Piece
 
 
@@ -46,6 +45,5 @@ class King(Piece):
             
         return res
 
-    def checkSquare(self, rank, column, board) -> Boolean:
+    def checkSquare(self, rank, column, board) -> bool:
         return (board[rank][column] is None or (board[rank][column].color != self.color))# and not isinstance(board[rank][column],King)))
-        

@@ -1,7 +1,6 @@
 # board squares are mapped to list indexes
 # each square has color + rank,column + piece
 # each piece contains a reference to a valid piece subClass instance or None in case of empty
-from turtle import clone
 from Classes.Piece import Piece
 from Classes.Pawn import Pawn
 from Classes.Rook import Rook
@@ -78,8 +77,8 @@ class Board:
         self.board[7][4] = King(7, 4, "b")
         self.black_king_position = (7,4)
 
-        self.white_captures_pieces = ()
-        self.black_captures_pieces = ()
+        self.white_captures_pieces = []
+        self.black_captures_pieces = []
 
         #en passant privilage 
         #if one player playes a move the other looses the right for his en passant
@@ -108,16 +107,16 @@ class Board:
 
     #move piece and update the position of the piece
     #when moving a pawn we need to check for promotion 
+    #when a king is under check , the player is forced to resolve the check , otherwise a checkmate happens
     def move_piece(self, start_pos: tuple, end_pos : tuple) -> bool: #,turn : str):
         isMoved = False
         #is it a valid move + the move will not cause me check
         if end_pos in self.board[start_pos[0]][start_pos[1]].getPossibleMoves(self.board) and not self.MoveCauseCheck(start_pos,end_pos):  
-            #check if the move will lead to a check
             # move the piece on baord
             if self.board[end_pos[0]][end_pos[1]] is not None : #capture detected
                 print("capture") #log all captures
                 #capture piece and append it to the captures pieces list
-                if self.board[end_pos[0]][end_pos[1]].color == "b" : 
+                if self.board[end_pos[0]][end_pos[1]].color == "b": 
                     self.white_captures_pieces.append(self.board[end_pos[0]][end_pos[1]])
                 elif self.board[end_pos[0]][end_pos[1]].color == "w":
                     self.black_captures_pieces.append(self.board[end_pos[0]][end_pos[1]])
@@ -145,7 +144,6 @@ class Board:
                 if self.board[end_pos[0]][end_pos[1]].isPromotable:
                     self.promotePawn(end_pos)
             
-
         #detect en passant captures for pawn 
         #en passant happens only in rank 4 and 3 so we can't have promotion + en passant
         elif isinstance(self.board[start_pos[0]][start_pos[1]],Pawn):
@@ -170,8 +168,6 @@ class Board:
                     self.LastMovedPiece = self.board[end_pos[0]][end_pos[1]]
                     isMoved = True
 
-        # if not isMoved : #if no legal move is performaed
-        #     print("illegal Move")
         return isMoved
 
     def MoveCauseCheck(self,start_pos: tuple,end_pos: tuple) -> bool:
@@ -183,7 +179,6 @@ class Board:
         cloned_board.board[start_pos[0]][start_pos[1]] = None
         cloned_board.board[end_pos[0]][end_pos[1]].setPosition((end_pos[0], end_pos[1]))
 
-        
         #if king is moved update board's king positions
         if isinstance(cloned_board.board[end_pos[0]][end_pos[1]],King):
             if cloned_board.board[end_pos[0]][end_pos[1]].color == "b":
@@ -228,3 +223,6 @@ class Board:
         else:
             print("enter valid piece name")
             self.promotePawn(position) #reinvoke in case of invalid move
+
+
+    
