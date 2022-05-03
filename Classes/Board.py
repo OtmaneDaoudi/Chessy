@@ -20,24 +20,24 @@ class Board:
 
         # initialise pawns
         # white pawns
-        # self.board[1][0] = Pawn(1, 0, "w")
-        # self.board[1][1] = Pawn(1, 1, "w")
-        # self.board[1][2] = Pawn(1, 2, "w")
-        # self.board[1][3] = Pawn(1, 3, "w")
-        # self.board[1][4] = Pawn(1, 4, "w")
-        # self.board[1][5] = Pawn(1, 5, "w")
-        # self.board[1][6] = Pawn(1, 6, "w")
-        # self.board[1][7] = Pawn(1, 7, "w")
+        self.board[1][0] = Pawn(1, 0, "w")
+        self.board[1][1] = Pawn(1, 1, "w")
+        self.board[1][2] = Pawn(1, 2, "w")
+        self.board[1][3] = Pawn(1, 3, "w")
+        self.board[1][4] = Pawn(1, 4, "w")
+        self.board[1][5] = Pawn(1, 5, "w")
+        self.board[1][6] = Pawn(1, 6, "w")
+        self.board[1][7] = Pawn(1, 7, "w")
 
-        # # # black pawns
-        # self.board[6][0] = Pawn(6, 0, "b")
-        # self.board[6][1] = Pawn(6, 1, "b")
-        # self.board[6][2] = Pawn(6, 2, "b")
-        # self.board[6][3] = Pawn(6, 3, "b")
-        # self.board[6][4] = Pawn(6, 4, "b")
-        # self.board[6][5] = Pawn(6, 5, "b")
-        # self.board[6][6] = Pawn(6, 6, "b")
-        # self.board[6][7] = Pawn(6, 7, "b")
+        # # black pawns
+        self.board[6][0] = Pawn(6, 0, "b")
+        self.board[6][1] = Pawn(6, 1, "b")
+        self.board[6][2] = Pawn(6, 2, "b")
+        self.board[6][3] = Pawn(6, 3, "b")
+        self.board[6][4] = Pawn(6, 4, "b")
+        self.board[6][5] = Pawn(6, 5, "b")
+        self.board[6][6] = Pawn(6, 6, "b")
+        self.board[6][7] = Pawn(6, 7, "b")
 
         # initialise rooks
         # white rooks
