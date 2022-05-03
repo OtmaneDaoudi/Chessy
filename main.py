@@ -1,6 +1,4 @@
-from Classes.Board import Board
 from Classes.Game import Game
-import ast
 
 # bd = Board()
 # bd.move_piece((0,0),(1,0))
