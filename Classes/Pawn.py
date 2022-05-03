@@ -60,10 +60,6 @@ class Pawn(Piece):
                         res[(self.rank - 1,self.column - 1)] = (self.rank,self.column - 1)
         return res
 
-
-    def Capture(self, piece):
-        pass
-
     def __str__(self):
         if self.color == "w":
             return f"{Piece.WHITE_PAWN}"
