@@ -97,8 +97,8 @@ class Board:
         #print("     A    B    C    D    E    F    G    H")
         print("     0    1    2    3    4    5    6    7")
         print("="*43)
-        print(f"white's king position : {self.white_king_position}")
-        print(f"black's king position : {self.black_king_position}")
+        # print(f"white's king position : {self.white_king_position}")
+        # print(f"black's king position : {self.black_king_position}")
         print(f"pieces captured by white : {self.white_captures_pieces}")
         print(f"pieces captured by black : {self.black_captures_pieces}")
         print("="*43)
@@ -315,7 +315,7 @@ class Board:
                                 res.append((0,6))
                 #check Queen side csatling availability
                 if self.board[0][0] is not None and not self.board[0][0].isMoved: #queen side rook hasen't moved
-                    if self.board[0][3] is None and self.board[0][2] is None : #all clear to move
+                    if self.board[0][3] is None and self.board[0][2] is None and self.board[0][1] is None : #all clear to move
                         #check if the crossing squres will not cause 
                         if not self.MoveCauseCheck(self.white_king_position,(0,3)): #if the first square crossed is fine
                             cloned_board = deepcopy(self)
@@ -343,7 +343,7 @@ class Board:
                                 res.append((7,6))
                 #check Queen side csatling availability
                 if self.board[7][0] is not None and not self.board[7][0].isMoved: #queen side rook hasen't moved
-                    if self.board[7][3] is  None and self.board[7][2] is  None : #all clear to move
+                    if self.board[7][3] is  None and self.board[7][2] is None and self.board[7][1] is None : #all clear to move
                         #check if the crossing squres will not cause 
                         if not self.MoveCauseCheck(self.black_king_position,(7,3)): #if the first square crossed is fine
                             cloned_board = deepcopy(self)
