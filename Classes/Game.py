@@ -1,7 +1,11 @@
 #a class that handels an instance of a game
+from Classes.AiPlayer import AiPlayer
 from Classes.Board import Board
 import ast
 from enum import Enum
+from Classes.OfflinePlayer import OfflinePlayer
+
+from Classes.Player import Player
 
 class GameStatus(Enum):
     ACTIVE = 1
@@ -16,24 +20,19 @@ class Game:
         self.game_status = GameStatus.ACTIVE
 
     def start_game(self):
+        black_player = OfflinePlayer("b")
+        white_player = AiPlayer("w",20)
         while self.game_status == GameStatus.ACTIVE:
             #eval a tuple from user input
-            self.game_board.printBoard()
-            turn_var = "white" if self.turn == "w" else "black"
-            print(f"{turn_var}'s turn")
-            start_pos = ast.literal_eval(input(f"Enter start position : "))
-
-            while self.game_board.board[start_pos[0]][start_pos[1]] is None or self.game_board.board[start_pos[0]][start_pos[1]].color != self.turn:
-                print("invalid selected piece , please try moving one of your pieces")
-                start_pos = ast.literal_eval(input(f"Enter start position : "))
-                
-            end_pos = ast.literal_eval(input(f"Enter end position : "))
-            while not self.game_board.move_piece(start_pos,end_pos): #unsuccessfull move
-                print("illegal move")
-                start_pos = ast.literal_eval(input(f"Enter start position : "))
-                end_pos = ast.literal_eval(input(f"Enter end position : "))
             
+            turn_var = "white" if self.turn == "w" else "black"
+            print(f"{turn_var}'s turn")            
+
             if self.turn == "b":
+                self.game_board.printBoard()
+                move = black_player.getMove(self.game_board) #returns a valid move
+                print(f"move stat : {self.game_board.move_piece(move[0],move[1])}")
+
                 if self.game_board.isCheck("w") :
                     if self.game_board.isCheckMate("w"):
                         print("Game is over, black team wins")
@@ -47,6 +46,9 @@ class Game:
                 self.turn = "w"
 
             else :
+                move = white_player.getMove(self.game_board) #returns a valid move
+                print(f"move stat : {self.game_board.move_piece(move[0],move[1])}")
+
                 if self.game_board.isCheck("b") :
                     if self.game_board.isCheckMate("b"):
                         print("Game is over, white team wins")

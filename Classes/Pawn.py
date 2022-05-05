@@ -71,10 +71,7 @@ class Pawn(Piece):
     def setPosition(self, newPos):
         self.forwardMoveOffset = abs(self.rank - newPos[0])
         super().setPosition(newPos)
-        self.countMoves += 1
-        
-        # print("sub : setPos")
-        if self.countMoves >= 2:
+        if self.isFirstMove:
             self.isFirstMove = False
         #if the pawn moves to rank 0 or 7 ==> promotable
         if newPos[0] == 0 or newPos[0] == 7:
