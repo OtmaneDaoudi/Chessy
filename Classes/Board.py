@@ -101,6 +101,14 @@ class Board:
         # print(f"black's king position : {self.black_king_position}")
         print(f"pieces captured by white : {self.white_captures_pieces}")
         print(f"pieces captured by black : {self.black_captures_pieces}")
+        r1 = self.isCheckMate("b")
+        print(f"is black checkmate = {r1}")
+        r2 = self.isCheckMate("w")
+        print(f"is white check = {r2}")
+        r3 = self.isCheck("w")
+        print(f"is white check = {r3}")
+        r4 = self.isCheck("b")
+        print(f"is black check = {r4}")
         print("="*43)
 
 
@@ -276,10 +284,17 @@ class Board:
             for line in range(len(self.board)):
                 for column in range(len(self.board[line])):
                     if self.board[line][column] is not None and self.board[line][column].color == color:
-                        for move in self.board[line][column].getPossibleMoves(self.board):
+                        possibleEndMoves = self.board[line][column].getPossibleMoves(self.board)
+                        if isinstance(self.board[line][column],Pawn):
+                            possibleEndMoves.extend(list(self.board[line][column].getPossibleEnPassantCaptures(self.board).keys()))
+                        if isinstance(self.board[line][column],King):
+                            self.getPossibleCastleMoves(self.board[line][column].color)
+                        possibleEndMoves.getPossibleCastleMoves()
+                        for move in possibleEndMoves:
                             if not self.MoveCauseCheck((line,column),move):
                                 return False
-        return True
+                        return True
+        return False
         
     def isStaleMate(self,color) -> bool:
         #a stalemate happens when 

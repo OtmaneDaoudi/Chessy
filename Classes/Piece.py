@@ -22,6 +22,5 @@ class Piece:
         self.image = image
 
     def setPosition(self,newPos):
-        # print("super: setPos")
         self.rank = newPos[0]
         self.column = newPos[1]
