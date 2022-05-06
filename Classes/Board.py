@@ -1,6 +1,7 @@
 # board squares are mapped to list indexes
 # each square has color + rank,column + piece
 # each piece contains a reference to a valid piece subClass instance or None in case of empty
+from select import select
 from Classes.Pawn import Pawn
 from Classes.Rook import Rook
 from Classes.Bishop import Bishop
@@ -11,7 +12,7 @@ from copy import deepcopy
 
 
 class Board:
-    def __init__(self):
+    def __init__(self,AiAutoPromotion = False):
         # initialise board
         self.board = []
         for line in range(8):
@@ -19,24 +20,24 @@ class Board:
 
         # initialise pawns
         # white pawns
-        self.board[1][0] = Pawn(1, 0, "w")
-        self.board[1][1] = Pawn(1, 1, "w")
-        self.board[1][2] = Pawn(1, 2, "w")
-        self.board[1][3] = Pawn(1, 3, "w")
-        self.board[1][4] = Pawn(1, 4, "w")
-        self.board[1][5] = Pawn(1, 5, "w")
-        self.board[1][6] = Pawn(1, 6, "w")
-        self.board[1][7] = Pawn(1, 7, "w")
+        # self.board[1][0] = Pawn(1, 0, "w")
+        # self.board[1][1] = Pawn(1, 1, "w")
+        # self.board[1][2] = Pawn(1, 2, "w")
+        # self.board[1][3] = Pawn(1, 3, "w")
+        # self.board[1][4] = Pawn(1, 4, "w")
+        # self.board[1][5] = Pawn(1, 5, "w")
+        # self.board[1][6] = Pawn(1, 6, "w")
+        # self.board[1][7] = Pawn(1, 7, "w")
 
         # # black pawns
-        self.board[6][0] = Pawn(6, 0, "b")
-        self.board[6][1] = Pawn(6, 1, "b")
-        self.board[6][2] = Pawn(6, 2, "b")
-        self.board[6][3] = Pawn(6, 3, "b")
-        self.board[6][4] = Pawn(6, 4, "b")
-        self.board[6][5] = Pawn(6, 5, "b")
-        self.board[6][6] = Pawn(6, 6, "b")
-        self.board[6][7] = Pawn(6, 7, "b")
+        # self.board[6][0] = Pawn(6, 0, "b")
+        # self.board[6][1] = Pawn(6, 1, "b")
+        # self.board[6][2] = Pawn(6, 2, "b")
+        # self.board[6][3] = Pawn(6, 3, "b")
+        # self.board[6][4] = Pawn(6, 4, "b")
+        # self.board[6][5] = Pawn(6, 5, "b")
+        # self.board[6][6] = Pawn(6, 6, "b")
+        # self.board[6][7] = Pawn(6, 7, "b")
 
         # initialise rooks
         # white rooks
@@ -48,25 +49,25 @@ class Board:
 
         # initialise knights
         # white knights
-        self.board[0][1] = Knight(0, 1, "w")
-        self.board[0][6] = Knight(0, 6, "w")
+        # self.board[0][1] = Knight(0, 1, "w")
+        # self.board[0][6] = Knight(0, 6, "w")
         # black knights
-        self.board[7][1] = Knight(7, 1, "b")
-        self.board[7][6] = Knight(7, 6, "b")
+        # self.board[7][1] = Knight(7, 1, "b")
+        # self.board[7][6] = Knight(7, 6, "b")
 
         # initialise Bishops
         # white bishops
-        self.board[0][2] = Bishop(0, 2, "w")
-        self.board[0][5] = Bishop(0, 5, "w")
+        # self.board[0][2] = Bishop(0, 2, "w")
+        # self.board[0][5] = Bishop(0, 5, "w")
         # black bishops
-        self.board[7][2] = Bishop(7, 2, "b")
-        self.board[7][5] = Bishop(7, 5, "b")
+        # self.board[7][2] = Bishop(7, 2, "b")
+        # self.board[7][5] = Bishop(7, 5, "b")
 
         # intialize Queens
         # white Queen
-        self.board[0][3] = Queen(0, 3, "w")
+        # self.board[0][3] = Queen(0, 3, "w")
         # black queen
-        self.board[7][3] = Queen(7, 3, "b")
+        # self.board[7][3] = Queen(7, 3, "b")
 
         # initilize kings
         # white king
@@ -97,21 +98,18 @@ class Board:
         #print("     A    B    C    D    E    F    G    H")
         print("     0    1    2    3    4    5    6    7")
         print("="*43)
-        # print(f"white's king position : {self.white_king_position}")
-        # print(f"black's king position : {self.black_king_position}")
         print(f"pieces captured by white : {self.white_captures_pieces}")
         print(f"pieces captured by black : {self.black_captures_pieces}")
         r1 = self.isCheckMate("b")
         print(f"is black checkmate = {r1}")
         r2 = self.isCheckMate("w")
-        print(f"is white check = {r2}")
+        print(f"is white checkmate = {r2}")
         r3 = self.isCheck("w")
         print(f"is white check = {r3}")
         r4 = self.isCheck("b")
         print(f"is black check = {r4}")
         print("="*43)
-
-
+        
     #move piece and update the position of the piece
     #when moving a pawn we need to check for promotion 
     #when a king is under check , the player is forced to resolve the check , otherwise a checkmate happens
@@ -243,8 +241,12 @@ class Board:
         return cloned_board.isCheck(my_color)
 
     def promotePawn(self,position : tuple):
-        print(f"select which piece to promote pawn at {position} to (k=knight, q=queen, b=bishop, r=rook) >>> ",end="")
-        selection = input("")
+        selection = None
+        if self.AiAutoPromotion :
+            selection = "q"
+        else:
+            print(f"select which piece to promote pawn at {position} to (k=knight, q=queen, b=bishop, r=rook) >>> ",end="")
+            selection = input("")
 
         if selection in ("k","q","r","b") : 
             old_pawn_color = self.board[position[0]][position[1]].color
@@ -263,10 +265,7 @@ class Board:
             print("enter valid piece name")
             self.promotePawn(position) #reinvoke in case of invalid move
 
-    #checks for king checks + checkmates
     def isCheck(self,color) -> bool: 
-        #a player is in check mate when he is under check + he has no legal moves that will resolve the check
-        #-1 ==> no check , 0 ==> color team is under check , 1 ==> color teams trapped under checkMate ==> other team wins
         #check if a given team's king is underCheck
         #loop over all other teams pieces and return if my king is in thier possible moves
         other_team_possible_moves = []
@@ -274,7 +273,6 @@ class Board:
             for column in range(len(self.board[line])):
                 if self.board[line][column] is not None and self.board[line][column].color != color:
                     other_team_possible_moves.extend(self.board[line][column].getPossibleMoves(self.board))
-
         return  (color == "w" and self.white_king_position in other_team_possible_moves) or (color == "b" and self.black_king_position in other_team_possible_moves) 
 
     def isCheckMate(self,color) -> bool:
@@ -287,13 +285,10 @@ class Board:
                         possibleEndMoves = self.board[line][column].getPossibleMoves(self.board)
                         if isinstance(self.board[line][column],Pawn):
                             possibleEndMoves.extend(list(self.board[line][column].getPossibleEnPassantCaptures(self.board).keys()))
-                        if isinstance(self.board[line][column],King):
-                            self.getPossibleCastleMoves(self.board[line][column].color)
-                        possibleEndMoves.getPossibleCastleMoves()
                         for move in possibleEndMoves:
                             if not self.MoveCauseCheck((line,column),move):
                                 return False
-                        return True
+            return True
         return False
         
     def isStaleMate(self,color) -> bool:
@@ -316,7 +311,7 @@ class Board:
         if color == "w":
             if not self.board[self.white_king_position[0]][self.white_king_position[1]].isMoved and not self.isCheck("w"): #king not in check and hasen't moved yet
                 #check king side castling availability
-                if self.board[0][7] is not None and not self.board[0][7].isMoved: #if the king side rook hasen't moved yet too
+                if self.board[0][7] is not None and isinstance(self.board[0][7],Rook) and not self.board[0][7].isMoved: #if the king side rook hasen't moved yet too
                     if self.board[0][5] is None and self.board[0][6] is None : #if every thing is clear
                         #check if crossing the squares will not raise a check
                         if not self.MoveCauseCheck(self.white_king_position,(0,5)): #if the first square crossed is fine
@@ -329,7 +324,7 @@ class Board:
                             if not cloned_board.MoveCauseCheck((0,5),(0,6)) : #all clear
                                 res.append((0,6))
                 #check Queen side csatling availability
-                if self.board[0][0] is not None and not self.board[0][0].isMoved: #queen side rook hasen't moved
+                if self.board[0][0] is not None and isinstance(self.board[0][0],Rook) and not self.board[0][0].isMoved: #queen side rook hasen't moved
                     if self.board[0][3] is None and self.board[0][2] is None and self.board[0][1] is None : #all clear to move
                         #check if the crossing squres will not cause 
                         if not self.MoveCauseCheck(self.white_king_position,(0,3)): #if the first square crossed is fine
@@ -344,7 +339,7 @@ class Board:
         else :
             if not self.board[self.black_king_position[0]][self.black_king_position[1]].isMoved and not self.isCheck("b"): #king not in check and hasen't moved yet
                 #check king side castling availability
-                if self.board[7][7] is not None and not self.board[7][7].isMoved: #if the king side rook hasen't moved yet too
+                if self.board[7][7] is not None and isinstance(self.board[7][7],Rook) and not self.board[7][7].isMoved: #if the king side rook hasen't moved yet too
                     if self.board[7][5] is None and self.board[7][6] is None : #if every thing is clear
                         #check if crossing the squares will not raise a check
                         if not self.MoveCauseCheck(self.black_king_position,(7,5)): #if the first square crossed is fine
@@ -357,7 +352,7 @@ class Board:
                             if not cloned_board.MoveCauseCheck((7,5),(7,6)) : #all clear
                                 res.append((7,6))
                 #check Queen side csatling availability
-                if self.board[7][0] is not None and not self.board[7][0].isMoved: #queen side rook hasen't moved
+                if self.board[7][0] is not None and isinstance(self.board[7][0],Rook) and not self.board[7][0].isMoved: #queen side rook hasen't moved
                     if self.board[7][3] is  None and self.board[7][2] is None and self.board[7][1] is None : #all clear to move
                         #check if the crossing squres will not cause 
                         if not self.MoveCauseCheck(self.black_king_position,(7,3)): #if the first square crossed is fine

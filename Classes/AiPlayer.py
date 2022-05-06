@@ -25,7 +25,6 @@ class AiPlayer(Player):
     
     def getMove(self,game_board : Board) -> list:
         res = self.minimax(game_board, self.difficulty, False)[1]
-        print(f"move = {res}")
         print(f"chess AI playin move : {res[0]}==>{res[1]}")
         return res
 
@@ -34,40 +33,38 @@ class AiPlayer(Player):
     def minimax(self,position: Board, depth: int, maximizingPlayer: bool):
         #if the game ends at the current position or depth == 0
         if depth == 0 or self.isGameOver(position):
-            print("static eval = ",self.evaluatePosition(position))
             return self.evaluatePosition(position), None
 
         if maximizingPlayer:
-            print("maximising")
             possibleMoves = self.getAllMoves(position, "w")
             maxEval = -math.inf
             best_move = None
             for start in possibleMoves.keys():
                 for end in possibleMoves[start]:
                     board_copy = deepcopy(position)
+                    position.AiAutoPromotion = True
                     board_copy.move_piece(start, end)
                     eval = self.minimax(board_copy, depth - 1, False)[0]
                     maxEval = max(maxEval, eval)
                     if maxEval == eval:
                         best_move = [start,end]
-                    print(f"best move returned from maximising: {best_move}, eval = {eval}")
             return maxEval, best_move
+
         else:
-            print("minimising")
             possibleMoves = self.getAllMoves(position, "b")
+            print(possibleMoves)
             print(possibleMoves)
             minEval = math.inf
             best_move = None
             for start in possibleMoves.keys():
                 for end in possibleMoves[start]:
                     board_copy = deepcopy(position)
+                    position.AiAutoPromotion = True
                     board_copy.move_piece(start, end)
                     eval = self.minimax(board_copy, depth - 1, True)[0]
                     minEval = min(minEval, eval)
                     if minEval == eval:
                         best_move = [start,end]
-                        print("minEval updated")
-                    print(f"best move returned from minimising: {best_move}, eval = {eval}")
             return minEval, best_move
 
     #static evaluation of a po sition

@@ -21,10 +21,10 @@ class Game:
 
     def start_game(self):
         white_player = OfflinePlayer("w")
-        black_player = OfflinePlayer("b")
+        black_player = AiPlayer("b",2)
         while self.game_status == GameStatus.ACTIVE:
             #eval a tuple from user input
-            self.game_board.printBoard()
+            
             turn_var = "white" if self.turn == "w" else "black"
             print(f"{turn_var}'s turn")            
 
@@ -45,6 +45,7 @@ class Game:
                 self.turn = "w"
 
             else :
+                self.game_board.printBoard()
                 move = white_player.getMove(self.game_board) #returns a valid move
                 print(f"move stat : {self.game_board.move_piece(move[0],move[1])}")
 

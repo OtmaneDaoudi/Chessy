@@ -20,10 +20,10 @@ class Pawn(Piece):
                     res.append((self.rank + 2, self.column))
             #check diagonals for possible captures
             #check right diagonal
-            if self.column < 7 and board[self.rank + 1][self.column + 1] is not None and board[self.rank + 1][self.column + 1].color != self.color:
+            if self.column < 7 and self.checkSquare(board,self.rank + 1,self.column + 1):
                     res.append((self.rank + 1,self.column + 1))
             #check left diagonal
-            if self.column > 0 and board[self.rank + 1][self.column -1] is not None and board[self.rank + 1][self.column - 1].color != self.color:
+            if self.column > 0 and self.checkSquare(board,self.rank + 1,self.column -1):
                     res.append((self.rank + 1,self.column - 1))
                 
         elif self.color == "b" :#and not self.isPromotable:
@@ -33,12 +33,15 @@ class Pawn(Piece):
                     res.append((self.rank - 2, self.column))
             #check diagonals for possible captures
             #check right diagonal
-            if self.column < 7 and board[self.rank - 1][self.column + 1] is not None and board[self.rank - 1][self.column + 1].color != self.color:
+            if self.column < 7 and self.checkSquare(board,self.rank - 1,self.column + 1):
                     res.append((self.rank - 1,self.column + 1))
             #check left diagonal
-            if self.column > 0 and board[self.rank - 1][self.column - 1] is not None and board[self.rank - 1][self.column - 1].color != self.color:
+            if self.column > 0 and self.checkSquare(board,self.rank - 1,self.column - 1):
                     res.append((self.rank - 1,self.column - 1))
         return res
+
+    def checkSquare(self,board,rank,column):
+        return board[rank][column] is not None and board[rank][column].color != self.color
 
     def getPossibleEnPassantCaptures(self,board):
         res = {}
@@ -75,5 +78,4 @@ class Pawn(Piece):
             self.isFirstMove = False
         #if the pawn moves to rank 0 or 7 ==> promotable
         if newPos[0] == 0 or newPos[0] == 7:
-            #invoke promotion
             self.isPromotable = True
