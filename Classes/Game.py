@@ -21,7 +21,7 @@ class Game:
 
     def start_game(self):
         white_player = OfflinePlayer("w")
-        black_player = AiPlayer("b",2)
+        black_player = AiPlayer("b",3)
         while self.game_status == GameStatus.ACTIVE:
             #eval a tuple from user input
             

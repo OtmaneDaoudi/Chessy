@@ -20,24 +20,24 @@ class Board:
 
         # initialise pawns
         # white pawns
-        # self.board[1][0] = Pawn(1, 0, "w")
-        # self.board[1][1] = Pawn(1, 1, "w")
-        # self.board[1][2] = Pawn(1, 2, "w")
-        # self.board[1][3] = Pawn(1, 3, "w")
-        # self.board[1][4] = Pawn(1, 4, "w")
-        # self.board[1][5] = Pawn(1, 5, "w")
-        # self.board[1][6] = Pawn(1, 6, "w")
-        # self.board[1][7] = Pawn(1, 7, "w")
+        self.board[1][0] = Pawn(1, 0, "w")
+        self.board[1][1] = Pawn(1, 1, "w")
+        self.board[1][2] = Pawn(1, 2, "w")
+        self.board[1][3] = Pawn(1, 3, "w")
+        self.board[1][4] = Pawn(1, 4, "w")
+        self.board[1][5] = Pawn(1, 5, "w")
+        self.board[1][6] = Pawn(1, 6, "w")
+        self.board[1][7] = Pawn(1, 7, "w")
 
         # # black pawns
-        # self.board[6][0] = Pawn(6, 0, "b")
-        # self.board[6][1] = Pawn(6, 1, "b")
-        # self.board[6][2] = Pawn(6, 2, "b")
-        # self.board[6][3] = Pawn(6, 3, "b")
-        # self.board[6][4] = Pawn(6, 4, "b")
-        # self.board[6][5] = Pawn(6, 5, "b")
-        # self.board[6][6] = Pawn(6, 6, "b")
-        # self.board[6][7] = Pawn(6, 7, "b")
+        self.board[6][0] = Pawn(6, 0, "b")
+        self.board[6][1] = Pawn(6, 1, "b")
+        self.board[6][2] = Pawn(6, 2, "b")
+        self.board[6][3] = Pawn(6, 3, "b")
+        self.board[6][4] = Pawn(6, 4, "b")
+        self.board[6][5] = Pawn(6, 5, "b")
+        self.board[6][6] = Pawn(6, 6, "b")
+        self.board[6][7] = Pawn(6, 7, "b")
 
         # initialise rooks
         # white rooks
@@ -49,25 +49,25 @@ class Board:
 
         # initialise knights
         # white knights
-        # self.board[0][1] = Knight(0, 1, "w")
-        # self.board[0][6] = Knight(0, 6, "w")
+        self.board[0][1] = Knight(0, 1, "w")
+        self.board[0][6] = Knight(0, 6, "w")
         # black knights
-        # self.board[7][1] = Knight(7, 1, "b")
-        # self.board[7][6] = Knight(7, 6, "b")
+        self.board[7][1] = Knight(7, 1, "b")
+        self.board[7][6] = Knight(7, 6, "b")
 
         # initialise Bishops
         # white bishops
-        # self.board[0][2] = Bishop(0, 2, "w")
-        # self.board[0][5] = Bishop(0, 5, "w")
+        self.board[0][2] = Bishop(0, 2, "w")
+        self.board[0][5] = Bishop(0, 5, "w")
         # black bishops
-        # self.board[7][2] = Bishop(7, 2, "b")
-        # self.board[7][5] = Bishop(7, 5, "b")
+        self.board[7][2] = Bishop(7, 2, "b")
+        self.board[7][5] = Bishop(7, 5, "b")
 
         # intialize Queens
         # white Queen
-        # self.board[0][3] = Queen(0, 3, "w")
+        self.board[0][3] = Queen(0, 3, "w")
         # black queen
-        # self.board[7][3] = Queen(7, 3, "b")
+        self.board[7][3] = Queen(7, 3, "b")
 
         # initilize kings
         # white king
@@ -119,7 +119,7 @@ class Board:
         if end_pos in self.board[start_pos[0]][start_pos[1]].getPossibleMoves(self.board) and not self.MoveCauseCheck(start_pos,end_pos):  
             # move the piece on baord
             if self.board[end_pos[0]][end_pos[1]] is not None : #capture detected
-                print("capture") #log all captures
+                # print("capture") #log all captures
                 #capture piece and append it to the captures pieces list
                 if self.board[end_pos[0]][end_pos[1]].color == "b": 
                     self.white_captures_pieces.append(self.board[end_pos[0]][end_pos[1]])
@@ -134,7 +134,7 @@ class Board:
     
             #if king is moved update board's king positions
             if isinstance(self.board[end_pos[0]][end_pos[1]],King):
-                print("king move detected, king indexes updated")
+                # print("king move detected, king indexes updated")
                 if self.board[end_pos[0]][end_pos[1]].color == "b":
                     self.black_king_position = end_pos
                 else:
@@ -158,7 +158,7 @@ class Board:
                 # print("capturing en passant")
                 captured_piece_index = temp_res[(end_pos[0],end_pos[1])]
                 if self.board[captured_piece_index[0]][captured_piece_index[1]] == self.LastMovedPiece:
-                    print("capturing en passant")
+                    # print("capturing en passant")
                     self.board[end_pos[0]][end_pos[1]] = self.board[start_pos[0]][start_pos[1]]
                     self.board[start_pos[0]][start_pos[1]] = None
                     self.board[end_pos[0]][end_pos[1]].setPosition((end_pos[0], end_pos[1]))
