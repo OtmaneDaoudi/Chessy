@@ -116,8 +116,8 @@ class AiPlayer(Player):
     #static evaluation of a po sition
     def evaluatePosition(self,position : Board):
         res = 0
-        for line in range(len(position.board)):
-            for column in range(len(position.board[line])):
+        for line in range(8):
+            for column in range(8):
                 if position.board[line][column] is not None:
                     if isinstance(position.board[line][column],Pawn):
                         factor = (1 if position.board[line][column].color == "w" else -1)
@@ -145,6 +145,7 @@ class AiPlayer(Player):
 
     def getAllMoves(self,position: Board,color):
         res = {}
+        #random indexes shuflling allows for random best move selection
         lines = list(range(8))
         shuffle(lines)
         columns = list(range(8))
