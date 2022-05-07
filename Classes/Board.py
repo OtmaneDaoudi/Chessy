@@ -12,7 +12,7 @@ from copy import deepcopy
 
 
 class Board:
-    def __init__(self,AiAutoPromotion = False):
+    def __init__(self):
         # initialise board
         self.board = []
         for line in range(8):
@@ -95,8 +95,8 @@ class Board:
                 else:
                     print("    |", end="")
         print("\n  -----------------------------------------")
-        #print("     A    B    C    D    E    F    G    H")
-        print("     0    1    2    3    4    5    6    7")
+        print("     A    B    C    D    E    F    G    H")
+        # print("     0    1    2    3    4    5    6    7")
         print("="*43)
         print(f"pieces captured by white : {self.white_captures_pieces}")
         print(f"pieces captured by black : {self.black_captures_pieces}")
@@ -113,7 +113,7 @@ class Board:
     #move piece and update the position of the piece
     #when moving a pawn we need to check for promotion 
     #when a king is under check , the player is forced to resolve the check , otherwise a checkmate happens
-    def move_piece(self, start_pos: tuple, end_pos : tuple) -> bool: #,turn : str):
+    def move_piece(self, start_pos: tuple, end_pos : tuple, AiAutoPromote = False) -> bool: #,turn : str):
         isMoved = False
         #is it a valid move + the move will not cause me check
         if end_pos in self.board[start_pos[0]][start_pos[1]].getPossibleMoves(self.board) and not self.MoveCauseCheck(start_pos,end_pos):  
@@ -147,7 +147,7 @@ class Board:
             #check for pawn promotion
             if isinstance(self.board[end_pos[0]][end_pos[1]],Pawn):
                 if self.board[end_pos[0]][end_pos[1]].isPromotable:
-                    self.promotePawn(end_pos)
+                    self.promotePawn(end_pos, AiAutoPromote)
             
         #detect en passant captures for pawn 
         #en passant happens only in rank 4 and 3 so we can't have promotion + en passant
@@ -155,7 +155,7 @@ class Board:
             temp_res = self.board[start_pos[0]][start_pos[1]].getPossibleEnPassantCaptures(self.board)
             # print("temp_res : ",temp_res)
             if (end_pos[0],end_pos[1]) in temp_res.keys():
-                # print("capturing en passant")
+                print("capturing en passant")
                 captured_piece_index = temp_res[(end_pos[0],end_pos[1])]
                 if self.board[captured_piece_index[0]][captured_piece_index[1]] == self.LastMovedPiece:
                     # print("capturing en passant")
@@ -240,9 +240,9 @@ class Board:
 
         return cloned_board.isCheck(my_color)
 
-    def promotePawn(self,position : tuple):
+    def promotePawn(self,position : tuple, autoPromote: bool = False):
         selection = None
-        if self.AiAutoPromotion :
+        if autoPromote :
             selection = "q"
         else:
             print(f"select which piece to promote pawn at {position} to (k=knight, q=queen, b=bishop, r=rook) >>> ",end="")
@@ -269,8 +269,8 @@ class Board:
         #check if a given team's king is underCheck
         #loop over all other teams pieces and return if my king is in thier possible moves
         other_team_possible_moves = []
-        for line in range(len(self.board)):
-            for column in range(len(self.board[line])):
+        for line in range(8):
+            for column in range(8):
                 if self.board[line][column] is not None and self.board[line][column].color != color:
                     other_team_possible_moves.extend(self.board[line][column].getPossibleMoves(self.board))
         return  (color == "w" and self.white_king_position in other_team_possible_moves) or (color == "b" and self.black_king_position in other_team_possible_moves) 
@@ -279,8 +279,8 @@ class Board:
         #checkmate = check + no legal moves
         if self.isCheck(color) :     
             #check if the player has no legal moves that will resolve the check 
-            for line in range(len(self.board)):
-                for column in range(len(self.board[line])):
+            for line in range(8):
+                for column in range(8):
                     if self.board[line][column] is not None and self.board[line][column].color == color:
                         possibleEndMoves = self.board[line][column].getPossibleMoves(self.board)
                         if isinstance(self.board[line][column],Pawn):
@@ -297,8 +297,8 @@ class Board:
         # 2-my king is not in check  --ensured by the caller
         # 3-i have no legal moves for any of my pieces
         available_moves = []
-        for line in range(len(self.board)):
-            for column in range(len(self.board[line])):
+        for line in range(8):
+            for column in range(8):
                 if self.board[line][column] is not None and self.board[line][column].color == color:
                     for move in self.board[line][column].getPossibleMoves(self.board):
                         if not self.MoveCauseCheck((line,column),move):
@@ -317,8 +317,12 @@ class Board:
                         if not self.MoveCauseCheck(self.white_king_position,(0,5)): #if the first square crossed is fine
                             cloned_board = deepcopy(self)
                             #move king in cloned board
+                            print("GAPCM 0,5 before",cloned_board.board[0][5])
+                            print("GAPCM 0,4 before",cloned_board.board[0][4])
                             cloned_board.board[0][5] = cloned_board.board[0][4]
                             cloned_board.board[0][4] = None
+                            print("GAPCM 0,5 after",cloned_board.board[0][5])
+                            print("GAPCM 0,4 after",cloned_board.board[0][4])
                             # update the piece's internal position
                             cloned_board.board[0][5].setPosition((0,5))
                             if not cloned_board.MoveCauseCheck((0,5),(0,6)) : #all clear
@@ -345,9 +349,14 @@ class Board:
                         if not self.MoveCauseCheck(self.black_king_position,(7,5)): #if the first square crossed is fine
                             cloned_board = deepcopy(self)
                             #move king in cloned board
+                            print("getAllCM before 7,5 = ",cloned_board.board[7][5])
+                            print("getAllCM before 7,4 = ",cloned_board.board[7][4])
                             cloned_board.board[7][5] = cloned_board.board[7][4]
                             cloned_board.board[7][4] = None
                             # update the piece's internal position
+                            print("getAllCM after 7,5 = ",cloned_board.board[7][5])
+                            print("getAllCM after 7,4 = ",cloned_board.board[7][4])
+
                             cloned_board.board[7][5].setPosition((7,5))
                             if not cloned_board.MoveCauseCheck((7,5),(7,6)) : #all clear
                                 res.append((7,6))
@@ -365,3 +374,6 @@ class Board:
                             if not cloned_board.MoveCauseCheck((7,3),(7,2)) : #all clear
                                 res.append((7,2))
         return res
+
+    def isGameOver(self):
+        return self.isCheckMate("b") or self.isCheckMate("w") or self.isStaleMate("b") or self.isStaleMate("w")

@@ -25,7 +25,8 @@ class AiPlayer(Player):
         self.difficulty = difficulty
     
     def getMove(self,game_board : Board) -> list:
-        res = self.minimax(game_board, self.difficulty,-math.inf,math.inf,False)[1]
+        maximizing = (False if self.color == "b" else True)
+        res = self.minimax(game_board, self.difficulty, -math.inf, math.inf, maximizing)[1]
         print(f"chess AI playin move : {res[0]}==>{res[1]}")
         return res
 
@@ -72,9 +73,9 @@ class AiPlayer(Player):
     #                     best_move = [start,end]
     #         return minEval, best_move
             
-    def minimax(self,position: Board, depth: int,alpha, beta, maximizingPlayer: bool):
+    def minimax(self, position: Board, depth: int,alpha, beta, maximizingPlayer: bool):
         #if the game ends at the current position or depth == 0
-        if depth == 0 or self.isGameOver(position):
+        if depth == 0 or position.isGameOver():
             return self.evaluatePosition(position), None
 
         if maximizingPlayer:
@@ -84,17 +85,15 @@ class AiPlayer(Player):
             for start in possibleMoves.keys():
                 for end in possibleMoves[start]:
                     board_copy = deepcopy(position)
-                    position.AiAutoPromotion = True
-                    board_copy.move_piece(start, end)
+                    board_copy.move_piece(start, end, True)
                     eval = self.minimax(board_copy, depth - 1,alpha,beta, False)[0]
                     maxEval = max(maxEval, eval)
                     alpha = max(alpha, eval)
-                    if beta <= alpha:
-                        break
                     if maxEval == eval:
                         best_move = [start,end]
+                    if beta <= alpha:
+                        break
             return maxEval, best_move
-
         else:
             possibleMoves = self.getAllMoves(position, "b")
             minEval = math.inf
@@ -102,15 +101,14 @@ class AiPlayer(Player):
             for start in possibleMoves.keys():
                 for end in possibleMoves[start]:
                     board_copy = deepcopy(position)
-                    position.AiAutoPromotion = True
-                    board_copy.move_piece(start, end)
+                    board_copy.move_piece(start, end,True)
                     eval = self.minimax(board_copy, depth - 1,alpha,beta, True)[0]
                     minEval = min(minEval, eval)
                     beta = min(beta, eval)
-                    if beta <= alpha:
-                        break
                     if minEval == eval:
                         best_move = [start,end]
+                    if beta <= alpha:
+                        break    
             return minEval, best_move
 
     #static evaluation of a po sition
@@ -140,8 +138,7 @@ class AiPlayer(Player):
         return res
 
     #returns true if the game ends at the current position
-    def isGameOver(self,game_board: Board):
-        return game_board.isCheckMate("b") or game_board.isCheckMate("w") or game_board.isStaleMate("b") or game_board.isStaleMate("w")
+    
 
     def getAllMoves(self,position: Board,color):
         res = {}
