@@ -67,7 +67,7 @@ class Board:
         # white Queen
         self.board[0][3] = Queen(0, 3, "w")
         # black queen
-        self.board[7][3] = Queen(7, 3, "b")
+        self.board[2][0] = Queen(2, 0, "b")
 
         # initilize kings
         # white king
@@ -317,12 +317,8 @@ class Board:
                         if not self.MoveCauseCheck(self.white_king_position,(0,5)): #if the first square crossed is fine
                             cloned_board = deepcopy(self)
                             #move king in cloned board
-                            print("GAPCM 0,5 before",cloned_board.board[0][5])
-                            print("GAPCM 0,4 before",cloned_board.board[0][4])
                             cloned_board.board[0][5] = cloned_board.board[0][4]
                             cloned_board.board[0][4] = None
-                            print("GAPCM 0,5 after",cloned_board.board[0][5])
-                            print("GAPCM 0,4 after",cloned_board.board[0][4])
                             # update the piece's internal position
                             cloned_board.board[0][5].setPosition((0,5))
                             if not cloned_board.MoveCauseCheck((0,5),(0,6)) : #all clear
@@ -349,14 +345,9 @@ class Board:
                         if not self.MoveCauseCheck(self.black_king_position,(7,5)): #if the first square crossed is fine
                             cloned_board = deepcopy(self)
                             #move king in cloned board
-                            print("getAllCM before 7,5 = ",cloned_board.board[7][5])
-                            print("getAllCM before 7,4 = ",cloned_board.board[7][4])
                             cloned_board.board[7][5] = cloned_board.board[7][4]
                             cloned_board.board[7][4] = None
                             # update the piece's internal position
-                            print("getAllCM after 7,5 = ",cloned_board.board[7][5])
-                            print("getAllCM after 7,4 = ",cloned_board.board[7][4])
-
                             cloned_board.board[7][5].setPosition((7,5))
                             if not cloned_board.MoveCauseCheck((7,5),(7,6)) : #all clear
                                 res.append((7,6))
@@ -376,4 +367,25 @@ class Board:
         return res
 
     def isGameOver(self):
-        return self.isCheckMate("b") or self.isCheckMate("w") or self.isStaleMate("b") or self.isStaleMate("w")
+        return self.isInsufficientMaterial() or self.isCheckMate("b") or self.isCheckMate("w") or self.isStaleMate("b") or self.isStaleMate("w") 
+
+    def isInsufficientMaterial(self):
+        #king vs king
+        if len(self.black_captures_pieces) == 15 and len(self.white_captures_pieces) == 15:
+            return True
+        #black king vs white king + bishop
+        if len(self.white_captures_pieces) == 15 and len(self.black_captures_pieces) == 14: #1 black king + white has 2 remaining pieces
+            #check if the 2 white remaining pieces are white king + white bishop
+            pieces_type = list(map(type, self.black_captures_pieces))
+            if pieces_type.count(Bishop) == 1 or pieces_type.count(Knight) == 1: #white king + (bishop or knight) are not captured
+                return True
+        #white king vs black king + black bishop
+        if len(self.black_captures_pieces) == 15 and len(self.white_captures_pieces) == 14: 
+            pieces_type = list(map(type, self.white_captures_pieces))
+            if pieces_type.count(Bishop) == 1 or pieces_type.count(Knight) == 1:
+                return True 
+            #if white has only one b
+        return False
+
+    def is50MoveDraw():
+        pass

@@ -137,9 +137,6 @@ class AiPlayer(Player):
                         res += factor*AiPlayer.KING
         return res
 
-    #returns true if the game ends at the current position
-    
-
     def getAllMoves(self,position: Board,color):
         res = {}
         #random indexes shuflling allows for random best move selection

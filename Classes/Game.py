@@ -13,6 +13,7 @@ class GameStatus(Enum):
     WHITE_WIN = 3
     FORFIET = 4
     STALEMATE = 5
+    INSUFFICIENT_MATERIAL = 6
 class Game:
     def __init__(self,turn="w"):
         self.game_board = Board()
@@ -31,6 +32,10 @@ class Game:
             if self.game_board.isStaleMate("b") or self.game_board.isStaleMate("w"):
                         print("Game is over, Stalemate")
                         self.game_status = GameStatus.STALEMATE 
+            elif self.game_board.isInsufficientMaterial():
+                        print("Game is Over, Draw by insufficient material")
+                        self.game_status = GameStatus.INSUFFICIENT_MATERIAL
+        
                         
             elif self.turn == "b":
                 move = black_player.getMove(self.game_board) #returns a valid move
