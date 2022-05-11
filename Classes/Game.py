@@ -35,8 +35,6 @@ class Game:
             elif self.game_board.isInsufficientMaterial():
                         print("Game is Over, Draw by insufficient material")
                         self.game_status = GameStatus.INSUFFICIENT_MATERIAL
-        
-                        
             elif self.turn == "b":
                 move = black_player.getMove(self.game_board) #returns a valid move
                 black_AI_autopromotion = (True if isinstance(black_player,AiPlayer) else False)
