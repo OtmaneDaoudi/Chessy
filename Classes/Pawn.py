@@ -2,7 +2,7 @@ from Classes.Piece import Piece
 
 
 class Pawn(Piece):
-    def __init__(self, rank, column, color, image=None,isFirstMove=True,isPromotable=False):
+    def __init__(self, rank, column, color, image="pawn.png",isFirstMove=True,isPromotable=False):
         super().__init__(rank, column, color, image)
         self.isFirstMove = isFirstMove
         self.isPromotable = isPromotable

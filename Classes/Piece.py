@@ -19,7 +19,7 @@ class Piece:
         self.rank = rank
         self.column = column
         self.color = color
-        self.image = image
+        self.image = self.color+"_"+self.image
 
     def setPosition(self,newPos):
         self.rank = newPos[0]

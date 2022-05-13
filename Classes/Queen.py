@@ -3,7 +3,7 @@ from Classes.Piece import Piece
 from Classes.Rook import Rook
 
 class Queen(Piece):
-    def __init__(self,rank,column,color,image = None) : 
+    def __init__(self,rank,column,color,image = "queen.png") : 
         super().__init__(rank,column,color,image)
 
     def __str__(self):

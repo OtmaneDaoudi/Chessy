@@ -2,7 +2,7 @@ from Classes.Piece import Piece
 
 
 class Rook(Piece):
-    def __init__(self,rank,column,color,image = None,isMoved=False) : 
+    def __init__(self,rank,column,color,image = "rook.png",isMoved=False) : 
         super().__init__(rank,column,color,image)
         self.isMoved = isMoved
 
