@@ -20,17 +20,14 @@ class Game:
         self.game_board = Board()
         self.turn = turn
         self.game_status = GameStatus.ACTIVE
+        self.boardUI = boardUI
         
-
     def start_game(self):
         white_player = AiPlayer("w",2)
         black_player = OfflinePlayer("b")
 
         #initialise Game UI
-        
         while self.game_status == GameStatus.ACTIVE:
-            #eval a tuple from user input
-            self.game_board.printBoard()
             turn_var = "white" if self.turn == "w" else "black"
             print(f"{turn_var}'s turn")
 
@@ -51,7 +48,6 @@ class Game:
                     else :
                         print("White king is under check")
                 self.turn = "w"
-
             else:
                 move = white_player.getMove(self.game_board) #returns a valid move
                 white_AI_autopromotion = (True if isinstance(white_player,AiPlayer) else False)
@@ -69,5 +65,5 @@ class Game:
     def switchTurnes(self):
         self.turn = "b" if self.turn == "w" else "w"
 
-    def selected(self,):
+    def playMove(self):
         pass

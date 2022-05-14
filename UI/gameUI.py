@@ -9,6 +9,7 @@ from Classes.Game import Game
 from Classes.Piece import Piece
 from kivy.uix.boxlayout import BoxLayout
 from kivy.clock import mainthread
+from kivy.clock import Clock
 
 Config.set('graphics', 'width', '900')
 Config.set('graphics', 'height', '630')
@@ -78,11 +79,39 @@ class ChessBoard(GridLayout):
             else: 
                 current_color = light_square
 
+        # Clock.schedule_once(self.game.start_game, 1)
+
+    def update_board(self):
+        self.clear_widgets()
+        light_square = (242/255.0, 225/255.0, 195/255.0, 1)
+        dark_square  = (195/255.0, 160/255.0, 130/255.0, 1)
+        current_color = light_square
+
+        self.cells = [] #stores grid cells
+        for _ in range(8):
+            self.cells.append([None, None, None, None, None, None, None, None])
+
+        for rank in reversed(range(8)):
+            for column in range(8):
+                newCell = Cell(rank,column,current_color,self.game.game_board.board[rank][column])
+                newCell.on_press = partial(self.selected, rank, column, newCell)
+                self.cells[rank][column] = newCell
+                self.add_widget(newCell)
+                newCell.set_img_pos()
+                if current_color == light_square:
+                    current_color = dark_square
+                else: 
+                    current_color = light_square
+            if current_color == light_square:
+                    current_color = dark_square
+            else: 
+                current_color = light_square
+        
     def selected(self, rank, column, cell: Cell):
         if cell.piece is None:
             if (rank,column) in self.marked_moved:
-                #move piece
-                print("move piece")
+                self.game.game_board.move_piece((self.selected_cell.rank,self.selected_cell.column),(rank,column))
+                self.update_board()
                 self.selected_cell.state = "normal"
                 self.selected_cell = None
                 for oldTarget in self.marked_moved:
@@ -91,7 +120,18 @@ class ChessBoard(GridLayout):
             else:
                 cell.state = "normal"
 
+        elif cell == self.selected_cell:
+            cell.state = "down"
+
         elif cell.piece.color != self.game.turn:
+            if (rank,column) in self.marked_moved:
+                self.game.game_board.move_piece((self.selected_cell.rank,self.selected_cell.column),(rank,column))
+                self.update_board()
+                self.selected_cell.state = "normal"
+                self.selected_cell = None
+                for oldTarget in self.marked_moved:
+                    self.cells[oldTarget[0]][oldTarget[1]].state = "normal"
+            else:
                 cell.state = "normal"
 
         else: #clicked on one of my pieces
