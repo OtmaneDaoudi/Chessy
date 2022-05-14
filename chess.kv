@@ -1,0 +1,203 @@
+GameUi:
+
+<GameUi>:
+    spacing: 10
+    orientation: 'horizontal'
+    BoxLayout:
+        orientation: 'vertical'
+        BlackCapturedPieces:
+        WhiteCapturedPieces:
+    ChessBoardNClocks:
+    Options:
+
+<Test@BoxLayout>:
+    Label:
+        text: "White player name"
+        size_hint: 2,None
+        background_color: (1,0,0,1)
+        canvas.before:
+            Color:
+                rgba: self.background_color
+            Rectangle:
+                size: self.size
+                pos: self.pos
+        height: 20
+    Label:
+        size_hint: 1,None
+        text: "00:00"
+        font_size: "30dp"
+        font_name: "./fonts/Lcd.ttf"
+        height: 20
+
+#black captured pieces
+<BlackCapturedPieces@BoxLayout>:
+    canvas.before:
+        Color:
+            rgba: (1,1,1,1)
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    orientation: 'vertical'
+    Label:
+        text: "Black's captured \n Pieces"
+        color: (0,0,0,1)
+    BoxLayout:
+        orientation: "horizontal"
+        Image:
+            source:  "./Assets/b_pawn.png"
+        Label:
+            text : " X "
+            color: (0,0,0,1)
+        Label:
+            text: " 0"
+            color: (0,0,0,1)
+    BoxLayout:
+        orientation: "horizontal"
+        Image:
+            source:  "./Assets/b_rook.png"
+        Label:
+            text : " X "
+            color: (0,0,0,1)
+        Label:
+            text: " 0"
+            color: (0,0,0,1)
+    BoxLayout:
+        orientation: "horizontal"
+        Image:
+            source:  "./Assets/b_knight.png"
+        Label:
+            text : " X "
+            color: (0,0,0,1)
+        Label:
+            text: " 0"
+            color: (0,0,0,1)
+    BoxLayout:
+        orientation: "horizontal"
+        Image:
+            source:  "./Assets/b_bishop.png"
+        Label:
+            text : " X "
+            color: (0,0,0,1)
+        Label:
+            text: " 0"
+            color: (0,0,0,1)
+    BoxLayout:
+        orientation: "horizontal"
+        Image:
+            source:  "./Assets/b_queen.png"
+        Label:
+            text : " X "
+            color: (0,0,0,1)
+        Label:
+            text: " 0"
+            color: (0,0,0,1)
+
+<WhiteCapturedPieces@BoxLayout>
+    orientation: 'vertical'
+    Label:
+        text: "White's captured\n      Pieces"
+    BoxLayout:
+        orientation: "horizontal"
+        Image:
+            source:  "./Assets/w_pawn.png"
+        Label:
+            text : " X "
+        Label:
+            text: " 0"
+    BoxLayout:
+        orientation: "horizontal"
+        Image:
+            source:  "./Assets/w_rook.png"
+        Label:
+            text : " X "
+        Label:
+            text: " 0"
+    BoxLayout:
+        orientation: "horizontal"
+        Image:
+            source:  "./Assets/w_knight.png"
+        Label:
+            text : " X "
+        Label:
+            text: " 0"
+    BoxLayout:
+        orientation: "horizontal"
+        Image:
+            source:  "./Assets/w_bishop.png"
+        Label:
+            text : " X "
+        Label:
+            text: " 0"
+    BoxLayout:
+        orientation: "horizontal"
+        Image:
+            source:  "./Assets/w_queen.png"
+        Label:
+            text : " X "
+        Label:
+            text: " 0"
+
+<ChessBoard>:
+
+<ChessBoardNClocks@BoxLayout>:
+    orientation: 'vertical'
+    size_hint: None,None
+    width: 600
+    height: 630
+    BoxLayout:
+        size_hint: 1,None
+        height: 25
+        Label:
+            text: "Black player name"
+            size_hint: 2,None
+            background_color: (1,0,0,1)
+            canvas.before:
+                Color:
+                    rgba: self.background_color
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            height: 25
+        Label:
+            size_hint: 1,None
+            text: "00:00"
+            font_size: "30dp"
+            font_name: "./fonts/Lcd.ttf"
+            height: 25
+    ChessBoard:
+    BoxLayout:
+        size_hint: 1,None
+        height: 25
+        Label:
+            size_hint: 1,None
+            text: "00:00"
+            font_size: "30dp"
+            font_name: "./fonts/Lcd.ttf"
+            height: 20
+        Label:
+            text: "White player name"
+            size_hint: 2,None
+            background_color: (120/255,238/255,62/255,1)
+            canvas.before:
+                Color:
+                    rgba: self.background_color
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            height: 22
+
+<Cell>:
+
+<Options@BoxLayout>:
+    orientation: "vertical"
+    spacing : 30
+    BoxLayout:
+        Button:
+            text: "prev"
+        Button:
+            text: "next"
+    Button:
+        text: "forfiet"
+    Button: 
+        text: "exitt"
+

@@ -67,7 +67,7 @@ class Board:
         # white Queen
         self.board[0][3] = Queen(0, 3, "w")
         # black queen
-        self.board[2][0] = Queen(2, 0, "b")
+        self.board[7][3] = Queen(7, 3, "b")
 
         # initilize kings
         # white king
