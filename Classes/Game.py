@@ -6,6 +6,7 @@ from enum import Enum
 from Classes.OfflinePlayer import OfflinePlayer
 
 from Classes.Player import Player
+import UI.gameUI as chessUI
 
 class GameStatus(Enum):
     ACTIVE = 1
@@ -15,14 +16,18 @@ class GameStatus(Enum):
     STALEMATE = 5
     INSUFFICIENT_MATERIAL = 6
 class Game:
-    def __init__(self,turn="w"):
+    def __init__(self,boardUI: chessUI,turn="w"):
         self.game_board = Board()
         self.turn = turn
         self.game_status = GameStatus.ACTIVE
+        
 
     def start_game(self):
         white_player = AiPlayer("w",2)
-        black_player = AiPlayer("b",2)
+        black_player = OfflinePlayer("b")
+
+        #initialise Game UI
+        
         while self.game_status == GameStatus.ACTIVE:
             #eval a tuple from user input
             self.game_board.printBoard()
@@ -60,3 +65,9 @@ class Game:
                 self.turn = "b"
 
         self.game_board.printBoard()
+
+    def switchTurnes(self):
+        self.turn = "b" if self.turn == "w" else "w"
+
+    def selected(self,):
+        pass

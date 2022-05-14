@@ -1,6 +1,6 @@
-from threading import main_thread
+from operator import le
+from time import sleep
 from kivy.uix.gridlayout import GridLayout
-from kivy.app import App
 from kivy.config import Config
 from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.image import Image
@@ -16,7 +16,6 @@ Config.set('graphics', 'resizable', False)
 Config.write()
 
 class Cell(ToggleButton):
-    
     def __init__(self,rank: int,column: int,color: tuple,piece: Piece,**kwargs):
         super().__init__(**kwargs)
         self.piece = piece
@@ -24,9 +23,10 @@ class Cell(ToggleButton):
         self.column = column
         self.background_normal=''
         self.background_color = color
+        
         self.img = None
 
-    @mainthread
+    @mainthread #initilise position in next frame
     def set_img_pos(self):
         if self.piece is not None:
             self.img = Image(source="./Assets/"+self.piece.image)
@@ -38,15 +38,16 @@ class Cell(ToggleButton):
         else:
             self.img = Image(source="")
 
-        
 class GameUi(BoxLayout):
     pass    
-
 
 class ChessBoard(GridLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.game = Game()
+        self.game = Game(self)
+
+        self.selected_cell = None
+        self.marked_moved = []
 
         self.cols = 8
         self.rows = 9
@@ -57,7 +58,7 @@ class ChessBoard(GridLayout):
         dark_square  = (195/255.0, 160/255.0, 130/255.0, 1)
         current_color = light_square
 
-        self.cells = [] #stores all ui elements
+        self.cells = [] #stores grid cells
         for _ in range(8):
             self.cells.append([None, None, None, None, None, None, None, None])
 
@@ -77,5 +78,38 @@ class ChessBoard(GridLayout):
             else: 
                 current_color = light_square
 
-    def selected(self, rank, column, cell):
-        print(f"selected {rank} {column}")
+    def selected(self, rank, column, cell: Cell):
+        if cell.piece is None:
+            if (rank,column) in self.marked_moved:
+                #move piece
+                print("move piece")
+                self.selected_cell.state = "normal"
+                self.selected_cell = None
+                for oldTarget in self.marked_moved:
+                    self.cells[oldTarget[0]][oldTarget[1]].state = "normal"
+
+            else:
+                cell.state = "normal"
+
+        elif cell.piece.color != self.game.turn:
+                cell.state = "normal"
+
+        else: #clicked on one of my pieces
+            if self.selected_cell is None: #no selected pieces
+                self.selected_cell = cell
+                PossibleMoves = self.game.game_board.getEligableMoves(rank,column)
+                self.marked_moved.clear()
+                self.marked_moved.extend(PossibleMoves)
+                for target in PossibleMoves:
+                    self.cells[target[0]][target[1]].state = "down"
+
+            else:
+                self.selected_cell.state = "normal"
+                self.selected_cell = cell
+                for oldTarget in self.marked_moved:
+                    self.cells[oldTarget[0]][oldTarget[1]].state = "normal"
+                self.marked_moved.clear()
+                PossibleMoves = self.game.game_board.getEligableMoves(rank,column)
+                self.marked_moved.extend(PossibleMoves)
+                for target in PossibleMoves:
+                    self.cells[target[0]][target[1]].state = "down"

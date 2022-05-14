@@ -2,6 +2,7 @@
 # each square has color + rank,column + piece
 # each piece contains a reference to a valid piece subClass instance or None in case of empty
 from select import select
+from unittest import TestProgram
 from Classes.Pawn import Pawn
 from Classes.Rook import Rook
 from Classes.Bishop import Bishop
@@ -9,6 +10,7 @@ from Classes.Knight import Knight
 from Classes.Queen import Queen
 from Classes.King import King
 from copy import deepcopy
+from random import shuffle
 
 
 class Board:
@@ -389,3 +391,18 @@ class Board:
 
     def is50MoveDraw():
         pass
+
+    def getEligableMoves(self,rank,column) -> list:
+        PossibleEndMoves = []
+        PossibleEndMoves.extend(self.board[rank][column].getPossibleMoves(self.board))
+        if isinstance(self.board[rank][column],Pawn):
+            PossibleEndMoves.extend(self.board[rank][column].getPossibleEnPassantCaptures(self.board).keys())
+        if isinstance(self.board[rank][column],King):
+            PossibleEndMoves.extend(self.getPossibleCastleMoves(self.board[rank][column].color))
+
+        eligableMoves=[]
+        for target in PossibleEndMoves:
+            if not self.MoveCauseCheck((rank,column),target):
+                eligableMoves.append(target)
+
+        return eligableMoves
