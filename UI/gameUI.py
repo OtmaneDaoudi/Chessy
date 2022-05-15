@@ -27,10 +27,15 @@ class Cell(ToggleButton):
         
         self.img = None
 
+        #TODO 
+        #if the mode is player vs algorithm
+            #if the algorithmis playing first 
+                #get a move and perform it
+
     @mainthread #initilise position in next frame
     def set_img_pos(self):
         if self.piece is not None:
-            self.img = Image(source="./Assets/"+self.piece.image)
+            self.img = Image(source="./Assets/images/"+self.piece.image)
             self.img.size_hint = (None,None)
             self.img.allow_stretch = True
             self.img.pos = [self.pos[0] + 2.5, self.pos[1] + 3]
@@ -55,8 +60,8 @@ class ChessBoard(GridLayout):
         self.padding = -1
         self.spacing = -2
 
-        light_square = (242/255.0, 225/255.0, 195/255.0, 1)
-        dark_square  = (195/255.0, 160/255.0, 130/255.0, 1)
+        light_square = (124/255.0, 76/255.0, 62/255.0, 1)
+        dark_square  = (81/255.0, 42/255.0, 42/255.0, 1)
         current_color = light_square
 
         self.cells = [] #stores grid cells
@@ -83,8 +88,8 @@ class ChessBoard(GridLayout):
 
     def update_board(self):
         self.clear_widgets()
-        light_square = (242/255.0, 225/255.0, 195/255.0, 1)
-        dark_square  = (195/255.0, 160/255.0, 130/255.0, 1)
+        light_square = (124/255.0, 76/255.0, 62/255.0, 1)
+        dark_square  = (81/255.0, 42/255.0, 42/255.0, 1)
         current_color = light_square
 
         self.cells = [] #stores grid cells
@@ -110,13 +115,13 @@ class ChessBoard(GridLayout):
     def selected(self, rank, column, cell: Cell):
         if cell.piece is None:
             if (rank,column) in self.marked_moved:
-                self.game.game_board.move_piece((self.selected_cell.rank,self.selected_cell.column),(rank,column))
+                self.game.playMove((self.selected_cell.rank,self.selected_cell.column),(rank,column))
                 self.update_board()
                 self.selected_cell.state = "normal"
                 self.selected_cell = None
                 for oldTarget in self.marked_moved:
                     self.cells[oldTarget[0]][oldTarget[1]].state = "normal"
-
+                self.marked_moved.clear()
             else:
                 cell.state = "normal"
 
@@ -125,12 +130,13 @@ class ChessBoard(GridLayout):
 
         elif cell.piece.color != self.game.turn:
             if (rank,column) in self.marked_moved:
-                self.game.game_board.move_piece((self.selected_cell.rank,self.selected_cell.column),(rank,column))
+                self.game.playMove((self.selected_cell.rank,self.selected_cell.column),(rank,column))
                 self.update_board()
                 self.selected_cell.state = "normal"
                 self.selected_cell = None
                 for oldTarget in self.marked_moved:
                     self.cells[oldTarget[0]][oldTarget[1]].state = "normal"
+                self.marked_moved.clear()
             else:
                 cell.state = "normal"
 
@@ -153,3 +159,11 @@ class ChessBoard(GridLayout):
                 self.marked_moved.extend(PossibleMoves)
                 for target in PossibleMoves:
                     self.cells[target[0]][target[1]].state = "down"
+
+        print("game status : ",self.game.game_status.name)
+            
+        # if self.selected_cell is None:
+        #     print("selected cell ==> None")
+        # else:
+        #     print(f"selected cell : {self.selected_cell.piece.rank},{self.selected_cell.piece.column}")
+        # print("Marked moves : ",self.marked_moved)
