@@ -138,6 +138,12 @@ GameUi:
             text: " 0"
 
 <ChessBoard>:
+    canvas.before:
+        Color:
+            rgba: (1,0,0,1)
+        Rectangle:
+            size: self.size
+            pos: self.pos
 
 <ChessBoardNClocks@BoxLayout>:
     orientation: 'vertical'

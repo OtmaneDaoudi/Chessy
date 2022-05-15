@@ -10,6 +10,8 @@ from Classes.Piece import Piece
 from kivy.uix.boxlayout import BoxLayout
 from kivy.clock import mainthread
 from kivy.clock import Clock
+from kivy.core.audio import SoundLoader
+from kivy.animation import Animation
 
 Config.set('graphics', 'width', '900')
 Config.set('graphics', 'height', '630')
@@ -58,7 +60,8 @@ class ChessBoard(GridLayout):
         self.cols = 8
         self.rows = 9
         self.padding = -1
-        self.spacing = -2
+        # self.spacing = -2
+        self.spacing = 30
 
         light_square = (124/255.0, 76/255.0, 62/255.0, 1)
         dark_square  = (81/255.0, 42/255.0, 42/255.0, 1)
@@ -83,6 +86,8 @@ class ChessBoard(GridLayout):
                     current_color = dark_square
             else: 
                 current_color = light_square
+
+        self.move_piece_sound = SoundLoader.load('./Assets/audio/piece_move.wav')
 
         # Clock.schedule_once(self.game.start_game, 1)
 
@@ -111,12 +116,19 @@ class ChessBoard(GridLayout):
                     current_color = dark_square
             else: 
                 current_color = light_square
+
+    def animate_move(self,start_cell: Cell, end_cell: Cell):
+        ani = Animation(pos=end_cell.pos)
+        ani.start(start_cell.img)
+
         
     def selected(self, rank, column, cell: Cell):
         if cell.piece is None:
             if (rank,column) in self.marked_moved:
                 self.game.playMove((self.selected_cell.rank,self.selected_cell.column),(rank,column))
+                self.move_piece_sound.play()
                 self.update_board()
+                self.animate_move(self.selected_cell,cell)
                 self.selected_cell.state = "normal"
                 self.selected_cell = None
                 for oldTarget in self.marked_moved:
@@ -132,6 +144,8 @@ class ChessBoard(GridLayout):
             if (rank,column) in self.marked_moved:
                 self.game.playMove((self.selected_cell.rank,self.selected_cell.column),(rank,column))
                 self.update_board()
+                self.animate_move(self.selected_cell,cell)
+                self.move_piece_sound.play()
                 self.selected_cell.state = "normal"
                 self.selected_cell = None
                 for oldTarget in self.marked_moved:
