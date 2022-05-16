@@ -102,8 +102,12 @@ class ChessBoard(GridLayout):
 
         for rank in reversed(range(8)):
             for column in range(8):
+                oldPiece = self.cells[rank][column].piece 
                 self.cells[rank][column].piece = self.game.game_board.board[rank][column]
-                self.cells[rank][column].set_img_pos()
+                if oldPiece == self.game.game_board.board[rank][column]:
+                    print("skipped")
+                else:
+                    self.cells[rank][column].set_img_pos()
                
             #     newCell = Cell(rank,column,current_color,self.game.game_board.board[rank][column])
             #     newCell.on_press = partial(self.selected, rank, column, newCell)
