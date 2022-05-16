@@ -1,7 +1,7 @@
 GameUi:
 
 <GameUi>:
-    spacing: 10
+    spacing: 0
     orientation: 'horizontal'
     BoxLayout:
         orientation: 'vertical'
@@ -197,6 +197,12 @@ GameUi:
 <Options@BoxLayout>:
     orientation: "vertical"
     spacing : 30
+    # canvas.before:
+    #     Color:
+    #         rgba: (194/255,194/255,194/255,1)
+    #     Rectangle:
+    #         size: self.size
+    #         pos: self.pos
     BoxLayout:
         Button:
             text: "prev"

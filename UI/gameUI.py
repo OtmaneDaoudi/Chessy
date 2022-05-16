@@ -1,5 +1,3 @@
-from operator import le
-from time import sleep
 from kivy.uix.gridlayout import GridLayout
 from kivy.config import Config
 from kivy.uix.togglebutton import ToggleButton
@@ -9,13 +7,12 @@ from Classes.Game import Game
 from Classes.Piece import Piece
 from kivy.uix.boxlayout import BoxLayout
 from kivy.clock import mainthread
-from kivy.clock import Clock
 from kivy.core.audio import SoundLoader
 from kivy.animation import Animation
 
 Config.set('graphics', 'width', '900')
 Config.set('graphics', 'height', '630')
-Config.set('graphics', 'resizable', False)
+Config.set('graphics', 'resizable', True)
 Config.write()
 
 class Cell(ToggleButton):
@@ -36,15 +33,17 @@ class Cell(ToggleButton):
 
     @mainthread #initilise position in next frame
     def set_img_pos(self):
+        if self.img is not None:
+            self.remove_widget(self.img)
+        source_ = "./Assets/images/None.png"
         if self.piece is not None:
-            self.img = Image(source="./Assets/images/"+self.piece.image)
-            self.img.size_hint = (None,None)
-            self.img.allow_stretch = True
-            self.img.pos = [self.pos[0] + 2.5, self.pos[1] + 3]
-            self.img.size = (70,70)
-            self.add_widget(self.img)
-        else:
-            self.img = Image(source="")
+            source_ ="./Assets/images/"+self.piece.image
+        self.img = Image(source = source_)
+        self.img.size_hint = (None,None)
+        self.img.allow_stretch = True
+        self.img.pos = [self.pos[0] + 2.5, self.pos[1] + 3]
+        self.img.size = (70,70)
+        self.add_widget(self.img)
 
 class GameUi(BoxLayout):
     pass    
@@ -60,8 +59,8 @@ class ChessBoard(GridLayout):
         self.cols = 8
         self.rows = 9
         self.padding = -1
-        # self.spacing = -2
-        self.spacing = 30
+        self.spacing = -2
+        # self.spacing = 30
 
         light_square = (124/255.0, 76/255.0, 62/255.0, 1)
         dark_square  = (81/255.0, 42/255.0, 42/255.0, 1)
@@ -92,30 +91,34 @@ class ChessBoard(GridLayout):
         # Clock.schedule_once(self.game.start_game, 1)
 
     def update_board(self):
-        self.clear_widgets()
-        light_square = (124/255.0, 76/255.0, 62/255.0, 1)
-        dark_square  = (81/255.0, 42/255.0, 42/255.0, 1)
-        current_color = light_square
+        # self.clear_widgets()
+        # light_square = (124/255.0, 76/255.0, 62/255.0, 1)
+        # dark_square  = (81/255.0, 42/255.0, 42/255.0, 1)
+        # current_color = light_square
 
-        self.cells = [] #stores grid cells
-        for _ in range(8):
-            self.cells.append([None, None, None, None, None, None, None, None])
+        # self.cells = [] #stores grid cells
+        # for _ in range(8):
+        #     self.cells.append([None, None, None, None, None, None, None, None])
 
         for rank in reversed(range(8)):
             for column in range(8):
-                newCell = Cell(rank,column,current_color,self.game.game_board.board[rank][column])
-                newCell.on_press = partial(self.selected, rank, column, newCell)
-                self.cells[rank][column] = newCell
-                self.add_widget(newCell)
-                newCell.set_img_pos()
-                if current_color == light_square:
-                    current_color = dark_square
-                else: 
-                    current_color = light_square
-            if current_color == light_square:
-                    current_color = dark_square
-            else: 
-                current_color = light_square
+                self.cells[rank][column].piece = self.game.game_board.board[rank][column]
+                self.cells[rank][column].set_img_pos()
+               
+            #     newCell = Cell(rank,column,current_color,self.game.game_board.board[rank][column])
+            #     newCell.on_press = partial(self.selected, rank, column, newCell)
+            #     self.remove_widget(self.cells[rank][column])
+            #     self.cells[rank][column] = newCell
+            #     self.add_widget(newCell)
+            #     newCell.set_img_pos()
+            #     if current_color == light_square:
+            #         current_color = dark_square
+            #     else: 
+            #         current_color = light_square
+            # if current_color == light_square:
+            #         current_color = dark_square
+            # else: 
+            #     current_color = light_square
 
     def animate_move(self,start_cell: Cell, end_cell: Cell):
         ani = Animation(pos=end_cell.pos)
@@ -128,7 +131,7 @@ class ChessBoard(GridLayout):
                 self.game.playMove((self.selected_cell.rank,self.selected_cell.column),(rank,column))
                 self.move_piece_sound.play()
                 self.update_board()
-                self.animate_move(self.selected_cell,cell)
+                # self.animate_move(self.selected_cell,cell)
                 self.selected_cell.state = "normal"
                 self.selected_cell = None
                 for oldTarget in self.marked_moved:
@@ -144,7 +147,7 @@ class ChessBoard(GridLayout):
             if (rank,column) in self.marked_moved:
                 self.game.playMove((self.selected_cell.rank,self.selected_cell.column),(rank,column))
                 self.update_board()
-                self.animate_move(self.selected_cell,cell)
+                # self.animate_move(self.selected_cell,cell)
                 self.move_piece_sound.play()
                 self.selected_cell.state = "normal"
                 self.selected_cell = None
