@@ -6,7 +6,9 @@ GameUi:
     BoxLayout:
         orientation: 'vertical'
         BlackCapturedPieces:
+            id: black_captured_pieces
         WhiteCapturedPieces:
+            id: white_captured_pieces
     ChessBoardNClocks:
     Options:
 
@@ -27,50 +29,55 @@ GameUi:
         Image:
             source:  "./Assets/images/b_pawn.png"
         Label:
-            text : " X "
+            text : "X"
             color: (0,0,0,1)
         Label:
-            text: " 0"
+            id: pawn
+            text: "0"
             color: (0,0,0,1)
     BoxLayout:
         orientation: "horizontal"
         Image:
             source:  "./Assets/images/b_rook.png"
         Label:
-            text : " X "
+            text : "X"
             color: (0,0,0,1)
         Label:
-            text: " 0"
+            id: rook
+            text: "0"
             color: (0,0,0,1)
     BoxLayout:
         orientation: "horizontal"
         Image:
             source:  "./Assets/images/b_knight.png"
         Label:
-            text : " X "
+            text : "X"
             color: (0,0,0,1)
         Label:
-            text: " 0"
+            id: knight
+            text: "0"
             color: (0,0,0,1)
     BoxLayout:
         orientation: "horizontal"
         Image:
             source:  "./Assets/images/b_bishop.png"
         Label:
-            text : " X "
+            text : "X"
             color: (0,0,0,1)
         Label:
-            text: " 0"
+            id: bishop
+            text: "0"
             color: (0,0,0,1)
     BoxLayout:
         orientation: "horizontal"
         Image:
             source:  "./Assets/images/b_queen.png"
         Label:
-            text : " X "
+            text : "X"
             color: (0,0,0,1)
         Label:
-            text: " 0"
+            id: queen
+            text: "0"
             color: (0,0,0,1)
 
 <WhiteCapturedPieces@BoxLayout>
@@ -88,43 +95,48 @@ GameUi:
         Image:
             source:  "./Assets/images/w_pawn.png"
         Label:
-            text : " X "
+            text : "X"
         Label:
-            text: " 0"
+            id: pawn
+            text: "0"
     BoxLayout:
         orientation: "horizontal"
         Image:
             source:  "./Assets/images/w_rook.png"
         Label:
-            text : " X "
+            text : "X"
         Label:
-            text: " 0"
+            id: rook
+            text: "0"
     BoxLayout:
         orientation: "horizontal"
         Image:
             source:  "./Assets/images/w_knight.png"
         Label:
-            text : " X "
+            text : "X"
         Label:
-            text: " 0"
+            id: knight
+            text: "0"
     BoxLayout:
         orientation: "horizontal"
         Image:
             source:  "./Assets/images/w_bishop.png"
         Label:
-            text : " X "
+            text : "X"
         Label:
-            text: " 0"
+            id: bishop
+            text: "0"
     BoxLayout:
         orientation: "horizontal"
         Image:
             source:  "./Assets/images/w_queen.png"
         Label:
-            text : " X "
+            text : "X"
         Label:
-            text: " 0"
+            id: queen
+            text: "0"
 
-<ChessBoard>:
+<ChessBoard>:   
 
 <ChessBoardNClocks@BoxLayout>:
     orientation: 'vertical'

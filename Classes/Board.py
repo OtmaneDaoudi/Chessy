@@ -1,8 +1,6 @@
 # board squares are mapped to list indexes
 # each square has color + rank,column + piece
 # each piece contains a reference to a valid piece subClass instance or None in case of empty
-from select import select
-from unittest import TestProgram
 from Classes.Pawn import Pawn
 from Classes.Rook import Rook
 from Classes.Bishop import Bishop
@@ -10,7 +8,6 @@ from Classes.Knight import Knight
 from Classes.Queen import Queen
 from Classes.King import King
 from copy import deepcopy
-from random import shuffle
 
 
 class Board:

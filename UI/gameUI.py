@@ -1,3 +1,4 @@
+from configparser import InterpolationSyntaxError
 from kivy.uix.gridlayout import GridLayout
 from kivy.config import Config
 from kivy.uix.togglebutton import ToggleButton
@@ -9,7 +10,14 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivy.clock import mainthread
 from kivy.core.audio import SoundLoader
-from kivy.animation import Animation
+from kivy.animation import Animation    
+from kivy.properties import ListProperty
+from kivy.app import App
+from Classes.Knight import Knight
+from Classes.Pawn import Pawn
+from Classes.Rook import Rook
+from Classes.Queen import Queen
+from Classes.Bishop import Bishop
 
 Config.set('graphics', 'width', '900')
 Config.set('graphics', 'height', '630')
@@ -32,6 +40,8 @@ class Cell(ToggleButton, FloatLayout):
             #if the algorithmis playing first 
                 #get a move and perform it
 
+        
+
     @mainthread #initilise position in next frame
     def set_img_pos(self):
         if self.img is not None:
@@ -47,10 +57,11 @@ class Cell(ToggleButton, FloatLayout):
         self.add_widget(self.img)
 
 class GameUi(BoxLayout):
-    pass    
+    pass   
 
 class ChessBoard(GridLayout):
     def __init__(self, **kwargs):
+
         super().__init__(**kwargs)
         self.game = Game(self)
 
@@ -89,8 +100,6 @@ class ChessBoard(GridLayout):
 
         self.move_piece_sound = SoundLoader.load('./Assets/audio/piece_move.wav')
 
-        # Clock.schedule_once(self.game.start_game, 1)
-
     def update_board(self):
         # self.clear_widgets()
         # light_square = (124/255.0, 76/255.0, 62/255.0, 1)
@@ -122,6 +131,32 @@ class ChessBoard(GridLayout):
             #         current_color = dark_square
             # else: 
             #     current_color = light_square
+
+        #update captured pieces
+        self.update_score()
+        # App.get_running_app().get_running_app().root.ids.black_captured_pieces.ids.pawn.text = "hehe"
+
+    def update_score(self):
+        black_ids = App.get_running_app().get_running_app().root.ids.black_captured_pieces.ids
+        white_ids = App.get_running_app().get_running_app().root.ids.white_captured_pieces.ids
+
+        #update white pieces           
+        pieces_type = list(map(type, self.game.game_board.white_captures_pieces))
+        white_ids.pawn.text = str(pieces_type.count(Pawn))
+        white_ids.rook.text = str(pieces_type.count(Rook))
+        white_ids.bishop.text = str(pieces_type.count(Bishop))
+        white_ids.knight.text = str(pieces_type.count(Knight))
+        white_ids.queen.text = str(pieces_type.count(Queen))
+
+        #update black pieces           
+        pieces_type = list(map(type, self.game.game_board.black_captures_pieces))
+        black_ids.pawn.text = str(pieces_type.count(Pawn))
+        black_ids.rook.text = str(pieces_type.count(Rook))
+        black_ids.bishop.text = str(pieces_type.count(Bishop))
+        black_ids.knight.text = str(pieces_type.count(Knight))
+        black_ids.queen.text = str(pieces_type.count(Queen))
+        
+
 
     def animate_move(self,start_cell: Cell, end_cell: Cell):
         ani = Animation(pos=end_cell.pos)
