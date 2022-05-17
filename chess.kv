@@ -178,19 +178,41 @@ GameUi:
 <Options@BoxLayout>:
     orientation: "vertical"
     spacing : 30
-    # canvas.before:
-    #     Color:
-    #         rgba: (194/255,194/255,194/255,1)
-    #     Rectangle:
-    #         size: self.size
-    #         pos: self.pos
+    canvas.before:
+        Color:
+            rgba: (129/255,133/255,137/255,1)
+        Rectangle:
+            size: self.size
+            pos: self.pos
     BoxLayout:
         Button:
-            text: "prev"
+            size_hint: 1,None
+            height: 200
+            Image:
+                source: "./Assets/images/undo.jpg"
+                allow_stretch: True
+                center_x: self.parent.center_x
+                center_y: self.parent.center_y
+                size: 50,50
         Button:
-            text: "next"
-    Button:
-        text: "forfiet"
+            size_hint: 1,None
+            height: 200
+            Image:
+                source: "./Assets/images/redo.png"
+                allow_stretch: True
+                center_x: self.parent.center_x
+                center_y: self.parent.center_y
+                size: 50,50
     Button: 
-        text: "exitt"
-
+        size_hint: 1,None
+        height: 80
+        Image:
+            source: "./Assets/images/exit.png"
+            allow_stretch: True
+            center_x: self.parent.center_x
+            center_y: self.parent.center_y
+            size: 50,50
+    
+    Label:
+        size_hint: 1,None
+        height: 120
