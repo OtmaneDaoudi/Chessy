@@ -20,8 +20,8 @@ class Game:
         self.turn = turn
         self.game_status = GameStatus.ACTIVE
         self.boardUI = boardUI
-        self.white_player = AiPlayer("w",2)
-        self.black_player = OfflinePlayer("b")
+        self.black_player = AiPlayer("w",2)
+        self.white_player = OfflinePlayer("b")
         
     def start_game(self):
         #initialise Game UI

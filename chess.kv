@@ -10,33 +10,14 @@ GameUi:
     ChessBoardNClocks:
     Options:
 
-<Test@BoxLayout>:
-    Label:
-        text: "White player name"
-        size_hint: 2,None
-        background_color: (1,0,0,1)
-        canvas.before:
-            Color:
-                rgba: self.background_color
-            Rectangle:
-                size: self.size
-                pos: self.pos
-        height: 20
-    Label:
-        size_hint: 1,None
-        text: "00:00"
-        font_size: "30dp"
-        font_name: "./fonts/Lcd.ttf"
-        height: 20
-
 #black captured pieces
 <BlackCapturedPieces@BoxLayout>:
     canvas.before:
         Color:
-            rgba: (1,1,1,1)
+            rgba: (129/255,133/255,137/255,1)
         Rectangle:
-            pos: self.pos
             size: self.size
+            pos: self.pos
     orientation: 'vertical'
     Label:
         text: "Black's captured \n Pieces"
@@ -94,6 +75,12 @@ GameUi:
 
 <WhiteCapturedPieces@BoxLayout>
     orientation: 'vertical'
+    canvas.before:
+        Color:
+            rgba: (129/255,133/255,137/255,1)
+        Rectangle:
+            size: self.size
+            pos: self.pos
     Label:
         text: "White's captured\n      Pieces"
     BoxLayout:
@@ -138,12 +125,6 @@ GameUi:
             text: " 0"
 
 <ChessBoard>:
-    canvas.before:
-        Color:
-            rgba: (1,0,0,1)
-        Rectangle:
-            size: self.size
-            pos: self.pos
 
 <ChessBoardNClocks@BoxLayout>:
     orientation: 'vertical'

@@ -6,16 +6,17 @@ from functools import partial
 from Classes.Game import Game
 from Classes.Piece import Piece
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.floatlayout import FloatLayout
 from kivy.clock import mainthread
 from kivy.core.audio import SoundLoader
 from kivy.animation import Animation
 
 Config.set('graphics', 'width', '900')
 Config.set('graphics', 'height', '630')
-Config.set('graphics', 'resizable', True)
+Config.set('graphics', 'resizable', False)
 Config.write()
 
-class Cell(ToggleButton):
+class Cell(ToggleButton, FloatLayout):
     def __init__(self,rank: int,column: int,color: tuple,piece: Piece,**kwargs):
         super().__init__(**kwargs)
         self.piece = piece
@@ -62,8 +63,8 @@ class ChessBoard(GridLayout):
         self.spacing = -2
         # self.spacing = 30
 
-        light_square = (124/255.0, 76/255.0, 62/255.0, 1)
-        dark_square  = (81/255.0, 42/255.0, 42/255.0, 1)
+        light_square = (242/255.0, 225/255.0, 195/255.0, 1)
+        dark_square  = (195/255.0, 160/255.0, 130/255.0, 1)
         current_color = light_square
 
         self.cells = [] #stores grid cells
