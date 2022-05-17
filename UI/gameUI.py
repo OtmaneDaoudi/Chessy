@@ -1,4 +1,3 @@
-from configparser import InterpolationSyntaxError
 from kivy.uix.gridlayout import GridLayout
 from kivy.config import Config
 from kivy.uix.togglebutton import ToggleButton
@@ -11,7 +10,6 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.clock import mainthread
 from kivy.core.audio import SoundLoader
 from kivy.animation import Animation    
-from kivy.properties import ListProperty
 from kivy.app import App
 from Classes.Knight import Knight
 from Classes.Pawn import Pawn
@@ -21,7 +19,7 @@ from Classes.Bishop import Bishop
 
 Config.set('graphics', 'width', '900')
 Config.set('graphics', 'height', '630')
-Config.set('graphics', 'resizable', False)
+Config.set('graphics', 'resizable', True)
 Config.write()
 
 class Cell(ToggleButton, FloatLayout):
@@ -101,40 +99,15 @@ class ChessBoard(GridLayout):
         self.move_piece_sound = SoundLoader.load('./Assets/audio/piece_move.wav')
 
     def update_board(self):
-        # self.clear_widgets()
-        # light_square = (124/255.0, 76/255.0, 62/255.0, 1)
-        # dark_square  = (81/255.0, 42/255.0, 42/255.0, 1)
-        # current_color = light_square
-
-        # self.cells = [] #stores grid cells
-        # for _ in range(8):
-        #     self.cells.append([None, None, None, None, None, None, None, None])
-
         for rank in reversed(range(8)):
             for column in range(8):
                 oldPiece = self.cells[rank][column].piece 
                 self.cells[rank][column].piece = self.game.game_board.board[rank][column]
                 if not (oldPiece == self.game.game_board.board[rank][column]):
                     self.cells[rank][column].set_img_pos()
-               
-            #     newCell = Cell(rank,column,current_color,self.game.game_board.board[rank][column])
-            #     newCell.on_press = partial(self.selected, rank, column, newCell)
-            #     self.remove_widget(self.cells[rank][column])
-            #     self.cells[rank][column] = newCell
-            #     self.add_widget(newCell)
-            #     newCell.set_img_pos()
-            #     if current_color == light_square:
-            #         current_color = dark_square
-            #     else: 
-            #         current_color = light_square
-            # if current_color == light_square:
-            #         current_color = dark_square
-            # else: 
-            #     current_color = light_square
 
         #update captured pieces
         self.update_score()
-        # App.get_running_app().get_running_app().root.ids.black_captured_pieces.ids.pawn.text = "hehe"
 
     def update_score(self):
         black_ids = App.get_running_app().get_running_app().root.ids.black_captured_pieces.ids
@@ -156,7 +129,6 @@ class ChessBoard(GridLayout):
         black_ids.knight.text = str(pieces_type.count(Knight))
         black_ids.queen.text = str(pieces_type.count(Queen))
         
-
 
     def animate_move(self,start_cell: Cell, end_cell: Cell):
         ani = Animation(pos=end_cell.pos)

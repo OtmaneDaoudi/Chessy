@@ -10,6 +10,7 @@ GameUi:
         WhiteCapturedPieces:
             id: white_captured_pieces
     ChessBoardNClocks:
+        id: boardNclocks
     Options:
 
 #black captured pieces
@@ -147,6 +148,7 @@ GameUi:
         size_hint: 1,None
         height: 25
         Label:
+            id: black_player_banner
             text: "Black player name"
             size_hint: 2,None
             background_color: (1,0,0,1)
@@ -158,6 +160,7 @@ GameUi:
                     pos: self.pos
             height: 25
         Label:
+            id: black_player_clock
             size_hint: 1,None
             text: "00:00"
             font_size: "30dp"
@@ -168,12 +171,14 @@ GameUi:
         size_hint: 1,None
         height: 25
         Label:
+            id: white_player_clock
             size_hint: 1,None
             text: "00:00"
             font_size: "30dp"
             font_name: "./fonts/Lcd.ttf"
             height: 20
         Label:
+            id: white_player_banner
             text: "White player name"
             size_hint: 2,None
             background_color: (120/255,238/255,62/255,1)
@@ -228,3 +233,56 @@ GameUi:
     Label:
         size_hint: 1,None
         height: 120
+
+<MyPopup@Popup>:
+    auto_dismiss: False
+    title: "Pawn Promotion"
+    Label: 
+        text : "Select which peace you want to promote your pawn to :"
+
+    #queen
+    #rook
+    #bishop
+    #knight
+
+    BoxLayout:
+        orientation: "horizontal"
+        Button:
+            size_hint: 1,None
+            height: 200
+            Image:
+                source: "./Assets/images/quee"
+                allow_stretch: True
+                center_x: self.parent.center_x
+                center_y: self.parent.center_y
+                size: 50,50
+        Button:
+            size_hint: 1,None
+            height: 200
+            Image:
+                source: "./Assets/images/undo.jpg"
+                allow_stretch: True
+                center_x: self.parent.center_x
+                center_y: self.parent.center_y
+                size: 50,50
+        Button:
+            size_hint: 1,None
+            height: 200
+            Image:
+                source: "./Assets/images/undo.jpg"
+                allow_stretch: True
+                center_x: self.parent.center_x
+                center_y: self.parent.center_y
+                size: 50,50
+        Button:
+            size_hint: 1,None
+            height: 200
+            Image:
+                source: "./Assets/images/undo.jpg"
+                allow_stretch: True
+                center_x: self.parent.center_x
+                center_y: self.parent.center_y
+                size: 50,50
+
+
+    

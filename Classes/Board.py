@@ -8,7 +8,8 @@ from Classes.Knight import Knight
 from Classes.Queen import Queen
 from Classes.King import King
 from copy import deepcopy
-
+from kivy.uix.popup import Popup
+from kivy.uix.label import Label
 
 class Board:
     def __init__(self):
@@ -246,6 +247,11 @@ class Board:
         else:
             print(f"select which piece to promote pawn at {position} to (k=knight, q=queen, b=bishop, r=rook) >>> ",end="")
             selection = input("")
+
+            # popup = Popup(title='Pawn Promotion',
+            # content=Label(text='Please select which peace to promote your pawn to'),
+            # size_hint=(None, None), size=(400, 400))
+            # popup.open()
 
         if selection in ("k","q","r","b") : 
             old_pawn_color = self.board[position[0]][position[1]].color
