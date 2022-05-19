@@ -8,14 +8,13 @@ import UI.gameUI as chessUI
 from kivy.app import App
 from kivy.core.audio import SoundLoader
 from kivy.uix.popup import Popup
-from kivy.uix.label import Label
 from kivy.uix.button import Button
+from kivy.clock import Clock
 
 class GameStatus(Enum):
     ACTIVE = 1
     BLACK_WIN = 2
     WHITE_WIN = 3
-    # FORFIET = 4
     STALEMATE = 4
     INSUFFICIENT_MATERIAL = 5
     BLACK_KING_CHECKED = 6
@@ -26,8 +25,8 @@ class Game:
         self.turn = turn
         self.game_status = GameStatus.ACTIVE
         self.boardUI = boardUI
-        self.black_player = OfflinePlayer("w")
-        self.white_player = OfflinePlayer("b")
+        self.black_player = AiPlayer("b",1)
+        self.white_player = OfflinePlayer("w")
         self.white_timer = 300
         self.black_timer = 300
 
@@ -38,12 +37,6 @@ class Game:
         while self.game_status == GameStatus.ACTIVE:
             turn_var = "white" if self.turn == "w" else "black"
             print(f"{turn_var}'s turn")
-            # if self.game_board.isStaleMate("b") or self.game_board.isStaleMate("w"):
-            #             print("Game is over, Stalemate")
-            #             self.game_status = GameStatus.STALEMATE 
-            # elif self.game_board.isInsufficientMaterial():
-            #             print("Game is Over, Draw by insufficient material")
-            #             self.game_status = GameStatus.INSUFFICIENT_MATERIAL
             if self.turn == "b":
                 move = self.black_player.getMove(self.game_board) #returns a valid move
                 black_AI_autopromotion = (True if isinstance(self.black_player,AiPlayer) else False)
@@ -117,6 +110,14 @@ class Game:
             black_banner.background_color = green
             white_banner.background_color = red
         
+        #schedule ai next move
+        if self.turn == "b" and isinstance(self.black_player, AiPlayer):
+            Clock.schedule_once(self.boardUI.AiMove, 1)
+        if self.turn == "w" and isinstance(self.white_player, AiPlayer):
+            Clock.schedule_once(self.boardUI.AiMove, 1)
+            
+
+        
     def playMove(self,start: tuple, end: tuple, gameUI):
         if self.turn == "b":
             black_AI_autopromotion = (True if isinstance(self.black_player,AiPlayer) else False)
@@ -145,8 +146,18 @@ class Game:
         elif self.game_board.isInsufficientMaterial():
             print("Game is Over, Draw by insufficient material")#
             self.game_status = GameStatus.INSUFFICIENT_MATERIAL
-        self.showGameStatus()
-        self.switchTurnes()
+        
+        if self.turn == 'w':
+            if isinstance(self.white_player, OfflinePlayer) or (isinstance(self.white_player,AiPlayer) and self.game_status.value in (2,3,4,5)):
+                print("showing 1")
+                self.showGameStatus()
+        elif self.turn == 'b':
+            if isinstance(self.black_player,OfflinePlayer) or (isinstance(self.black_player,AiPlayer) and self.game_status.value in (2,3,4,5)):
+                self.showGameStatus()
+                print("showing 2")
+
+        if self.game_status.value in (1,6,7):
+            self.switchTurnes()
 
     def getGameStatus(self):
         return self.getGameStatus
@@ -197,4 +208,3 @@ class Game:
                 popup.dismiss()
             btn.on_press = clicked
             popup.open()
-        

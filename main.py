@@ -5,4 +5,4 @@ from UI.gameUI import *
 class ChessApp(App):
     pass
 
-ChessApp().run()    
+ChessApp().run()

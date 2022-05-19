@@ -85,7 +85,7 @@ class AiPlayer(Player):
             for start in possibleMoves.keys():
                 for end in possibleMoves[start]:
                     board_copy = deepcopy(position)
-                    board_copy.move_piece(start, end, True)
+                    board_copy.move_piece(start, end, None, True)
                     eval = self.minimax(board_copy, depth - 1,alpha,beta, False)[0]
                     maxEval = max(maxEval, eval)
                     alpha = max(alpha, eval)

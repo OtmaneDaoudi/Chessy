@@ -250,6 +250,7 @@ class Board:
         old_pawn_color = self.board[position[0]][position[1]].color
         if autoPromote :
             self.board[position[0]][position[1]] = Queen(position[0],position[1],old_pawn_color)
+            return
         else:
             color = self.board[position[0]][position[1]].color
             view = ModalView(size_hint=(None, None), size=(400, 400))

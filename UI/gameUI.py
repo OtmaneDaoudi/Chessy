@@ -2,6 +2,7 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.image import Image
 from functools import partial
+from Classes.AiPlayer import AiPlayer
 from Classes.Game import Game
 from Classes.Piece import Piece
 from kivy.uix.boxlayout import BoxLayout
@@ -90,10 +91,22 @@ class ChessBoard(GridLayout):
 
         self.move_piece_sound = SoundLoader.load('./Assets/audio/piece_move.wav')
         
-
         #schedule clock updates
         Clock.schedule_interval(self.game.update_clocks, 1)
-        
+
+        if isinstance(self.game.white_player, AiPlayer):
+            #make the algorithm go firs
+            Clock.schedule_once(self.AiMove, 2)
+            
+    def AiMove(self, *args):
+        move = []
+        if self.game.turn == "w":
+            move = self.game.white_player.getMove(self.game.game_board)
+        else:
+            move = self.game.black_player.getMove(self.game.game_board)
+        self.game.playMove(move[0], move[1], self)
+        self.update_board()
+        self.move_piece_sound.play()
 
     def update_board(self):
         for rank in reversed(range(8)):
@@ -126,12 +139,10 @@ class ChessBoard(GridLayout):
         black_ids.knight.text = str(pieces_type.count(Knight))
         black_ids.queen.text = str(pieces_type.count(Queen))
         
-
     def animate_move(self,start_cell: Cell, end_cell: Cell):
         ani = Animation(pos=end_cell.pos)
         ani.start(start_cell.img)
-
-        
+   
     def selected(self, rank, column, cell: Cell):
         if cell.piece is None:
             if (rank,column) in self.marked_moved:
