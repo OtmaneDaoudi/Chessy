@@ -96,7 +96,7 @@ class ChessBoard(GridLayout):
 
         if isinstance(self.game.white_player, AiPlayer):
             #make the algorithm go firs
-            Clock.schedule_once(self.AiMove, 2)
+            Clock.schedule_once(self.AiMove, 1)
             
     def AiMove(self, *args):
         move = []

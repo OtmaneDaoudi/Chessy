@@ -25,10 +25,11 @@ class Game:
         self.turn = turn
         self.game_status = GameStatus.ACTIVE
         self.boardUI = boardUI
-        self.black_player = AiPlayer("b",1)
-        self.white_player = OfflinePlayer("w")
-        self.white_timer = 300
-        self.black_timer = 300
+        self.white_player = AiPlayer("w",3)
+        self.black_player = OfflinePlayer("b")
+        
+        self.white_timer = 31
+        self.black_timer = 31
 
         self.clock_ticking_sound = SoundLoader.load('./Assets/audio/ticking_clock.wav')
         
@@ -147,15 +148,9 @@ class Game:
             print("Game is Over, Draw by insufficient material")#
             self.game_status = GameStatus.INSUFFICIENT_MATERIAL
         
-        if self.turn == 'w':
-            if isinstance(self.white_player, OfflinePlayer) or (isinstance(self.white_player,AiPlayer) and self.game_status.value in (2,3,4,5)):
-                print("showing 1")
-                self.showGameStatus()
-        elif self.turn == 'b':
-            if isinstance(self.black_player,OfflinePlayer) or (isinstance(self.black_player,AiPlayer) and self.game_status.value in (2,3,4,5)):
-                self.showGameStatus()
-                print("showing 2")
-
+        print(f"before showing game status : turn = {self.turn} stats = {self.game_status.value}")
+        self.showGameStatus()
+        
         if self.game_status.value in (1,6,7):
             self.switchTurnes()
 
@@ -163,7 +158,16 @@ class Game:
         return self.getGameStatus
 
     def showGameStatus(self):
-        print('called')
+        print(f"turn = {self.turn} stat = {self.game_status.value}")
+        if self.turn == 'b' and isinstance(self.white_player,AiPlayer) and self.game_status.value in (1,6,7):
+            self.game_status = GameStatus.ACTIVE
+            print("returning 1 ")
+            return
+        elif self.turn == 'w' and isinstance(self.black_player,AiPlayer) and self.game_status.value in (1,6,7):
+            self.game_status = GameStatus.ACTIVE
+            print("returning")
+            return 
+
         popup = Popup(title="Game status",size_hint=(.5, None), height= 120)
         popup.auto_dismiss = False
         btn = Button()
