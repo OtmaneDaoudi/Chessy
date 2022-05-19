@@ -1,5 +1,4 @@
 from kivy.uix.gridlayout import GridLayout
-from kivy.config import Config
 from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.image import Image
 from functools import partial
@@ -16,9 +15,7 @@ from Classes.Pawn import Pawn
 from Classes.Rook import Rook
 from Classes.Queen import Queen
 from Classes.Bishop import Bishop
-from kivy.uix.modalview import ModalView
-from kivy.uix.label import Label
-
+from kivy.clock import Clock
 # Config.set('graphics', 'width', '900')
 # Config.set('graphics', 'height', '630')
 # Config.set('graphics', 'resizable', False)
@@ -34,13 +31,6 @@ class Cell(ToggleButton, FloatLayout):
         self.background_color = color
         
         self.img = None
-
-        #TODO 
-        #if the mode is player vs algorithm
-            #if the algorithmis playing first 
-                #get a move and perform it
-
-        
 
     @mainthread #initilise position in next frame
     def set_img_pos(self):
@@ -100,6 +90,10 @@ class ChessBoard(GridLayout):
 
         self.move_piece_sound = SoundLoader.load('./Assets/audio/piece_move.wav')
 
+        #schedule clock updates
+        Clock.schedule_interval(self.game.update_clocks, 1)
+        
+
     def update_board(self):
         for rank in reversed(range(8)):
             for column in range(8):
@@ -112,8 +106,8 @@ class ChessBoard(GridLayout):
         self.update_score()
 
     def update_score(self):
-        black_ids = App.get_running_app().get_running_app().root.ids.black_captured_pieces.ids
-        white_ids = App.get_running_app().get_running_app().root.ids.white_captured_pieces.ids
+        black_ids = App.get_running_app().root.ids.black_captured_pieces.ids
+        white_ids = App.get_running_app().root.ids.white_captured_pieces.ids
 
         #update white pieces           
         pieces_type = list(map(type, self.game.game_board.white_captures_pieces))
@@ -152,10 +146,8 @@ class ChessBoard(GridLayout):
                 self.marked_moved.clear()
             else:
                 cell.state = "normal"
-
         elif cell == self.selected_cell:
             cell.state = "down"
-
         elif cell.piece.color != self.game.turn:
             if (rank,column) in self.marked_moved:
                 self.game.playMove((self.selected_cell.rank,self.selected_cell.column),(rank,column), self)
@@ -169,7 +161,6 @@ class ChessBoard(GridLayout):
                 self.marked_moved.clear()
             else:
                 cell.state = "normal"
-
         else: #clicked on one of my pieces
             if self.selected_cell is None: #no selected pieces
                 self.selected_cell = cell
@@ -178,7 +169,6 @@ class ChessBoard(GridLayout):
                 self.marked_moved.extend(PossibleMoves)
                 for target in PossibleMoves:
                     self.cells[target[0]][target[1]].state = "down"
-
             else:
                 self.selected_cell.state = "normal"
                 self.selected_cell = cell
@@ -191,9 +181,3 @@ class ChessBoard(GridLayout):
                     self.cells[target[0]][target[1]].state = "down"
 
         print("game status : ",self.game.game_status.name)
-            
-        # if self.selected_cell is None:
-        #     print("selected cell ==> None")
-        # else:
-        #     print(f"selected cell : {self.selected_cell.piece.rank},{self.selected_cell.piece.column}")
-        # print("Marked moves : ",self.marked_moved)

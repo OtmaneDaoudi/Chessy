@@ -247,9 +247,9 @@ class Board:
         return cloned_board.isCheck(my_color)
 
     def promotePawn(self,position : tuple, gui , autoPromote: bool = False):
-        selection = None
+        old_pawn_color = self.board[position[0]][position[1]].color
         if autoPromote :
-            selection = "q"
+            self.board[position[0]][position[1]] = Queen(position[0],position[1],old_pawn_color)
         else:
             color = self.board[position[0]][position[1]].color
             view = ModalView(size_hint=(None, None), size=(400, 400))
@@ -295,6 +295,7 @@ class Board:
             submit.height = 100
 
             def onclick():
+                selection = None
                 if queen.state == "down":
                     selection = "q"
                 if bishop.state == "down":
@@ -304,39 +305,34 @@ class Board:
                 if knight.state == "down":
                     selection = "k"
 
-                old_pawn_color = self.board[position[0]][position[1]].color
-                self.board[position[0]][position[1]] = None
+                if selection is not None:
+                    
+                    self.board[position[0]][position[1]] = None
 
-                if selection == "k":
-                    self.board[position[0]][position[1]] = Knight(position[0],position[1],old_pawn_color)
-                elif selection == "q":
-                    self.board[position[0]][position[1]] = Queen(position[0],position[1],old_pawn_color)
-                elif selection == "b":
-                    self.board[position[0]][position[1]] = Bishop(position[0],position[1],old_pawn_color)
-                elif selection == "r":
-                    self.board[position[0]][position[1]] = Rook(position[0],position[1],old_pawn_color)
-                    self.LastMovedPiece = self.board[position[0]][position[1]]
+                    if selection == "k":
+                        self.board[position[0]][position[1]] = Knight(position[0],position[1],old_pawn_color)
+                    elif selection == "q":
+                        self.board[position[0]][position[1]] = Queen(position[0],position[1],old_pawn_color)
+                    elif selection == "b":
+                        self.board[position[0]][position[1]] = Bishop(position[0],position[1],old_pawn_color)
+                    elif selection == "r":
+                        self.board[position[0]][position[1]] = Rook(position[0],position[1],old_pawn_color)
+                        self.LastMovedPiece = self.board[position[0]][position[1]]
 
-                #update the board
-                gui.update_board()
-                view.dismiss()
+                    #update the board
+                    gui.update_board()
+                    view.dismiss()
                 print("selection = ",selection)
 
             submit.on_press= onclick
             bx_lywt1.add_widget(submit)
-
             bx_lywt2.add_widget(queen)
             bx_lywt2.add_widget(bishop)
             bx_lywt2.add_widget(knight)
             bx_lywt2.add_widget(rook)
             view.add_widget(bx_lywt1)
-
             view.auto_dismiss = False
-            print("before")
-
             view.open()
-            print("done")
-            
 
     def isCheck(self,color) -> bool: 
         #check if a given team's king is underCheck

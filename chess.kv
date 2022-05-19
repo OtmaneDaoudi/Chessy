@@ -145,11 +145,12 @@ GameUi:
     width: 600
     height: 630
     BoxLayout:
+        id: banners_box
         size_hint: 1,None
         height: 25
         Label:
             id: black_player_banner
-            text: "Black player name"
+            text: "Black Player"
             size_hint: 2,None
             background_color: (1,0,0,1)
             canvas.before:
@@ -179,7 +180,7 @@ GameUi:
             height: 20
         Label:
             id: white_player_banner
-            text: "White player name"
+            text: "White player"
             size_hint: 2,None
             background_color: (120/255,238/255,62/255,1)
             canvas.before:
