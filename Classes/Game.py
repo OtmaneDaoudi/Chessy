@@ -1,10 +1,15 @@
 #a class that handels an instance of a game
+from unicodedata import name
 from Classes.AiPlayer import AiPlayer
 from Classes.Board import Board
 from enum import Enum
 from Classes.OfflinePlayer import OfflinePlayer
 import UI.gameUI as chessUI
 from kivy.app import App
+from kivy.core.audio import SoundLoader
+from kivy.uix.popup import Popup
+from kivy.uix.label import Label
+from kivy.uix.button import Button
 
 class GameStatus(Enum):
     ACTIVE = 1
@@ -25,6 +30,8 @@ class Game:
         self.white_player = OfflinePlayer("b")
         self.white_timer = 300
         self.black_timer = 300
+
+        self.clock_ticking_sound = SoundLoader.load('./Assets/audio/ticking_clock.wav')
         
     def start_game(self):
         #initialise Game UI
@@ -64,19 +71,35 @@ class Game:
         if self.turn == "w":
             mins, secs = divmod(self.white_timer, 60)
             current_time = '{:02d}:{:02d}'.format(mins, secs)
-            #update lable
-            # print(f"white's timer is : {current_time}")
+            #update lables
             white_clock = App.get_running_app().root.ids.boardNclocks.ids.white_player_clock
             white_clock.text = current_time
             self.white_timer -= 1
+            if mins == 0 and secs <= 30:
+                white_clock.color = (1,0,0,1)
+                self.clock_ticking_sound.play()
+                if secs == 0:
+                    #show game over
+                    self.game_status = GameStatus.BLACK_WIN
+                    self.showGameStatus()
+                    return False
         else:
             mins, secs = divmod(self.black_timer, 60)
             current_time = '{:02d}:{:02d}'.format(mins, secs)
-            #update lable
-            # print(f"black's timer is : {current_time}")
+            #update lables
             black_clock = App.get_running_app().root.ids.boardNclocks.ids.black_player_clock
             black_clock.text = current_time
             self.black_timer -= 1
+            if mins == 0 and secs <= 30:
+                black_clock.color = (1,0,0,1)
+                self.clock_ticking_sound.play()
+                if secs == 0:
+                    self.game_status = GameStatus.WHITE_WIN
+                    self.showGameStatus()
+                    return False
+        if self.game_status.value in (2,3,4,5):
+            return False
+                    
             
     def switchTurnes(self):
         self.turn = "b" if self.turn == "w" else "w"
@@ -94,13 +117,12 @@ class Game:
             black_banner.background_color = green
             white_banner.background_color = red
         
-
-
     def playMove(self,start: tuple, end: tuple, gameUI):
         if self.turn == "b":
             black_AI_autopromotion = (True if isinstance(self.black_player,AiPlayer) else False)
             print(f"move stat : {self.game_board.move_piece(start,end, self.boardUI ,black_AI_autopromotion)}")
             if self.game_board.isCheck("w") :
+                self.game_status = GameStatus.WHITE_KING_CHECKED
                 if self.game_board.isCheckMate("w"): 
                     print("Game is over, black team wins") #
                     self.game_status = GameStatus.BLACK_WIN
@@ -110,21 +132,69 @@ class Game:
             white_AI_autopromotion = (True if isinstance(self.white_player,AiPlayer) else False)
             print(f"move stat : {self.game_board.move_piece(start,end, self.boardUI,white_AI_autopromotion)}")
             if self.game_board.isCheck("b") :
+                self.game_status = GameStatus.BLACK_KING_CHECKED
                 if self.game_board.isCheckMate("b"):
                     print("Game is over, white team wins")
                     self.game_status = GameStatus.WHITE_WIN
                 else :
-                    print("black king is under check")            
+                    print("black king is under check")          
+
         if self.game_board.isStaleMate("b") or self.game_board.isStaleMate("w"):
+            self.game_status = GameStatus.STALEMATE
             print("Game is over, Stalemate") #
-            self.game_status = GameStatus.STALEMATE 
         elif self.game_board.isInsufficientMaterial():
             print("Game is Over, Draw by insufficient material")#
             self.game_status = GameStatus.INSUFFICIENT_MATERIAL
-        
+        self.showGameStatus()
         self.switchTurnes()
 
     def getGameStatus(self):
         return self.getGameStatus
 
+    def showGameStatus(self):
+        print('called')
+        popup = Popup(title="Game status",size_hint=(.5, None), height= 120)
+        popup.auto_dismiss = False
+        btn = Button()
+        btn.size_hint = (.2,None)
+        btn.height = 50
+        popup.content = btn
+
+        if self.game_status == GameStatus.BLACK_WIN:
+            popup.title = "Game is Over, black team wins"
+            btn.text= "Exit"
+            def clicked():
+                popup.dismiss()
+            btn.on_press = clicked
+            #update stats in database
+            popup.open()
+        elif self.game_status == GameStatus.WHITE_WIN:
+            popup.title = "Game is Over, white team wins"
+            btn.text= "Exit"
+            def clicked():
+                popup.dismiss()
+            btn.on_press = clicked
+            #update stats in database
+            popup.open()
+        elif self.game_status in  (GameStatus.WHITE_KING_CHECKED,GameStatus.BLACK_KING_CHECKED): 
+            name_ = 'white' if self.game_status == GameStatus.WHITE_KING_CHECKED else 'black'
+            popup.title = f"{name_} king is under check"
+            btn.text= " Ok "
+            btn.bind(on_press=popup.dismiss)
+            popup.open()
+            self.game_status = GameStatus.ACTIVE
+        elif self.game_status == GameStatus.STALEMATE: 
+            popup.title = "Game is Over, draw by Stalemate"
+            btn.text= "EXIT"
+            def clicked():
+                popup.dismiss()
+            btn.on_press = clicked
+            popup.open()
+        elif self.game_status == GameStatus.INSUFFICIENT_MATERIAL: 
+            popup.title = "Game is Over, draw by insufficient material"
+            btn.text= "EXIT"
+            def clicked():
+                popup.dismiss()
+            btn.on_press = clicked
+            popup.open()
         

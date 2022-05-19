@@ -367,14 +367,16 @@ class Board:
         # 1-it's my turn to play --ensured by the caller
         # 2-my king is not in check  --ensured by the caller
         # 3-i have no legal moves for any of my pieces
-        available_moves = []
-        for line in range(8):
-            for column in range(8):
-                if self.board[line][column] is not None and self.board[line][column].color == color:
-                    for move in self.board[line][column].getPossibleMoves(self.board):
-                        if not self.MoveCauseCheck((line,column),move):
-                            available_moves.extend(move)
-        return not (len(available_moves) > 0)
+        if not self.isCheck(color):
+            available_moves = []
+            for line in range(8):
+                for column in range(8):
+                    if self.board[line][column] is not None and self.board[line][column].color == color:
+                        for move in self.board[line][column].getPossibleMoves(self.board):
+                            if not self.MoveCauseCheck((line,column),move):
+                                available_moves.extend(move)
+            return not (len(available_moves) > 0)
+        return False
 
     #if a move is returned ==> all clear to castle
     def getPossibleCastleMoves(self,color):

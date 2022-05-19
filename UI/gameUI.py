@@ -89,6 +89,7 @@ class ChessBoard(GridLayout):
                 current_color = light_square
 
         self.move_piece_sound = SoundLoader.load('./Assets/audio/piece_move.wav')
+        
 
         #schedule clock updates
         Clock.schedule_interval(self.game.update_clocks, 1)
