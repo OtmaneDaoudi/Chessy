@@ -321,6 +321,7 @@ class Board:
 
                     #update the board
                     gui.update_board()
+                    gui.game.switchTurnes()
                     view.dismiss()
                 print("selection = ",selection)
 
@@ -333,6 +334,7 @@ class Board:
             view.add_widget(bx_lywt1)
             view.auto_dismiss = False
             view.open()
+            gui.game.switchTurnes()
 
     def isCheck(self,color) -> bool: 
         #check if a given team's king is underCheck
