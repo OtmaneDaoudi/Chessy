@@ -1,6 +1,8 @@
 # board squares are mapped to list indexes
 # each square has color + rank,column + piece
 # each piece contains a reference to a valid piece subClass instance or None in case of empty
+from re import sub
+from time import sleep
 from Classes.Pawn import Pawn
 from Classes.Rook import Rook
 from Classes.Bishop import Bishop
@@ -8,9 +10,13 @@ from Classes.Knight import Knight
 from Classes.Queen import Queen
 from Classes.King import King
 from copy import deepcopy
-from kivy.uix.popup import Popup
+from kivy.uix.modalview import ModalView
 from kivy.uix.label import Label
-
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.togglebutton import ToggleButton
+from kivy.uix.button import Button
+from kivy.properties import StringProperty
+from kivy.clock import mainthread
 class Board:
     def __init__(self):
         # initialise board
@@ -113,7 +119,7 @@ class Board:
     #move piece and update the position of the piece
     #when moving a pawn we need to check for promotion 
     #when a king is under check , the player is forced to resolve the check , otherwise a checkmate happens
-    def move_piece(self, start_pos: tuple, end_pos : tuple, AiAutoPromote = False) -> bool: #,turn : str):
+    def move_piece(self, start_pos: tuple, end_pos : tuple, gameUi,  AiAutoPromote = False) -> bool: #,turn : str):
         isMoved = False
         #is it a valid move + the move will not cause me check
         if end_pos in self.board[start_pos[0]][start_pos[1]].getPossibleMoves(self.board) and not self.MoveCauseCheck(start_pos,end_pos):  
@@ -144,10 +150,10 @@ class Board:
 
             isMoved = True #marks the piece as moved
 
-            #check for pawn promotion
+            # check for pawn promotion
             if isinstance(self.board[end_pos[0]][end_pos[1]],Pawn):
                 if self.board[end_pos[0]][end_pos[1]].isPromotable:
-                    self.promotePawn(end_pos, AiAutoPromote)
+                    self.promotePawn(end_pos, gameUi, AiAutoPromote)
             
         #detect en passant captures for pawn 
         #en passant happens only in rank 4 and 3 so we can't have promotion + en passant
@@ -240,35 +246,97 @@ class Board:
 
         return cloned_board.isCheck(my_color)
 
-    def promotePawn(self,position : tuple, autoPromote: bool = False):
+    def promotePawn(self,position : tuple, gui , autoPromote: bool = False):
         selection = None
         if autoPromote :
             selection = "q"
         else:
-            print(f"select which piece to promote pawn at {position} to (k=knight, q=queen, b=bishop, r=rook) >>> ",end="")
-            selection = input("")
+            color = self.board[position[0]][position[1]].color
+            view = ModalView(size_hint=(None, None), size=(400, 400))
+            
+            bx_lywt2 = BoxLayout(orientation="horizontal")
+            bx_lywt2.size_hint = (1,None)
+            bx_lywt2.height = 105
+            bx_lywt2.padding = 5
+            bx_lywt1 = BoxLayout(orientation="vertical")
+            bx_lywt1.add_widget(Label(text='Select whiche piece to promote pawn to:'))
+            bx_lywt1.add_widget(bx_lywt2)
 
-            # popup = Popup(title='Pawn Promotion',
-            # content=Label(text='Please select which peace to promote your pawn to'),
-            # size_hint=(None, None), size=(400, 400))
-            # popup.open()
+            selection = "q"
+        
+            queen = ToggleButton(
+                     background_normal = f'./Assets/images/{color}_queen.png',
+                     pos_hint = {"x":0.35, "y":0.3},
+                     group = "promotion"
+                   ) 
+                
+            queen.state = "down"
+        
+            bishop = ToggleButton(
+                     background_normal = f'./Assets/images/{color}_bishop.png',
+                     pos_hint = {"x":0.35, "y":0.3},
+                     group = "promotion"
+                   ) 
+        
+            knight = ToggleButton(
+                     background_normal = f'./Assets/images/{color}_knight.png',
+                     pos_hint = {"x":0.35, "y":0.3},
+                     group = "promotion"
+                   ) 
+        
+            rook = ToggleButton(
+                     background_normal = f'./Assets/images/{color}_rook.png',
+                     pos_hint = {"x":0.35, "y":0.3},
+                     group = "promotion"
+                   ) 
 
-        if selection in ("k","q","r","b") : 
-            old_pawn_color = self.board[position[0]][position[1]].color
-            self.board[position[0]][position[1]] = None
+            submit = Button(text = "Promote")
+            submit.size_hint = (1,None)
+            submit.height = 100
 
-            if selection == "k":
-                self.board[position[0]][position[1]] = Knight(position[0],position[1],old_pawn_color)
-            elif selection == "q":
-                self.board[position[0]][position[1]] = Queen(position[0],position[1],old_pawn_color)
-            elif selection == "b":
-                self.board[position[0]][position[1]] = Bishop(position[0],position[1],old_pawn_color)
-            elif selection == "r":
-                self.board[position[0]][position[1]] = Rook(position[0],position[1],old_pawn_color)
-            self.LastMovedPiece = self.board[position[0]][position[1]]
-        else:
-            print("enter valid piece name")
-            self.promotePawn(position) #reinvoke in case of invalid move
+            def onclick():
+                if queen.state == "down":
+                    selection = "q"
+                if bishop.state == "down":
+                    selection = "b"
+                if rook.state == "down":
+                    selection = "r"
+                if knight.state == "down":
+                    selection = "k"
+
+                old_pawn_color = self.board[position[0]][position[1]].color
+                self.board[position[0]][position[1]] = None
+
+                if selection == "k":
+                    self.board[position[0]][position[1]] = Knight(position[0],position[1],old_pawn_color)
+                elif selection == "q":
+                    self.board[position[0]][position[1]] = Queen(position[0],position[1],old_pawn_color)
+                elif selection == "b":
+                    self.board[position[0]][position[1]] = Bishop(position[0],position[1],old_pawn_color)
+                elif selection == "r":
+                    self.board[position[0]][position[1]] = Rook(position[0],position[1],old_pawn_color)
+                    self.LastMovedPiece = self.board[position[0]][position[1]]
+
+                #update the board
+                gui.update_board()
+                view.dismiss()
+                print("selection = ",selection)
+
+            submit.on_press= onclick
+            bx_lywt1.add_widget(submit)
+
+            bx_lywt2.add_widget(queen)
+            bx_lywt2.add_widget(bishop)
+            bx_lywt2.add_widget(knight)
+            bx_lywt2.add_widget(rook)
+            view.add_widget(bx_lywt1)
+
+            view.auto_dismiss = False
+            print("before")
+
+            view.open()
+            print("done")
+            
 
     def isCheck(self,color) -> bool: 
         #check if a given team's king is underCheck

@@ -16,11 +16,13 @@ from Classes.Pawn import Pawn
 from Classes.Rook import Rook
 from Classes.Queen import Queen
 from Classes.Bishop import Bishop
+from kivy.uix.modalview import ModalView
+from kivy.uix.label import Label
 
-Config.set('graphics', 'width', '900')
-Config.set('graphics', 'height', '630')
-Config.set('graphics', 'resizable', True)
-Config.write()
+# Config.set('graphics', 'width', '900')
+# Config.set('graphics', 'height', '630')
+# Config.set('graphics', 'resizable', False)
+# Config.write()
 
 class Cell(ToggleButton, FloatLayout):
     def __init__(self,rank: int,column: int,color: tuple,piece: Piece,**kwargs):
@@ -138,7 +140,8 @@ class ChessBoard(GridLayout):
     def selected(self, rank, column, cell: Cell):
         if cell.piece is None:
             if (rank,column) in self.marked_moved:
-                self.game.playMove((self.selected_cell.rank,self.selected_cell.column),(rank,column))
+                print("self type ",type(self))
+                self.game.playMove((self.selected_cell.rank,self.selected_cell.column),(rank,column), self)
                 self.move_piece_sound.play()
                 self.update_board()
                 # self.animate_move(self.selected_cell,cell)
@@ -155,7 +158,7 @@ class ChessBoard(GridLayout):
 
         elif cell.piece.color != self.game.turn:
             if (rank,column) in self.marked_moved:
-                self.game.playMove((self.selected_cell.rank,self.selected_cell.column),(rank,column))
+                self.game.playMove((self.selected_cell.rank,self.selected_cell.column),(rank,column), self)
                 self.update_board()
                 # self.animate_move(self.selected_cell,cell)
                 self.move_piece_sound.play()

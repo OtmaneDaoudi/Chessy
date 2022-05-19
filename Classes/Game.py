@@ -60,10 +60,10 @@ class Game:
     def switchTurnes(self):
         self.turn = "b" if self.turn == "w" else "w"
 
-    def playMove(self,start: tuple, end: tuple):
+    def playMove(self,start: tuple, end: tuple, gameUI):
         if self.turn == "b":
             black_AI_autopromotion = (True if isinstance(self.black_player,AiPlayer) else False)
-            print(f"move stat : {self.game_board.move_piece(start,end,black_AI_autopromotion)}")
+            print(f"move stat : {self.game_board.move_piece(start,end, gameUI ,black_AI_autopromotion)}")
             if self.game_board.isCheck("w") :
                 if self.game_board.isCheckMate("w"): 
                     print("Game is over, black team wins") #
@@ -72,7 +72,7 @@ class Game:
                     print("White king is under check")
         else:
             white_AI_autopromotion = (True if isinstance(self.white_player,AiPlayer) else False)
-            print(f"move stat : {self.game_board.move_piece(start,end,white_AI_autopromotion)}")
+            print(f"move stat : {self.game_board.move_piece(start,end,gameUI,white_AI_autopromotion)}")
             if self.game_board.isCheck("b") :
                 if self.game_board.isCheckMate("b"):
                     print("Game is over, white team wins")

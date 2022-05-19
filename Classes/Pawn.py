@@ -13,7 +13,8 @@ class Pawn(Piece):
     # all moves should not cause team's king ti be under check 
     def getPossibleMoves(self, board) -> list:
         res = []
-        if self.color == "w" :#and not self.isPromotable:
+        if self.color == "w" and not self.isPromotable:
+            # print(f"pawn py : self.rank + 1 = {self.rank + 1} ** self.column = {self.column} ** promotable = {self.isPromotable}")
             if board[self.rank + 1][self.column] is None:
                 res.append((self.rank + 1, self.column))
                 if self.isFirstMove and board[self.rank + 2][self.column] is None:
@@ -26,7 +27,7 @@ class Pawn(Piece):
             if self.column > 0 and self.checkSquare(board,self.rank + 1,self.column -1):
                     res.append((self.rank + 1,self.column - 1))
                 
-        elif self.color == "b" :#and not self.isPromotable:
+        elif self.color == "b" and not self.isPromotable:
             if board[self.rank - 1][self.column] is None:
                 res.append((self.rank - 1, self.column))
                 if self.isFirstMove and board[self.rank - 2][self.column] is None:
