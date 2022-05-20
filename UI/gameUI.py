@@ -141,21 +141,33 @@ class ChessBoard(GridLayout):
         print("exiting...")
 
     def redo(self, *args):
-        # print("Redo stack : ", self.redo_stack)
         print("redoing...")
-        #return to previous state
-
+        if len(self.redo_stack) > 0:
+            redo_entry = self.redo_stack.pop()
+            self.undo_stack.append({"board" : deepcopy(self.game.game_board), "game_state" : self.game.game_status})
+            print("available redo : ")
+            redo_entry["board"].printBoard()
+            self.game.game_board = redo_entry["board"]
+            self.game.game_status = redo_entry["game_state"]
+            self.game.switchTurnes()
+            self.update_board()
+            print("done redoing")
+            if len(self.redo_stack) == 0:
+                self.redo_btn.disabled = True
+            
     def undo(self, *args):
         if len(self.undo_stack) > 0:
             undo_entry = self.undo_stack.pop()
+            self.redo_stack.append({"board" : deepcopy(self.game.game_board), "game_state" : self.game.game_status})
             self.game.game_board = undo_entry["board"]
-            self.game.switchTurnes()
             self.game.game_status = undo_entry["game_state"]
+            self.game.switchTurnes()
             self.update_board()
-            print("done redoing")
+            print("done undoing")
             if len(self.undo_stack) == 0:
                 print('btn disabled')
                 self.undo_btn.disabled = True
+            self.redo_btn.disabled = False
 
             #if AI's turn then back again 
             if (self.game.turn == "w" and isinstance(self.game.white_player, AiPlayer)) or (self.game.turn == "b" and isinstance(self.game.black_player, AiPlayer)):
@@ -175,7 +187,7 @@ class ChessBoard(GridLayout):
         Clock.schedule_once(partial(self.playAiMove, move))
         
     def playAiMove(self,move, *args):
-        self.undo_stack.append({"board" : deepcopy(self.game.game_board), "turn" : self.game.turn, "game_state" : self.game.game_status})
+        self.undo_stack.append({"board" : deepcopy(self.game.game_board), "game_state" : self.game.game_status})
         self.game.playMove(move[0], move[1], self)
         self.update_board()
         self.move_piece_sound.play()
@@ -222,7 +234,7 @@ class ChessBoard(GridLayout):
         if cell.piece is None:
             if (rank,column) in self.marked_moved:
                 print("self type ",type(self))
-                self.undo_stack.append({"board" : deepcopy(self.game.game_board), "turn" : self.game.turn, "game_state" : self.game.game_status})
+                self.undo_stack.append({"board" : deepcopy(self.game.game_board) , "game_state" : self.game.game_status})
                 self.game.playMove((self.selected_cell.rank,self.selected_cell.column),(rank,column), self)
                 self.move_piece_sound.play()
                 self.update_board()
@@ -238,7 +250,7 @@ class ChessBoard(GridLayout):
             cell.state = "down"
         elif cell.piece.color != self.game.turn:
             if (rank,column) in self.marked_moved:
-                self.undo_stack.append({"board" : deepcopy(self.game.game_board), "turn" : self.game.turn, "game_state" : self.game.game_status})
+                self.undo_stack.append({"board" : deepcopy(self.game.game_board), "game_state" : self.game.game_status})
                 self.game.playMove((self.selected_cell.rank,self.selected_cell.column),(rank,column), self)
                 self.update_board()
                 # self.animate_move(self.selected_cell,cell)
