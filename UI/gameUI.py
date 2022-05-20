@@ -1,3 +1,4 @@
+import threading
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.image import Image
@@ -17,6 +18,7 @@ from Classes.Rook import Rook
 from Classes.Queen import Queen
 from Classes.Bishop import Bishop
 from kivy.clock import Clock
+
 # Config.set('graphics', 'width', '900')
 # Config.set('graphics', 'height', '630')
 # Config.set('graphics', 'resizable', False)
@@ -96,17 +98,30 @@ class ChessBoard(GridLayout):
 
         if isinstance(self.game.white_player, AiPlayer):
             #make the algorithm go firs
-            Clock.schedule_once(self.AiMove, 1)
+            print("ok")
+            Clock.schedule_once(self.AiMoveThread, .3)
+
+    def AiMoveThread(self, *args):
+        myThread = threading.Thread(target=self.AiMove, name='AI')
+        myThread.start()
             
     def AiMove(self, *args):
+        print("move thread started")
         move = []
         if self.game.turn == "w":
             move = self.game.white_player.getMove(self.game.game_board)
         else:
             move = self.game.black_player.getMove(self.game.game_board)
+        Clock.schedule_once(partial(self.playAiMove, move))
+        
+    def playAiMove(self,move, *args):
         self.game.playMove(move[0], move[1], self)
         self.update_board()
         self.move_piece_sound.play()
+        print("move thread ended")
+
+    
+
 
     def update_board(self):
         for rank in reversed(range(8)):

@@ -101,7 +101,7 @@ class AiPlayer(Player):
             for start in possibleMoves.keys():
                 for end in possibleMoves[start]:
                     board_copy = deepcopy(position)
-                    board_copy.move_piece(start, end,True)
+                    board_copy.move_piece(start, end,None, True)
                     eval = self.minimax(board_copy, depth - 1,alpha,beta, True)[0]
                     minEval = min(minEval, eval)
                     beta = min(beta, eval)
@@ -117,23 +117,18 @@ class AiPlayer(Player):
         for line in range(8):
             for column in range(8):
                 if position.board[line][column] is not None:
+                    factor = (1 if position.board[line][column].color == "w" else -1)
                     if isinstance(position.board[line][column],Pawn):
-                        factor = (1 if position.board[line][column].color == "w" else -1)
                         res += factor*AiPlayer.PAWN
                     elif isinstance(position.board[line][column],Bishop):
-                        factor = (1 if position.board[line][column].color == "w" else -1)
                         res += factor*AiPlayer.BISHOP
                     elif isinstance(position.board[line][column],Rook):
-                        factor = (1 if position.board[line][column].color == "w" else -1)
                         res += factor*AiPlayer.ROOK
                     elif isinstance(position.board[line][column],Knight):
-                        factor = (1 if position.board[line][column].color == "w" else -1)
                         res += factor*AiPlayer.KNIGHT
                     elif isinstance(position.board[line][column],Queen):
-                        factor = (1 if position.board[line][column].color == "w" else -1)
                         res += factor*AiPlayer.QUEEN
                     elif isinstance(position.board[line][column],King):
-                        factor = (1 if position.board[line][column].color == "w" else -1)
                         res += factor*AiPlayer.KING
         return res
 

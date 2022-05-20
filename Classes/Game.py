@@ -28,8 +28,8 @@ class Game:
         self.white_player = AiPlayer("w",3)
         self.black_player = OfflinePlayer("b")
         
-        self.white_timer = 31
-        self.black_timer = 31
+        self.white_timer = 300
+        self.black_timer = 300
 
         self.clock_ticking_sound = SoundLoader.load('./Assets/audio/ticking_clock.wav')
         
@@ -113,9 +113,9 @@ class Game:
         
         #schedule ai next move
         if self.turn == "b" and isinstance(self.black_player, AiPlayer):
-            Clock.schedule_once(self.boardUI.AiMove, 1)
+            Clock.schedule_once(self.boardUI.AiMoveThread, 1)
         if self.turn == "w" and isinstance(self.white_player, AiPlayer):
-            Clock.schedule_once(self.boardUI.AiMove, 1)
+            Clock.schedule_once(self.boardUI.AiMoveThread, 1)
             
 
         
@@ -152,6 +152,7 @@ class Game:
         self.showGameStatus()
         
         if self.game_status.value in (1,6,7):
+            print("switching turns")
             self.switchTurnes()
 
     def getGameStatus(self):
