@@ -4,6 +4,7 @@ from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.image import Image
 from functools import partial
 from Classes.AiPlayer import AiPlayer
+from Classes.Board import Board
 from Classes.Game import Game
 from Classes.Piece import Piece
 from kivy.uix.boxlayout import BoxLayout
@@ -18,11 +19,17 @@ from Classes.Rook import Rook
 from Classes.Queen import Queen
 from Classes.Bishop import Bishop
 from kivy.clock import Clock
+from kivy.uix.button import Button
+from kivy.uix.popup import Popup
+from kivy.core.window import Window
+from copy import deepcopy
+from kivy.config import Config
 
-# Config.set('graphics', 'width', '900')
-# Config.set('graphics', 'height', '630')
-# Config.set('graphics', 'resizable', False)
-# Config.write()
+Config.set('graphics', 'width', '900')
+Config.set('graphics', 'height', '630')
+Config.set('graphics', 'resizable', False)
+# Window.borderless = True
+Config.write()
 
 class Cell(ToggleButton, FloatLayout):
     def __init__(self,rank: int,column: int,color: tuple,piece: Piece,**kwargs):
@@ -57,6 +64,8 @@ class ChessBoard(GridLayout):
 
         super().__init__(**kwargs)
         self.game = Game(self)
+        self.undo_stack = []
+        self.redo_stack = []
 
         self.selected_cell = None
         self.marked_moved = []
@@ -95,11 +104,62 @@ class ChessBoard(GridLayout):
         
         #schedule clock updates
         Clock.schedule_interval(self.game.update_clocks, 1)
+        Clock.schedule_once(self.setBtns)
 
         if isinstance(self.game.white_player, AiPlayer):
             #make the algorithm go firs
             print("ok")
             Clock.schedule_once(self.AiMoveThread, .3)
+
+    def setBtns(self, *args):
+        App.get_running_app().root.ids.options.ids.exit_btn.on_press = self.exit
+
+        self.redo_btn = App.get_running_app().root.ids.options.ids.redo 
+        self.redo_btn.on_press = self.redo
+        self.redo_btn.disabled = True
+
+        self.undo_btn = App.get_running_app().root.ids.options.ids.undo 
+        self.undo_btn.on_press = self.undo
+        self.undo_btn.disabled = True
+    
+    def exit(self, *args):
+        #show confirmation diallogue
+        btn1 = Button(text="Yes", size_hint=(1, None), height = 80)
+        btn1.bind(on_release=self.apply_exiting)
+        btn2 = Button(text="no", size_hint=(1, None), height = 80)
+        Boxed_layout= BoxLayout(orientation = "horizontal")
+        Boxed_layout.add_widget(btn1)
+        Boxed_layout.add_widget(btn2)
+        pop = Popup(title="Are you sure?",content=Boxed_layout, size_hint=(.5,.25))
+
+        # btn1.bind(on_release=partial(doit, pop)) # bind to whatever action is being confiirmed
+        btn2.bind(on_release=pop.dismiss)
+        pop.open()
+
+    def apply_exiting(self, *args):
+        Window.close()
+        print("exiting...")
+
+    def redo(self, *args):
+        # print("Redo stack : ", self.redo_stack)
+        print("redoing...")
+        #return to previous state
+
+    def undo(self, *args):
+        if len(self.undo_stack) > 0:
+            undo_entry = self.undo_stack.pop()
+            self.game.game_board = undo_entry["board"]
+            self.game.switchTurnes()
+            self.game.game_status = undo_entry["game_state"]
+            self.update_board()
+            print("done redoing")
+            if len(self.undo_stack) == 0:
+                print('btn disabled')
+                self.undo_btn.disabled = True
+
+            #if AI's turn then back again 
+            if (self.game.turn == "w" and isinstance(self.game.white_player, AiPlayer)) or (self.game.turn == "b" and isinstance(self.game.black_player, AiPlayer)):
+                self.undo()
 
     def AiMoveThread(self, *args):
         myThread = threading.Thread(target=self.AiMove, name='AI')
@@ -115,13 +175,11 @@ class ChessBoard(GridLayout):
         Clock.schedule_once(partial(self.playAiMove, move))
         
     def playAiMove(self,move, *args):
+        self.undo_stack.append({"board" : deepcopy(self.game.game_board), "turn" : self.game.turn, "game_state" : self.game.game_status})
         self.game.playMove(move[0], move[1], self)
         self.update_board()
         self.move_piece_sound.play()
         print("move thread ended")
-
-    
-
 
     def update_board(self):
         for rank in reversed(range(8)):
@@ -130,6 +188,8 @@ class ChessBoard(GridLayout):
                 self.cells[rank][column].piece = self.game.game_board.board[rank][column]
                 if not (oldPiece == self.game.game_board.board[rank][column]):
                     self.cells[rank][column].set_img_pos()
+
+        self.undo_btn.disabled = False
 
         #update captured pieces
         self.update_score()
@@ -162,6 +222,7 @@ class ChessBoard(GridLayout):
         if cell.piece is None:
             if (rank,column) in self.marked_moved:
                 print("self type ",type(self))
+                self.undo_stack.append({"board" : deepcopy(self.game.game_board), "turn" : self.game.turn, "game_state" : self.game.game_status})
                 self.game.playMove((self.selected_cell.rank,self.selected_cell.column),(rank,column), self)
                 self.move_piece_sound.play()
                 self.update_board()
@@ -177,6 +238,7 @@ class ChessBoard(GridLayout):
             cell.state = "down"
         elif cell.piece.color != self.game.turn:
             if (rank,column) in self.marked_moved:
+                self.undo_stack.append({"board" : deepcopy(self.game.game_board), "turn" : self.game.turn, "game_state" : self.game.game_status})
                 self.game.playMove((self.selected_cell.rank,self.selected_cell.column),(rank,column), self)
                 self.update_board()
                 # self.animate_move(self.selected_cell,cell)
@@ -208,3 +270,6 @@ class ChessBoard(GridLayout):
                     self.cells[target[0]][target[1]].state = "down"
 
         print("game status : ",self.game.game_status.name)
+
+    def on_exit(self):
+        pass

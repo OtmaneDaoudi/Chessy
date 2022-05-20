@@ -17,7 +17,9 @@ from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.button import Button
 from kivy.properties import StringProperty
 from kivy.clock import mainthread
+import sys
 class Board:
+    boards = []
     def __init__(self):
         # initialise board
         self.board = []
@@ -89,6 +91,9 @@ class Board:
         #en passant privilage 
         #if one player playes a move the other looses the right for his en passant
         self.LastMovedPiece = None
+
+        self.boards = []
+        # Board.boards.append(deepcopy(self))
 
     def printBoard(self):
         for line in reversed(range(8)):
@@ -224,6 +229,11 @@ class Board:
                         self.board[7][3].setPosition((7,3))
                 isMoved = True       
                     
+        # self.boards.append(deepcopy(self))
+        # print("boards : ",self.boards)
+        # if Save_instance:
+        #     print("saving current board instance")
+        #     Board.boards.append(deepcopy(self))
         return isMoved
 
     def MoveCauseCheck(self,start_pos: tuple,end_pos: tuple) -> bool:

@@ -25,7 +25,7 @@ class Game:
         self.turn = turn
         self.game_status = GameStatus.ACTIVE
         self.boardUI = boardUI
-        self.white_player = AiPlayer("w",3)
+        self.white_player = OfflinePlayer("w")
         self.black_player = OfflinePlayer("b")
         
         self.white_timer = 300
@@ -148,11 +148,11 @@ class Game:
             print("Game is Over, Draw by insufficient material")#
             self.game_status = GameStatus.INSUFFICIENT_MATERIAL
         
-        print(f"before showing game status : turn = {self.turn} stats = {self.game_status.value}")
+        # print(f"before showing game status : turn = {self.turn} stats = {self.game_status.value}")
         self.showGameStatus()
         
         if self.game_status.value in (1,6,7):
-            print("switching turns")
+            # print("switching turns")
             self.switchTurnes()
 
     def getGameStatus(self):

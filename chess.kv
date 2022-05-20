@@ -12,6 +12,7 @@ GameUi:
     ChessBoardNClocks:
         id: boardNclocks
     Options:
+        id: options
 
 #black captured pieces
 <BlackCapturedPieces@BoxLayout>:
@@ -28,7 +29,7 @@ GameUi:
     BoxLayout:
         orientation: "horizontal"
         Image:
-            source:  "./Assets/images/b_pawn.png"
+            source:  "./Assets/images/w_pawn.png"
         Label:
             text : "X"
             color: (0,0,0,1)
@@ -39,7 +40,7 @@ GameUi:
     BoxLayout:
         orientation: "horizontal"
         Image:
-            source:  "./Assets/images/b_rook.png"
+            source:  "./Assets/images/w_rook.png"
         Label:
             text : "X"
             color: (0,0,0,1)
@@ -50,7 +51,7 @@ GameUi:
     BoxLayout:
         orientation: "horizontal"
         Image:
-            source:  "./Assets/images/b_knight.png"
+            source:  "./Assets/images/w_knight.png"
         Label:
             text : "X"
             color: (0,0,0,1)
@@ -61,7 +62,7 @@ GameUi:
     BoxLayout:
         orientation: "horizontal"
         Image:
-            source:  "./Assets/images/b_bishop.png"
+            source:  "./Assets/images/w_bishop.png"
         Label:
             text : "X"
             color: (0,0,0,1)
@@ -72,7 +73,7 @@ GameUi:
     BoxLayout:
         orientation: "horizontal"
         Image:
-            source:  "./Assets/images/b_queen.png"
+            source:  "./Assets/images/w_queen.png"
         Label:
             text : "X"
             color: (0,0,0,1)
@@ -94,7 +95,7 @@ GameUi:
     BoxLayout:
         orientation: "horizontal"
         Image:
-            source:  "./Assets/images/w_pawn.png"
+            source:  "./Assets/images/b_pawn.png"
         Label:
             text : "X"
         Label:
@@ -103,7 +104,7 @@ GameUi:
     BoxLayout:
         orientation: "horizontal"
         Image:
-            source:  "./Assets/images/w_rook.png"
+            source:  "./Assets/images/b_rook.png"
         Label:
             text : "X"
         Label:
@@ -112,7 +113,7 @@ GameUi:
     BoxLayout:
         orientation: "horizontal"
         Image:
-            source:  "./Assets/images/w_knight.png"
+            source:  "./Assets/images/b_knight.png"
         Label:
             text : "X"
         Label:
@@ -121,7 +122,7 @@ GameUi:
     BoxLayout:
         orientation: "horizontal"
         Image:
-            source:  "./Assets/images/w_bishop.png"
+            source:  "./Assets/images/b_bishop.png"
         Label:
             text : "X"
         Label:
@@ -130,7 +131,7 @@ GameUi:
     BoxLayout:
         orientation: "horizontal"
         Image:
-            source:  "./Assets/images/w_queen.png"
+            source:  "./Assets/images/b_queen.png"
         Label:
             text : "X"
         Label:
@@ -205,6 +206,7 @@ GameUi:
             pos: self.pos
     BoxLayout:
         Button:
+            id: undo
             size_hint: 1,None
             height: 200
             Image:
@@ -216,6 +218,7 @@ GameUi:
         Button:
             size_hint: 1,None
             height: 200
+            id: redo
             Image:
                 source: "./Assets/images/redo.png"
                 allow_stretch: True
@@ -225,13 +228,13 @@ GameUi:
     Button: 
         size_hint: 1,None
         height: 80
+        id: exit_btn
         Image:
             source: "./Assets/images/exit.png"
             allow_stretch: True
             center_x: self.parent.center_x
             center_y: self.parent.center_y
             size: 50,50
-    
     Label:
         size_hint: 1,None
         height: 120
