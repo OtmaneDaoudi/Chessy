@@ -146,14 +146,34 @@ class ChessBoard(GridLayout):
             redo_entry = self.redo_stack.pop()
             self.undo_stack.append({"board" : deepcopy(self.game.game_board), "game_state" : self.game.game_status})
             print("available redo : ")
-            redo_entry["board"].printBoard()
             self.game.game_board = redo_entry["board"]
             self.game.game_status = redo_entry["game_state"]
-            self.game.switchTurnes()
+
+            #switch turns
+            self.game.turn = "b" if self.game.turn == "w" else "w"
+            red = (1,0,0,1)
+            green = (120/255,238/255,62/255,1)
+            black_banner = App.get_running_app().root.ids.boardNclocks.ids.black_player_banner
+            white_banner = App.get_running_app().root.ids.boardNclocks.ids.white_player_banner
+
+            # switch label background colors
+            if self.game.turn == "w":
+                black_banner.background_color = red
+                white_banner.background_color = green
+            else:
+                black_banner.background_color = green
+                white_banner.background_color = red
+
             self.update_board()
+
             print("done redoing")
             if len(self.redo_stack) == 0:
                 self.redo_btn.disabled = True
+
+            #if AI's turn then back again 
+            if (self.game.turn == "w" and isinstance(self.game.white_player, AiPlayer)) or (self.game.turn == "b" and isinstance(self.game.black_player, AiPlayer)):
+                self.redo()
+
             
     def undo(self, *args):
         if len(self.undo_stack) > 0:
@@ -161,8 +181,23 @@ class ChessBoard(GridLayout):
             self.redo_stack.append({"board" : deepcopy(self.game.game_board), "game_state" : self.game.game_status})
             self.game.game_board = undo_entry["board"]
             self.game.game_status = undo_entry["game_state"]
-            self.game.switchTurnes()
+
+            #switch turns
+            self.game.turn = "b" if self.game.turn == "w" else "w"
+            red = (1,0,0,1)
+            green = (120/255,238/255,62/255,1)
+            black_banner = App.get_running_app().root.ids.boardNclocks.ids.black_player_banner
+            white_banner = App.get_running_app().root.ids.boardNclocks.ids.white_player_banner
+
+            # switch label background colors
+            if self.game.turn == "w":
+                black_banner.background_color = red
+                white_banner.background_color = green
+            else:
+                black_banner.background_color = green
+                white_banner.background_color = red
             self.update_board()
+
             print("done undoing")
             if len(self.undo_stack) == 0:
                 print('btn disabled')
@@ -172,6 +207,12 @@ class ChessBoard(GridLayout):
             #if AI's turn then back again 
             if (self.game.turn == "w" and isinstance(self.game.white_player, AiPlayer)) or (self.game.turn == "b" and isinstance(self.game.black_player, AiPlayer)):
                 self.undo()
+        elif self.game.turn == "b" and isinstance(self.game.black_player, AiPlayer):
+            print("scheduling ai move")
+            Clock.schedule_once(self.AiMoveThread, 1)
+        elif self.game.turn == "w" and isinstance(self.game.white_player, AiPlayer):
+            print("scheduling ai move")
+            Clock.schedule_once(self.AiMoveThread, 1)
 
     def AiMoveThread(self, *args):
         myThread = threading.Thread(target=self.AiMove, name='AI')
@@ -187,11 +228,12 @@ class ChessBoard(GridLayout):
         Clock.schedule_once(partial(self.playAiMove, move))
         
     def playAiMove(self,move, *args):
-        self.undo_stack.append({"board" : deepcopy(self.game.game_board), "game_state" : self.game.game_status})
-        self.game.playMove(move[0], move[1], self)
-        self.update_board()
-        self.move_piece_sound.play()
-        print("move thread ended")
+        if not AiPlayer.Thread_exit_state:
+            self.undo_stack.append({"board" : deepcopy(self.game.game_board), "game_state" : self.game.game_status})
+            self.game.playMove(move[0], move[1], self)
+            self.update_board()
+            self.move_piece_sound.play()
+            print("move thread ended")
 
     def update_board(self):
         for rank in reversed(range(8)):

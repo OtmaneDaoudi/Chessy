@@ -12,6 +12,7 @@ from Classes.Rook import Rook
 
 
 class AiPlayer(Player):
+    Thread_exit_state = False
     #negative values for black , positive for white
     PAWN = 10
     KNIGHT = 30

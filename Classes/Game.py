@@ -25,7 +25,7 @@ class Game:
         self.turn = turn
         self.game_status = GameStatus.ACTIVE
         self.boardUI = boardUI
-        self.white_player = OfflinePlayer("w")
+        self.white_player = AiPlayer("w", 1)
         self.black_player = OfflinePlayer("b")
         
         self.white_timer = 300
@@ -93,8 +93,7 @@ class Game:
                     return False
         if self.game_status.value in (2,3,4,5):
             return False
-                    
-            
+                      
     def switchTurnes(self):
         self.turn = "b" if self.turn == "w" else "w"
 
@@ -117,8 +116,6 @@ class Game:
         if self.turn == "w" and isinstance(self.white_player, AiPlayer):
             Clock.schedule_once(self.boardUI.AiMoveThread, 1)
             
-
-        
     def playMove(self,start: tuple, end: tuple, gameUI):
         if self.turn == "b":
             black_AI_autopromotion = (True if isinstance(self.black_player,AiPlayer) else False)
