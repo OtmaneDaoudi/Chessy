@@ -1,15 +1,12 @@
-from imp import get_magic
 import threading
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.image import Image
 from functools import partial
 from Classes.AiPlayer import AiPlayer
-from Classes.Board import Board
 from Classes.Game import Game
 from Classes.Piece import Piece
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.floatlayout import FloatLayout
 from kivy.clock import mainthread
 from kivy.core.audio import SoundLoader
 from kivy.animation import Animation    
