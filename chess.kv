@@ -1,9 +1,11 @@
 WindowManager:
+    id: screenManager
     HomePage:
     PvsmScreen:
     PvspScreen:
     # GameUi:
-
+    #     id: gameUi
+    
 <GameUi>:
     spacing: 0
     orientation: 'horizontal'
@@ -286,7 +288,6 @@ WindowManager:
                 bold:"true"
                 size_hint_x:.1
                 font_size:20
-
             BoxLayout:
                 size_hint:.25,1
                 spacing:5
@@ -324,19 +325,17 @@ WindowManager:
                 bold:"true"
                 size_hint_x:.1
                 font_size:20
-
-                
             BoxLayout:
                 size_hint:.25,1
                 spacing:10
                 Button:
-                    text:"Black"
+                    text:"White"
                     size_hint:.3,1
                     bold:"true"
                     disabled : root.color_clicked
                     on_press: root.on_color_button_click(self)
                     Image:
-                        source: './Assets/images/b_king.png'
+                        source: './Assets/images/w_king.png'
                         # y: self.parent.y + self.parent.height -85
                         # x: self.parent.x +26
                         # size:80,80
@@ -349,13 +348,13 @@ WindowManager:
 
                         #allow_stretch: True
                 Button:
-                    text:"White"
+                    text:"Black"
                     size_hint:.3,1
                     bold:"true"
                     disabled : not root.color_clicked
                     on_press:  root.on_color_button_click(self)
                     Image:
-                        source: './Assets/images/w_king.png'
+                        source: './Assets/images/b_king.png'
                         # y: self.parent.y + self.parent.height -85
                         # x: self.parent.x +26
                         # size:80,80
@@ -385,6 +384,7 @@ WindowManager:
                 size_hint_x:.1
                 bold:"true"
                 text:"Play"
+                on_press: root.init_game()
         
                 
                
@@ -429,19 +429,17 @@ WindowManager:
                 bold:"true"
                 size_hint_x:.1
                 font_size:20
-                
-                
             BoxLayout:
                 size_hint:.2,1
                 spacing:10
                 Button:
-                    text:"Black"
+                    text:"White"
                     size_hint:.3,1
                     bold:"true"
                     disabled : root.color_clicked
                     on_press: root.on_color_button_click(self)
                     Image:
-                        source: './Assets/images/b_king.png'
+                        source: './Assets/images/w_king.png'
                         # y: self.parent.y + self.parent.height -100
                         # x: self.parent.x +12
                         size_hint: (None, None)
@@ -449,17 +447,15 @@ WindowManager:
                         size: 100, 100
                         center_x: self.parent.center_x
                         center_y: self.parent.center_y
-
-                        #allow_stretch: True
                         
                 Button:
-                    text:"White"
+                    text:"Black"
                     size_hint:.3,1
                     bold:"true"
                     disabled : not root.color_clicked
                     on_press: root.on_color_button_click(self)
                     Image:
-                        source: './Assets/images/w_king.png'
+                        source: './Assets/images/b_king.png'
                         # y: self.parent.y + self.parent.height -100
                         # x: self.parent.x +12
 
@@ -488,6 +484,7 @@ WindowManager:
                 size_hint_x:.1
                 bold:"true"
                 text:"Play"
+                on_press: root.init_game()
         
 
 # +---------------------- Home Page ----------------------------+

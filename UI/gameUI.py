@@ -1,3 +1,4 @@
+from imp import get_magic
 import threading
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.togglebutton import ToggleButton
@@ -24,6 +25,9 @@ from kivy.uix.popup import Popup
 from kivy.core.window import Window
 from copy import deepcopy
 from kivy.config import Config
+from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.properties import BooleanProperty
+from kivy.config import Config
 
 Config.set('graphics', 'width', '900')
 Config.set('graphics', 'height', '630')
@@ -31,7 +35,7 @@ Config.set('graphics', 'resizable', False)
 # Window.borderless = True
 Config.write()
 
-class Cell(ToggleButton, FloatLayout):
+class Cell(ToggleButton):
     def __init__(self,rank: int,column: int,color: tuple,piece: Piece,**kwargs):
         super().__init__(**kwargs)
         self.piece = piece
@@ -42,28 +46,37 @@ class Cell(ToggleButton, FloatLayout):
         
         self.img = None
 
-    @mainthread #initilise position in next frame
-    def set_img_pos(self):
+    @mainthread
+    def set_img_pos(self, *args):
         if self.img is not None:
             self.remove_widget(self.img)
-        source_ = "./Assets/images/None.png"
+        source_ = "./Assets/images/None.png" 
         if self.piece is not None:
             source_ ="./Assets/images/"+self.piece.image
         self.img = Image(source = source_)
         self.img.size_hint = (None,None)
         self.img.allow_stretch = True
-        self.img.pos = [self.pos[0] + 2.5, self.pos[1] + 3]
+        # self.img.pos = [100, 100]
+        print("self pos : ", self.pos)
+        self.img.pos = [self.pos[0] + 3, self.pos[1]]
+        # self.img.center_x = self.center_x
+        # self.img.center_y = self.center_y
         self.img.size = (70,70)
         self.add_widget(self.img)
 
-class GameUi(BoxLayout):
-    pass   
-
+class GameUi(BoxLayout, Screen):
+    gameMode = None
+    playAs = "w"
+    diff = 1
 class ChessBoard(GridLayout):
     def __init__(self, **kwargs):
-
         super().__init__(**kwargs)
+        # print("game mode : ", self.parent.parent.gameMode)
+        # print("game mode : ", GameUi.gameMode)
+        # print("play as : ", GameUi.playAs)
+
         self.game = Game(self)
+
         self.undo_stack = []
         self.redo_stack = []
 
@@ -90,7 +103,7 @@ class ChessBoard(GridLayout):
                 newCell.on_press = partial(self.selected, rank, column, newCell)
                 self.cells[rank][column] = newCell
                 self.add_widget(newCell)
-                newCell.set_img_pos()
+                Clock.schedule_once(newCell.set_img_pos, .7)
                 if current_color == light_square:
                     current_color = dark_square
                 else: 
@@ -109,16 +122,18 @@ class ChessBoard(GridLayout):
         if isinstance(self.game.white_player, AiPlayer):
             #make the algorithm go firs
             print("ok")
-            Clock.schedule_once(self.AiMoveThread, .3)
+            Clock.schedule_once(self.AiMoveThread, 1.2)
 
     def setBtns(self, *args):
-        App.get_running_app().root.ids.options.ids.exit_btn.on_press = self.exit
+        # print("ids = ", App.get_running_app().root.get_screen('gameUi').ids)
 
-        self.redo_btn = App.get_running_app().root.ids.options.ids.redo 
+        App.get_running_app().root.get_screen('gameUi').ids.options.ids.exit_btn.on_press = self.exit
+
+        self.redo_btn = App.get_running_app().root.get_screen('gameUi').ids.options.ids.redo 
         self.redo_btn.on_press = self.redo
         self.redo_btn.disabled = True
 
-        self.undo_btn = App.get_running_app().root.ids.options.ids.undo 
+        self.undo_btn = App.get_running_app().root.get_screen('gameUi').ids.options.ids.undo 
         self.undo_btn.on_press = self.undo
         self.undo_btn.disabled = True
     
@@ -153,8 +168,8 @@ class ChessBoard(GridLayout):
             self.game.turn = "b" if self.game.turn == "w" else "w"
             red = (1,0,0,1)
             green = (120/255,238/255,62/255,1)
-            black_banner = App.get_running_app().root.ids.boardNclocks.ids.black_player_banner
-            white_banner = App.get_running_app().root.ids.boardNclocks.ids.white_player_banner
+            black_banner = App.get_running_app().root.get_screen('gameUi').ids.boardNclocks.ids.black_player_banner
+            white_banner = App.get_running_app().root.get_screen('gameUi').ids.boardNclocks.ids.white_player_banner
 
             # switch label background colors
             if self.game.turn == "w":
@@ -186,8 +201,8 @@ class ChessBoard(GridLayout):
             self.game.turn = "b" if self.game.turn == "w" else "w"
             red = (1,0,0,1)
             green = (120/255,238/255,62/255,1)
-            black_banner = App.get_running_app().root.ids.boardNclocks.ids.black_player_banner
-            white_banner = App.get_running_app().root.ids.boardNclocks.ids.white_player_banner
+            black_banner = App.get_running_app().root.get_screen('gameUi').ids.boardNclocks.ids.black_player_banner
+            white_banner = App.get_running_app().root.get_screen('gameUi').ids.boardNclocks.ids.white_player_banner
 
             # switch label background colors
             if self.game.turn == "w":
@@ -235,7 +250,7 @@ class ChessBoard(GridLayout):
             self.move_piece_sound.play()
             print("move thread ended")
 
-    def update_board(self):
+    def update_board(self, *args):
         for rank in reversed(range(8)):
             for column in range(8):
                 oldPiece = self.cells[rank][column].piece 
@@ -249,8 +264,8 @@ class ChessBoard(GridLayout):
         self.update_score()
 
     def update_score(self):
-        black_ids = App.get_running_app().root.ids.black_captured_pieces.ids
-        white_ids = App.get_running_app().root.ids.white_captured_pieces.ids
+        black_ids = App.get_running_app().root.get_screen('gameUi').ids.black_captured_pieces.ids
+        white_ids = App.get_running_app().root.get_screen('gameUi').ids.white_captured_pieces.ids
 
         #update white pieces           
         pieces_type = list(map(type, self.game.game_board.white_captures_pieces))
@@ -327,3 +342,129 @@ class ChessBoard(GridLayout):
 
     def on_exit(self):
         pass
+
+
+class WindowManager(ScreenManager):
+    pass
+
+
+class HomePage(Screen):
+    def __init__(self,gameMode = None, firstPlayer = None,  **kwargs):
+        super().__init__(**kwargs)
+        self.gameMode = gameMode
+        self.firstPlayer = firstPlayer
+
+        print("home page const : ", end = '')
+        print("gamemode : ", self.gameMode)
+        print("firstPLayer : ", self.firstPlayer)
+
+
+    # +--------- Player VS Player Screen ---------+
+
+class PvspScreen(Screen):
+    color_clicked = BooleanProperty(True)
+
+    def on_color_button_click(self, widget):
+        if widget.text == "Black":
+            print("play as black")
+            GameUi.playAs = "b"
+        else:
+            print("play as white")
+            GameUi.playAs = "w"
+        if widget.state == "down":
+            if self.color_clicked == False:
+                self.color_clicked = True
+            else:
+                self.color_clicked = False
+    
+    def init_game(self):
+        #player versus machine
+        #get UI data 
+        
+        GameUi.gameMode = "PvP"
+
+        gameui = GameUi()
+        gameui.name = 'gameUi'
+        gameui.id = 'gameUi'
+        self.parent.add_widget(gameui)
+        Clock.schedule_once(self.setCurrent, .2)
+
+    def setCurrent(self, *args):
+        self.parent.current = 'gameUi'
+
+    
+    # +--------- Player VS Machine Screen ---------+
+    
+class PvsmScreen(Screen):
+    color_clicked = BooleanProperty(True)
+    level_clicked1 = BooleanProperty(True)
+    level_clicked2 = BooleanProperty(False)
+    level_clicked3 = BooleanProperty(False)
+
+    def on_color_button_click(self, widget):
+        if widget.text == "Black":
+            print("play as black")
+            GameUi.playAs = "b"
+        else:
+            print("play as white")
+            GameUi.playAs = "w"
+        if widget.state == "down":
+            if self.color_clicked == False:
+                self.color_clicked = True
+            else:
+                self.color_clicked = False
+
+    
+
+    def on_level_button_click(self, widget, id):
+        if widget.state == "down":
+            if id == 1:
+                GameUi.diff = 1
+                print("diff updated to 1")
+                if self.level_clicked1 == False:
+                    self.level_clicked1 = True
+                    self.level_clicked2 = False
+                    self.level_clicked3 = False
+                else:
+                    self.level_clicked1 = False
+                    self.level_clicked2 = True
+                    self.level_clicked3 = True
+            elif id == 2:
+                GameUi.diff = 2
+                print("diff updated to 2")
+                if self.level_clicked2 == False:
+                    self.level_clicked2 = True
+                    self.level_clicked1 = False
+                    self.level_clicked3 = False
+                else:
+                    self.level_clicked2 = False
+                    self.level_clicked1 = True
+                    self.level_clicked3 = True
+            else:
+                GameUi.diff = 3
+                print("diff updated to 3")
+                if self.level_clicked3 == False:
+                    self.level_clicked3 = True
+                    self.level_clicked1 = False
+                    self.level_clicked2 = False
+                else:
+                    self.level_clicked3 = False
+                    self.level_clicked1 = True
+                    self.level_clicked2 = True
+
+    def init_game(self, *args):
+        #player versus machine
+        #get UI data 
+        
+        GameUi.gameMode = "PvM"
+
+        gameui = GameUi()
+        print("done initialising")
+        gameui.name = 'gameUi'
+        gameui.id = 'gameUi'
+        self.parent.add_widget(gameui)
+        # self.parent.current = 'gameUi'
+        Clock.schedule_once(self.setCurrent, .2)
+
+    def setCurrent(self, *args):
+        self.parent.current = 'gameUi'

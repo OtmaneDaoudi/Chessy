@@ -1,5 +1,4 @@
 #a class that handels an instance of a game
-from unicodedata import name
 from Classes.AiPlayer import AiPlayer
 from Classes.Board import Board
 from enum import Enum
@@ -25,9 +24,22 @@ class Game:
         self.turn = turn
         self.game_status = GameStatus.ACTIVE
         self.boardUI = boardUI
-        self.white_player = AiPlayer("w", 1)
-        self.black_player = OfflinePlayer("b")
         
+        # print("game class : gamemode = ", chessUI.GameUi.gameMode, "play as =  ", chessUI.GameUi.playAs)
+        if chessUI.GameUi.gameMode == "PvP":
+            print("init 1")
+            self.white_player = OfflinePlayer("w")
+            self.black_player = OfflinePlayer("b")
+        else:
+            if chessUI.GameUi.playAs == "w":
+                print("init 2 ")
+                self.white_player = OfflinePlayer("w")
+                self.black_player = AiPlayer("b", chessUI.GameUi.diff)
+            else:
+                print("init 3")
+                self.white_player = AiPlayer("w", chessUI.GameUi.diff)
+                self.black_player = OfflinePlayer("b")
+
         self.white_timer = 300
         self.black_timer = 300
 
@@ -66,7 +78,7 @@ class Game:
             mins, secs = divmod(self.white_timer, 60)
             current_time = '{:02d}:{:02d}'.format(mins, secs)
             #update lables
-            white_clock = App.get_running_app().root.ids.boardNclocks.ids.white_player_clock
+            white_clock = App.get_running_app().root.get_screen('gameUi').ids.boardNclocks.ids.white_player_clock
             white_clock.text = current_time
             self.white_timer -= 1
             if mins == 0 and secs <= 30:
@@ -81,7 +93,7 @@ class Game:
             mins, secs = divmod(self.black_timer, 60)
             current_time = '{:02d}:{:02d}'.format(mins, secs)
             #update lables
-            black_clock = App.get_running_app().root.ids.boardNclocks.ids.black_player_clock
+            black_clock = App.get_running_app().root.get_screen('gameUi').ids.boardNclocks.ids.black_player_clock
             black_clock.text = current_time
             self.black_timer -= 1
             if mins == 0 and secs <= 30:
@@ -99,8 +111,8 @@ class Game:
 
         red = (1,0,0,1)
         green = (120/255,238/255,62/255,1)
-        black_banner = App.get_running_app().root.ids.boardNclocks.ids.black_player_banner
-        white_banner = App.get_running_app().root.ids.boardNclocks.ids.white_player_banner
+        black_banner = App.get_running_app().root.get_screen('gameUi').ids.boardNclocks.ids.black_player_banner
+        white_banner = App.get_running_app().root.get_screen('gameUi').ids.boardNclocks.ids.white_player_banner
 
         # switch label background colors
         if self.turn == "w":
