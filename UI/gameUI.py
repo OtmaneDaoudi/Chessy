@@ -65,6 +65,7 @@ class GameUi(BoxLayout, Screen):
     gameMode = None
     playAs = "w"
     diff = 1
+    current_gameui = None
 class ChessBoard(GridLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -113,7 +114,7 @@ class ChessBoard(GridLayout):
         self.move_piece_sound = SoundLoader.load('./Assets/audio/piece_move.wav')
         
         #schedule clock updates
-        Clock.schedule_interval(self.game.update_clocks, 1)
+        self.clocks_job = Clock.schedule_interval(self.game.update_clocks, 1)
         Clock.schedule_once(self.setBtns)
 
         if isinstance(self.game.white_player, AiPlayer):
@@ -137,21 +138,26 @@ class ChessBoard(GridLayout):
     def exit(self, *args):
         #show confirmation diallogue
         btn1 = Button(text="Yes", size_hint=(1, None), height = 80)
-        btn1.bind(on_release=self.apply_exiting)
         btn2 = Button(text="no", size_hint=(1, None), height = 80)
         Boxed_layout= BoxLayout(orientation = "horizontal")
         Boxed_layout.add_widget(btn1)
         Boxed_layout.add_widget(btn2)
         pop = Popup(title="Are you sure?",content=Boxed_layout, size_hint=(.5,.25))
+        btn1.bind(on_release=partial(self.apply_exiting, pop))
 
         # btn1.bind(on_release=partial(doit, pop)) # bind to whatever action is being confiirmed
         btn2.bind(on_release=pop.dismiss)
         pop.open()
 
-    def apply_exiting(self, *args):
-        Window.close()
-        print("exiting...")
+    def apply_exiting(self, pop, *args):
+        # Window.close()
+        # App.get_running_app().root.remove_widget(self)
+        pop.dismiss()
+        App.get_running_app().root.current = 'home'
+        App.get_running_app().root.remove_widget(GameUi.current_gameui)
+        Clock.unschedule(self.clocks_job)
 
+        
     def redo(self, *args):
         print("redoing...")
         if len(self.redo_stack) > 0:
@@ -346,16 +352,7 @@ class WindowManager(ScreenManager):
 
 
 class HomePage(Screen):
-    def __init__(self,gameMode = None, firstPlayer = None,  **kwargs):
-        super().__init__(**kwargs)
-        self.gameMode = gameMode
-        self.firstPlayer = firstPlayer
-
-        print("home page const : ", end = '')
-        print("gamemode : ", self.gameMode)
-        print("firstPLayer : ", self.firstPlayer)
-
-
+    pass
     # +--------- Player VS Player Screen ---------+
 
 class PvspScreen(Screen):
@@ -381,6 +378,7 @@ class PvspScreen(Screen):
         GameUi.gameMode = "PvP"
 
         gameui = GameUi()
+        GameUi.current_gameui = gameui
         gameui.name = 'gameUi'
         gameui.id = 'gameUi'
         self.parent.add_widget(gameui)
@@ -456,6 +454,7 @@ class PvsmScreen(Screen):
         GameUi.gameMode = "PvM"
 
         gameui = GameUi()
+        GameUi.current_gameui = gameui
         print("done initialising")
         gameui.name = 'gameUi'
         gameui.id = 'gameUi'
