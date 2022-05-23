@@ -256,7 +256,7 @@ WindowManager:
         Rectangle:
             pos: self.pos
             size: self.size
-            source: 'imgs/03.jpg'
+            source: './Assets/images/03.jpg'
     BoxLayout:
         orientation:"vertical"
         spacing:10
@@ -336,7 +336,7 @@ WindowManager:
                     disabled : root.color_clicked
                     on_press: root.on_color_button_click(self)
                     Image:
-                        source: 'imgs/black.png'
+                        source: './Assets/images/b_king.png'
                         # y: self.parent.y + self.parent.height -85
                         # x: self.parent.x +26
                         # size:80,80
@@ -355,7 +355,7 @@ WindowManager:
                     disabled : not root.color_clicked
                     on_press:  root.on_color_button_click(self)
                     Image:
-                        source: 'imgs/white.png'
+                        source: './Assets/images/w_king.png'
                         # y: self.parent.y + self.parent.height -85
                         # x: self.parent.x +26
                         # size:80,80
@@ -399,7 +399,7 @@ WindowManager:
         Rectangle:
             pos: self.pos
             size: self.size
-            source: 'imgs/03.jpg'
+            source: './Assets/images/03.jpg'
     BoxLayout:
         orientation:"vertical"
         spacing:10
@@ -441,7 +441,7 @@ WindowManager:
                     disabled : root.color_clicked
                     on_press: root.on_color_button_click(self)
                     Image:
-                        source: 'imgs/black.png'
+                        source: './Assets/images/b_king.png'
                         # y: self.parent.y + self.parent.height -100
                         # x: self.parent.x +12
                         size_hint: (None, None)
@@ -459,7 +459,7 @@ WindowManager:
                     disabled : not root.color_clicked
                     on_press: root.on_color_button_click(self)
                     Image:
-                        source: 'imgs/white.png'
+                        source: './Assets/images/w_king.png'
                         # y: self.parent.y + self.parent.height -100
                         # x: self.parent.x +12
 
@@ -497,7 +497,7 @@ WindowManager:
         Rectangle:
             pos: self.pos
             size: self.size
-            source: 'imgs/01.jpg'
+            source: './Assets/images/01.jpg'
 
     BoxLayout:
         orientation:"vertical"
