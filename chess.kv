@@ -3,9 +3,55 @@ WindowManager:
     HomePage:
     PvsmScreen:
     PvspScreen:
+    SaveWind:
     # GameUi:
     #     id: gameUi
-    
+
+<ContentPopup>:
+    orientation:"vertical"
+    BoxLayout:
+        Label:
+            text:"Do you want to save the Game ?"
+            bold:True
+            size_hint:1,0.2
+
+    BoxLayout:
+
+        Button:
+            text:"Save"
+            size_hint:1,0.3
+            bold:True
+            on_press:
+                root.withSave()
+
+        Button:
+            text:"No"
+            size_hint:1,0.3
+            bold:True
+            on_press:
+                root.withoutSave()
+
+        Button:
+            text:"Cancel"
+            size_hint:1,0.3
+            bold:True
+            on_press: root.closePop()
+
+
+<SaveWind>:
+    name:"save"
+    BoxLayout:
+        orientation:"vertical"
+        Label : 
+            text:"Do you want to save the game ?"
+        BoxLayout:
+            orientation:"horizontal"
+            Button:
+                text:"No"
+            Button:
+                text:"Save"
+
+
 <GameUi>:
     spacing: 0
     orientation: 'horizontal'

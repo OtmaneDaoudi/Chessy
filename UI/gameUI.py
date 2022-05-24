@@ -25,6 +25,15 @@ from kivy.config import Config
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import BooleanProperty
 from kivy.config import Config
+import os
+from kivy.app import App
+from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.properties import BooleanProperty
+from kivy.core.window import Window
+from kivy.uix.popup import Popup
+from kivy.uix.boxlayout import BoxLayout
+from DB.connection import Connection
+import pickle
 
 Config.set('graphics', 'width', '900')
 Config.set('graphics', 'height', '630')
@@ -70,6 +79,7 @@ class GameUi(BoxLayout, Screen):
     diff = 1
     current_gameui = None
 class ChessBoard(GridLayout):
+    current_game = None
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         # print("game mode : ", self.parent.parent.gameMode)
@@ -77,6 +87,7 @@ class ChessBoard(GridLayout):
         # print("play as : ", GameUi.playAs)
 
         self.game = Game(self)
+        ChessBoard.current_game = self.game
 
         self.undo_stack = []
         self.redo_stack = []
@@ -155,10 +166,15 @@ class ChessBoard(GridLayout):
     def apply_exiting(self, pop, *args):
         # Window.close()
         # App.get_running_app().root.remove_widget(self)
+        # check game status before close
+
         pop.dismiss()
         App.get_running_app().root.current = 'home'
         App.get_running_app().root.remove_widget(GameUi.current_gameui)
         Clock.unschedule(self.clocks_job)
+
+    
+
 
         
     def redo(self, *args):
@@ -469,3 +485,42 @@ class PvsmScreen(Screen):
 
     # def setCurrent(self, *args):
     #     self.parent.current = 'gameUi'
+
+    #============================================
+
+
+def show_popup(self):
+        show = ContentPopup()
+        window = Popup(title="Exit Chess Game", content=show,
+                       size_hint=(None, None), size=(400, 400))
+        show.popup = window
+        window.open()
+        return True
+
+class SaveWind(Screen):
+    def __init__(self, **kwargs):
+        super(SaveWind, self).__init__(**kwargs)
+        Window.bind(on_request_close=show_popup)
+
+def test():
+    return "-------Otman is Gay--------"
+
+class ContentPopup(BoxLayout):
+    def __init__(self,popup=None,  **kwargs):
+        super().__init__(**kwargs)
+        self.popup = popup
+
+    def withSave(self):
+        path = os.path.abspath(os.getcwd())
+        obj = ChessBoard.current_game
+        # print(obj)
+        with open('GameObject','wb') as f:
+            pickle.dump(obj,f)
+        isComp = Connection.setPath(path+"\GameObject")
+        if(isComp):
+            Window.close()
+    def withoutSave(self):
+        Window.close()
+
+    def closePop(self):
+        self.popup.dismiss()

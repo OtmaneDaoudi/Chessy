@@ -1,16 +1,15 @@
 from kivy.app import App
 from UI.gameUI import *
-from kivy.app import App
 
 class ChessApp(App):
-    pass
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        Connection.Connect()
+        try:
+            with open('GameObject','rb') as f:
+                obj = pickle.load(f)
+            print(obj)
+        except FileNotFoundError:
+             print("The 'doc' directory does not exist")
 
 ChessApp().run()
-
-# class ChessApp(App):
-#     pass
-
-# if __name__ == '__main__':
-#     ChessApp().run()
-#     print("out UI")
-#     print("running threads , ", threading.enumerate())
