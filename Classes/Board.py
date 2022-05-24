@@ -15,7 +15,6 @@ from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.button import Button
-from kivy.properties import StringProperty
 from kivy.clock import mainthread
 import sys
 class Board:

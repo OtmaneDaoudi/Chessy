@@ -28,7 +28,7 @@ from kivy.config import Config
 
 Config.set('graphics', 'width', '900')
 Config.set('graphics', 'height', '630')
-Config.set('graphics', 'resizable', False)
+Config.set('graphics', 'resizable', True)
 # Window.borderless = True
 Config.write()
 
@@ -40,9 +40,10 @@ class Cell(ToggleButton):
         self.column = column
         self.background_normal=''
         self.background_color = color
-        
         self.img = None
-
+        self.firstMake = True
+        
+        
     @mainthread
     def set_img_pos(self, *args):
         if self.img is not None:
@@ -50,17 +51,19 @@ class Cell(ToggleButton):
         source_ = "./Assets/images/None.png" 
         if self.piece is not None:
             source_ ="./Assets/images/"+self.piece.image
-        self.img = Image(source = source_)
-        self.img.size_hint = (None,None)
+        if self.firstMake:
+            self.img = Image(source = source_)
+            self.img.opacity = 0
+            a = Animation(duration = .3, opacity = 1)
+            
+            a.start(self.img)
+            self.firstMake = False
+        else:
+            self.img = Image(source = source_)
         self.img.allow_stretch = True
-        # self.img.pos = [100, 100]
-        print("self pos : ", self.pos)
         self.img.pos = [self.pos[0] + 3, self.pos[1]]
-        # self.img.center_x = self.center_x
-        # self.img.center_y = self.center_y
         self.img.size = (70,70)
         self.add_widget(self.img)
-
 class GameUi(BoxLayout, Screen):
     gameMode = None
     playAs = "w"
