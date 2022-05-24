@@ -4,7 +4,8 @@ from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.image import Image
 from functools import partial
 from Classes.AiPlayer import AiPlayer
-from Classes.Game import Game
+from Classes.Board import Board
+from Classes.Game import Game, GameStatus
 from Classes.Piece import Piece
 from kivy.uix.boxlayout import BoxLayout
 from kivy.clock import mainthread
@@ -139,7 +140,7 @@ class ChessBoard(GridLayout):
     def setBtns(self, *args):
         # print("ids = ", App.get_running_app().root.get_screen('gameUi').ids)
 
-        App.get_running_app().root.get_screen('gameUi').ids.options.ids.exit_btn.on_press = self.exit
+        # App.get_running_app().root.get_screen('gameUi').ids.options.ids.exit_btn.on_press = self.exit
 
         self.redo_btn = App.get_running_app().root.get_screen('gameUi').ids.options.ids.redo 
         self.redo_btn.on_press = self.redo
@@ -150,18 +151,22 @@ class ChessBoard(GridLayout):
         self.undo_btn.disabled = True
     
     def exit(self, *args):
-        #show confirmation diallogue
-        btn1 = Button(text="Yes", size_hint=(1, None), height = 80)
-        btn2 = Button(text="no", size_hint=(1, None), height = 80)
-        Boxed_layout= BoxLayout(orientation = "horizontal")
-        Boxed_layout.add_widget(btn1)
-        Boxed_layout.add_widget(btn2)
-        pop = Popup(title="Are you sure?",content=Boxed_layout, size_hint=(.5,.25))
-        btn1.bind(on_release=partial(self.apply_exiting, pop))
-
-        # btn1.bind(on_release=partial(doit, pop)) # bind to whatever action is being confiirmed
-        btn2.bind(on_release=pop.dismiss)
-        pop.open()
+        #check game status before close
+        if self.game.game_status.value in (1,6,7):
+            #show game save dialogue
+            show_popup()
+        else:
+            #show confirmation diallogue
+            btn1 = Button(text="Yes", size_hint=(1, None), height = 80)
+            btn2 = Button(text="no", size_hint=(1, None), height = 80)
+            Boxed_layout= BoxLayout(orientation = "horizontal")
+            Boxed_layout.add_widget(btn1)
+            Boxed_layout.add_widget(btn2)
+            pop = Popup(title="Are you sure?",content=Boxed_layout, size_hint=(.5,.25))
+            btn1.bind(on_release=partial(self.apply_exiting, pop))
+            # btn1.bind(on_release=partial(doit, pop)) # bind to whatever action is being confiirmed
+            btn2.bind(on_release=pop.dismiss)
+            pop.open()
 
     def apply_exiting(self, pop, *args):
         # Window.close()
@@ -489,36 +494,53 @@ class PvsmScreen(Screen):
     #============================================
 
 
-def show_popup(self):
+def show_popup(*args):
+    if App.get_running_app().root.current == 'gameUi':
         show = ContentPopup()
         window = Popup(title="Exit Chess Game", content=show,
-                       size_hint=(None, None), size=(400, 400))
+                    size_hint=(None, None), size=(400, 400))
         show.popup = window
         window.open()
-        return True
+    else:   
+        btn1 = Button(text="Yes", size_hint=(1, None), height = 80)
+        btn2 = Button(text="no", size_hint=(1, None), height = 80)
+        Boxed_layout= BoxLayout(orientation = "horizontal")
+        Boxed_layout.add_widget(btn1)
+        Boxed_layout.add_widget(btn2)
+        pop = Popup(title="Are you sure?",content=Boxed_layout, size_hint=(.5,.25))
+        btn1.bind(on_release=pop.dismiss)
+        # btn1.bind(on_release=partial(doit, pop)) # bind to whatever action is being confiirmed
+        btn2.bind(on_release=pop.dismiss)
+        pop.open()
+
+    return True
 
 class SaveWind(Screen):
     def __init__(self, **kwargs):
         super(SaveWind, self).__init__(**kwargs)
+        
         Window.bind(on_request_close=show_popup)
 
 def test():
     return "-------Otman is Gay--------"
 
+class serialisedGame:
+    def __init__(self, game_board:Board, turn: str, game_status: GameStatus):
+        self.game_board = game_board
+        self.turn = turn
+        self.game_status = game_status
+        
 class ContentPopup(BoxLayout):
     def __init__(self,popup=None,  **kwargs):
         super().__init__(**kwargs)
         self.popup = popup
 
     def withSave(self):
-        path = os.path.abspath(os.getcwd())
-        obj = ChessBoard.current_game
-        # print(obj)
-        with open('GameObject','wb') as f:
+        game = ChessBoard.current_game
+        obj = serialisedGame(game.game_board, game.turn, game.game_status)
+        with open('GameObject', 'wb') as f:
             pickle.dump(obj,f)
-        isComp = Connection.setPath(path+"\GameObject")
-        if(isComp):
-            Window.close()
+        Window.close()
     def withoutSave(self):
         Window.close()
 

@@ -7,7 +7,7 @@ class Connection():
 
         try:
             global db
-            db = sqlite3.connect("./chessdb.db")
+            db = sqlite3.connect("DB/chessdb.db")
             print("Connected To Database Successfully")
 
         except sqlite3.Error as er:
