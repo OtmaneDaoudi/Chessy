@@ -101,7 +101,7 @@ class ChessBoard(GridLayout):
                 newCell.on_press = partial(self.selected, rank, column, newCell)
                 self.cells[rank][column] = newCell
                 self.add_widget(newCell)
-                Clock.schedule_once(newCell.set_img_pos, .7)
+                Clock.schedule_once(newCell.set_img_pos, 1)
                 if current_color == light_square:
                     current_color = dark_square
                 else: 
@@ -120,7 +120,7 @@ class ChessBoard(GridLayout):
         if isinstance(self.game.white_player, AiPlayer):
             #make the algorithm go firs
             print("ok")
-            Clock.schedule_once(self.AiMoveThread, 1.2)
+            Clock.schedule_once(self.AiMoveThread, 1)
 
     def setBtns(self, *args):
         # print("ids = ", App.get_running_app().root.get_screen('gameUi').ids)
@@ -382,10 +382,12 @@ class PvspScreen(Screen):
         gameui.name = 'gameUi'
         gameui.id = 'gameUi'
         self.parent.add_widget(gameui)
-        Clock.schedule_once(self.setCurrent, .2)
-
-    def setCurrent(self, *args):
         self.parent.current = 'gameUi'
+
+    #     Clock.schedule_once(self.setCurrent, .2)
+
+    # def setCurrent(self, *args):
+    #     self.parent.current = 'gameUi'
 
     
     # +--------- Player VS Machine Screen ---------+
@@ -459,8 +461,8 @@ class PvsmScreen(Screen):
         gameui.name = 'gameUi'
         gameui.id = 'gameUi'
         self.parent.add_widget(gameui)
-        # self.parent.current = 'gameUi'
-        Clock.schedule_once(self.setCurrent, .2)
-
-    def setCurrent(self, *args):
         self.parent.current = 'gameUi'
+    #     Clock.schedule_once(self.setCurrent, .2)
+
+    # def setCurrent(self, *args):
+    #     self.parent.current = 'gameUi'
