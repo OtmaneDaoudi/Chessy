@@ -37,7 +37,7 @@ import os
 
 Config.set('graphics', 'width', '900')
 Config.set('graphics', 'height', '630')
-Config.set('graphics', 'resizable', False)
+Config.set('graphics', 'resizable', True)
 # Window.borderless = True
 Config.write()
 
@@ -53,7 +53,7 @@ class Cell(ToggleButton):
         self.firstMake = True
         
         
-    @mainthread
+
     def set_img_pos(self, *args):
         if self.img is not None:
             self.remove_widget(self.img)
@@ -73,6 +73,11 @@ class Cell(ToggleButton):
         self.img.pos = [self.pos[0] + 3, self.pos[1]]
         self.img.size = (70,70)
         self.add_widget(self.img)
+
+    def reposition_img(self, *args):
+        if self.img is not None:
+            self.img.pos = [self.pos[0] + 3, self.pos[1]]
+
 class GameUi(BoxLayout, Screen):
     gameMode = None
     playAs = "w"
@@ -141,6 +146,7 @@ class ChessBoard(GridLayout):
                 self.cells[rank][column] = newCell
                 self.add_widget(newCell)
                 Clock.schedule_once(newCell.set_img_pos, 1)
+                newCell.bind(pos=newCell.reposition_img)
                 if current_color == light_square:
                     current_color = dark_square
                 else: 
@@ -160,6 +166,18 @@ class ChessBoard(GridLayout):
             #make the algorithm go firs
             print("ok")
             Clock.schedule_once(self.AiMoveThread, 1)
+
+    #     Window.bind(size=self.reposition_images)
+
+    # def reposition_images(self, *args):
+    #     print("positioning images")
+    #     for line in range(8):
+    #         for column in range(8):
+    #             if self.cells[line][column] is not None:
+    #                 self.cells[line][column].set_img_pos()
+
+    def printpos(self, *args):
+        print("hehe")
 
     def setBtns(self, *args):
         App.get_running_app().root.get_screen('gameUi').ids.options.ids.go_home.on_press = self.showHome
