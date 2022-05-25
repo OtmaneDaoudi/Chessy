@@ -4,6 +4,7 @@ WindowManager:
     PvsmScreen:
     PvspScreen:
     SaveWind:
+    StatsScreen:
 
 <ContentPopup>:
     orientation:"vertical"
@@ -34,7 +35,6 @@ WindowManager:
             size_hint:1,0.3
             bold:True
             on_press: root.closePop()
-
 
 <SaveWind>:
     name:"save"
@@ -579,3 +579,182 @@ WindowManager:
                 text:"Statistics"
                 bold:"true"
                 font_size:18
+                on_press:
+                    root.manager.current = "stats"
+                    root.manager.transition.direction = "left"
+
+<StatsScreen>:
+    name: "stats"
+    canvas.before:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: './Assets/images/03.jpg'
+    BoxLayout:
+        orientation: "vertical"
+        Label:
+            text: "Game Stats"
+            font_size: 40
+            size_hint: 1, .3
+
+        BoxLayout:
+            orientation: "horizontal"
+            BoxLayout:
+                #pvp stats
+                padding: 10
+                orientation: "vertical"
+                Label:
+                    size_hint: 1, 2.5
+                    text: "PvP Mode"
+                    underline: True
+                    font_size : 30
+                BoxLayout:
+                    Label:
+                        size_hint: .8, 1
+                        text: "Total Played :"
+                        halign: 'right'
+                        valign: 'middle'
+                    Label:
+                        size_hint: .2, 1
+                        text: str(root.PVPtotalPLayed)
+                BoxLayout:
+                    Label:
+                        size_hint: .8, 1
+                        text: "Wins :"
+                    Label:
+                        size_hint: .2, 1
+                        text: str(root.PVPwins)
+                BoxLayout:
+                    ProgressBar:
+                        size_hint: .8, 1
+                        value: root.PVPwinsPercentage
+                    Label:
+                        size_hint: .2, 1
+                        text: str(root.PVPwinsPercentage)
+                BoxLayout:
+                    Label:
+                        size_hint: .8, 1
+                        text: "Lost :"
+                    Label:
+                        size_hint: .2, 1
+                        text: str(root.PVPlost)
+                BoxLayout:
+                    ProgressBar:
+                        size_hint: .8, 1
+                        value: root.PVPlostPercentage
+                    Label:
+                        size_hint: .2, 1
+                        text: str(root.PVPlostPercentage)
+                BoxLayout:
+                    Label:
+                        size_hint: .8, 1
+                        text: "Draws :"
+                    Label:
+                        size_hint: .2, 1
+                        text: str(root.PVPdraw)
+                BoxLayout:
+                    ProgressBar:
+                        size_hint: .8, 1
+                        value: root.PVPdrawPercentage
+                    Label:
+                        size_hint: .2, 1
+                        text: str(root.PVPdrawPercentage)
+                BoxLayout:
+                    Label:
+                        size_hint: .8, 1
+                        text: "Best Score : "
+                    Label:
+                        size_hint: .2, 1
+                        text: str(root.PVPbestScore)+"pts | "+str(divmod(root.PVPbestScoreTime, 60)[0])+"m"+str(divmod(root.PVPbestScoreTime, 60)[1])+"s"
+                BoxLayout:
+                    Label:
+                        size_hint: .8, 1
+                        text: "Best Time : "
+                    Label:
+                        size_hint: .2, 1
+                        text: str(divmod(root.PVPbestTime, 60)[0])+"m"+str(divmod(root.PVPbestTime, 60)[1])+"s"
+            BoxLayout:
+                #pvm stats
+                padding: 10
+                orientation: "vertical"
+                Label:
+                    size_hint: 1, 2.5
+                    text: "PvM Mode"
+                    underline: True
+                    font_size : 30
+                BoxLayout:
+                    Label:
+                        size_hint: .8, 1
+                        text: "Total Played :"
+                        halign: 'right'
+                        valign: 'middle'
+                    Label:
+                        size_hint: .2, 1
+                        text: str(root.PVMtotalPLayed)
+                BoxLayout:
+                    Label:
+                        size_hint: .8, 1
+                        text: "Wins :"
+                    Label:
+                        size_hint: .2, 1
+                        text: str(root.PVMwins)
+                BoxLayout:
+                    ProgressBar:
+                        size_hint: .8, 1
+                        value: root.PVMwinsPercentage
+                    Label:
+                        size_hint: .2, 1
+                        text: str(root.PVMwinsPercentage)
+                BoxLayout:
+                    Label:
+                        size_hint: .8, 1
+                        text: "Lost :"
+                    Label:
+                        size_hint: .2, 1
+                        text: str(root.PVMlost)
+                BoxLayout:
+                    ProgressBar:
+                        size_hint: .8, 1
+                        value: root.PVMlostPercentage
+                    Label:
+                        size_hint: .2, 1
+                        text: str(root.PVMlostPercentage)
+                BoxLayout:
+                    Label:
+                        size_hint: .8, 1
+                        text: "Draws :"
+                    Label:
+                        size_hint: .2, 1
+                        text: str(root.PVMdraw)
+                BoxLayout:
+                    ProgressBar:
+                        size_hint: .8, 1
+                        value: root.PVMdrawPercentage
+                    Label:
+                        size_hint: .2, 1
+                        text: str(root.PVMdrawPercentage)
+                BoxLayout:
+                    Label:
+                        size_hint: .8, 1
+                        text: "Best Score : "
+                    Label:
+                        size_hint: .2, 1
+                        text: str(root.PVMbestScore)+"pts | "+str(divmod(root.PVMbestScoreTime, 60)[0])+"m"+str(divmod(root.PVMbestScoreTime, 60)[1])+"s"
+                BoxLayout:
+                    Label:
+                        size_hint: .8, 1
+                        text: "Best Time : "
+                    Label:
+                        size_hint: .2, 1
+                        text: str(divmod(root.PVMbestTime, 60)[0])+"m"+str(divmod(root.PVMbestTime, 60)[1])+"s"
+            
+
+        Button:
+            text: "Back"
+            size_hint: .3, .2
+            pos_hint: {"center_x": .5}
+            on_press:
+                root.manager.current = "home"
+                root.manager.transition.direction = "right"
+
+        
