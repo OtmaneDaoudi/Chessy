@@ -27,14 +27,16 @@ class StatsScreen(Screen):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.update_stats()
+        self.fetch_stats()
         
-
-    def update_stats(self, *args):
+    def fetch_stats(self, *args):
+        print("updating stats UI")
         data = Connection.getStats()
+        print(data)
         pvp = data[0]
         #pvp data
         StatsScreen.PVPtotalPLayed = pvp[1]
+        print("stats totalplayed = ", StatsScreen.PVPtotalPLayed)
         StatsScreen.PVPwins = pvp[2]
         StatsScreen.PVPlost = pvp[5]
         StatsScreen.PVPdraw = pvp[6]

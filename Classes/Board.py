@@ -1,8 +1,6 @@
 # board squares are mapped to list indexes
 # each square has color + rank,column + piece
 # each piece contains a reference to a valid piece subClass instance or None in case of empty
-from re import sub
-from time import sleep
 from Classes.Pawn import Pawn
 from Classes.Rook import Rook
 from Classes.Bishop import Bishop
@@ -16,7 +14,6 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.button import Button
 from kivy.clock import mainthread
-import sys
 class Board:
     boards = []
     def __init__(self):
@@ -487,3 +484,19 @@ class Board:
                 eligableMoves.append(target)
 
         return eligableMoves
+
+    def calculate_score(self, color,*agrs):
+        res = 0
+        targetList = self.white_captures_pieces if color == "w" else self.black_captures_pieces
+        for piece in targetList:
+            if isinstance(piece, Pawn):
+                res += 100
+            if isinstance(piece, Knight):
+                res += 280
+            if isinstance(piece, Bishop):
+                res += 320
+            if isinstance(piece, Rook):
+                res += 479
+            if isinstance(piece, Queen):
+                res += 929
+        return res

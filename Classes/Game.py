@@ -3,12 +3,14 @@ from Classes.AiPlayer import AiPlayer
 from Classes.Board import Board
 from enum import Enum
 from Classes.OfflinePlayer import OfflinePlayer
+from UI.StatsScreen import StatsScreen
 import UI.gameUI as chessUI
 from kivy.app import App
 from kivy.core.audio import SoundLoader
 from kivy.uix.popup import Popup
 from kivy.uix.button import Button
 from kivy.clock import Clock
+from DB.connection import Connection
 
 class GameStatus(Enum):
     ACTIVE = 1
@@ -198,6 +200,12 @@ class Game:
         popup.content = btn
 
         if self.game_status == GameStatus.BLACK_WIN:
+            Connection.winner("b")
+            Connection.update_score(self.game_board.calculate_score(chessUI.GameUi.playAs), self.white_timer if chessUI.GameUi.playAs == "w" else self.black_timer)
+            Connection.update_best_time(self.white_timer if chessUI.GameUi.playAs == "w" else self.black_timer)
+            # App.get_running_app().root.remove_widget(App.get_running_app().root.get_screen('stats'))
+            # sc = StatsScreen(name='stats')
+            # App.get_running_app().root.add_widget(sc)
             popup.title = "Game is Over, black team wins"
             btn.text= "Exit"
             def clicked():
@@ -206,6 +214,13 @@ class Game:
             #update stats in database
             popup.open()
         elif self.game_status == GameStatus.WHITE_WIN:
+            score = self.calculate_score()
+            Connection.winner("w")
+            Connection.update_score(self.game_board.calculate_score(chessUI.GameUi.playAs), self.white_timer if chessUI.GameUi.playAs == "w" else self.black_timer)
+            Connection.update_best_time(self.white_timer if chessUI.GameUi.playAs == "w" else self.black_timer)
+            # App.get_running_app().root.remove_widget(App.get_running_app().root.get_screen('stats'))
+            # sc = StatsScreen(name='stats')
+            # App.get_running_app().root.add_widget(sc)
             popup.title = "Game is Over, white team wins"
             btn.text= "Exit"
             def clicked():
@@ -221,6 +236,7 @@ class Game:
             popup.open()
             self.game_status = GameStatus.ACTIVE
         elif self.game_status == GameStatus.STALEMATE: 
+            Connection.draw()
             popup.title = "Game is Over, draw by Stalemate"
             btn.text= "EXIT"
             def clicked():
@@ -228,6 +244,7 @@ class Game:
             btn.on_press = clicked
             popup.open()
         elif self.game_status == GameStatus.INSUFFICIENT_MATERIAL: 
+            Connection.draw()
             popup.title = "Game is Over, draw by insufficient material"
             btn.text= "EXIT"
             def clicked():

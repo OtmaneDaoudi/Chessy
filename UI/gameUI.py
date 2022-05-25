@@ -33,6 +33,7 @@ from kivy.uix.popup import Popup
 from kivy.uix.boxlayout import BoxLayout
 import pickle
 from Classes.serialisedGame import serialisedGame
+import DB.connection as con
 
 Config.set('graphics', 'width', '900')
 Config.set('graphics', 'height', '630')
@@ -164,14 +165,7 @@ class ChessBoard(GridLayout):
             print("ok")
             Clock.schedule_once(self.AiMoveThread, 1)
 
-    #     Window.bind(size=self.reposition_images)
-
-    # def reposition_images(self, *args):
-    #     print("positioning images")
-    #     for line in range(8):
-    #         for column in range(8):
-    #             if self.cells[line][column] is not None:
-    #                 self.cells[line][column].set_img_pos()
+        Clock.schedule_once(con.Connection.increment_total_played)
 
     def printpos(self, *args):
         print("hehe")
@@ -200,7 +194,6 @@ class ChessBoard(GridLayout):
         pop.open()
 
 
-    
     def exit(self, *args):
         #check game status before close
         if self.game.game_status.value in (1,6,7):
