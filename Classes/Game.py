@@ -73,7 +73,7 @@ class Game:
                         print("black king is under check")
                 self.turn = "b"
 
-    def update_clocks(self, *args):
+    def update_clocks(self, isFirstLaunch, *args):
         if self.turn == "w":
             mins, secs = divmod(self.white_timer, 60)
             current_time = '{:02d}:{:02d}'.format(mins, secs)
@@ -105,8 +105,19 @@ class Game:
                     return False
         if self.game_status.value in (2,3,4,5):
             return False
+
+    def updateClockLabelOnLoad(self, *args):
+        mins, secs = divmod(self.white_timer, 60)
+        current_time = '{:02d}:{:02d}'.format(mins, secs)
+        white_clock = App.get_running_app().root.get_screen('gameUi').ids.boardNclocks.ids.white_player_clock
+        white_clock.text = current_time
+        mins, secs = divmod(self.black_timer, 60)
+        current_time = '{:02d}:{:02d}'.format(mins, secs)
+        #update lables
+        black_clock = App.get_running_app().root.get_screen('gameUi').ids.boardNclocks.ids.black_player_clock
+        black_clock.text = current_time
                       
-    def switchTurnes(self):
+    def switchTurnes(self,launchFlag=True,*agrs):
         self.turn = "b" if self.turn == "w" else "w"
 
         red = (1,0,0,1)
@@ -122,11 +133,12 @@ class Game:
             black_banner.background_color = green
             white_banner.background_color = red
         
-        #schedule ai next move
-        if self.turn == "b" and isinstance(self.black_player, AiPlayer):
-            Clock.schedule_once(self.boardUI.AiMoveThread, 1)
-        if self.turn == "w" and isinstance(self.white_player, AiPlayer):
-            Clock.schedule_once(self.boardUI.AiMoveThread, 1)
+        if launchFlag:
+            #schedule ai next move
+            if self.turn == "b" and isinstance(self.black_player, AiPlayer):
+                Clock.schedule_once(self.boardUI.AiMoveThread, 1)
+            if self.turn == "w" and isinstance(self.white_player, AiPlayer):
+                Clock.schedule_once(self.boardUI.AiMoveThread, 1)
             
     def playMove(self,start: tuple, end: tuple, gameUI):
         if self.turn == "b":

@@ -83,18 +83,32 @@ class ChessBoard(GridLayout):
     loaded_game = None
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        # print("game mode : ", self.parent.parent.gameMode)
-        # print("game mode : ", GameUi.gameMode)
-        # print("play as : ", GameUi.playAs)
-
-        self.game = Game(self)
-        ChessBoard.current_game = self.game
-
         if ChessBoard.loaded_game is not None:
             print("Chessboard init : loading...")
+            GameUi.gameMode = ChessBoard.loaded_game.gameMode
+            print("mode : ", ChessBoard.loaded_game.gameMode)
+
+            GameUi.diff = ChessBoard.loaded_game.diff
+
+            GameUi.playAs = ChessBoard.loaded_game.playas
+            print("play as ",ChessBoard.loaded_game.playas)
+
+            print("turn ",ChessBoard.loaded_game.turn)
+
+            turn = "w" if ChessBoard.loaded_game.turn == "b" else "b"
+            self.game = Game(self, turn)
+            Clock.schedule_once(partial(self.game.switchTurnes, GameUi.playAs == "w" and self.game.turn == "w"))
+            Clock.schedule_once(self.game.updateClockLabelOnLoad)
+            Clock.schedule_once(self.update_score)
+            ChessBoard.current_game = self.game
             self.game.game_board = ChessBoard.loaded_game.game_board
-            self.game.turn = ChessBoard.loaded_game.turn
             self.game.game_status = ChessBoard.loaded_game.game_status
+            self.game.white_timer = ChessBoard.loaded_game.white_timer
+            self.game.black_timer = ChessBoard.loaded_game.black_timer
+        else:
+            self.game = Game(self)
+            ChessBoard.current_game = self.game
+        ChessBoard.loaded_game = None
 
         self.undo_stack = []
         self.redo_stack = []
@@ -144,8 +158,6 @@ class ChessBoard(GridLayout):
             Clock.schedule_once(self.AiMoveThread, 1)
 
     def setBtns(self, *args):
-        # print("ids = ", App.get_running_app().root.get_screen('gameUi').ids)
-
         App.get_running_app().root.get_screen('gameUi').ids.options.ids.go_home.on_press = self.showHome
 
         self.redo_btn = App.get_running_app().root.get_screen('gameUi').ids.options.ids.redo 
@@ -157,6 +169,7 @@ class ChessBoard(GridLayout):
         self.undo_btn.disabled = True
 
     def showHome(self):
+        GameUi.diff = 1
         btn1 = Button(text="Yes", size_hint=(1, None), height = 80)
         btn2 = Button(text="no", size_hint=(1, None), height = 80)
         Boxed_layout= BoxLayout(orientation = "horizontal")
@@ -164,7 +177,6 @@ class ChessBoard(GridLayout):
         Boxed_layout.add_widget(btn2)
         pop = Popup(title="Are you sure?",content=Boxed_layout, size_hint=(.5,.25))
         btn1.bind(on_release=partial(self.apply_exiting, pop))
-        # btn1.bind(on_release=partial(doit, pop)) # bind to whatever action is being confiirmed
         btn2.bind(on_release=pop.dismiss)
         pop.open()
 
@@ -189,19 +201,12 @@ class ChessBoard(GridLayout):
             pop.open()
 
     def apply_exiting(self, pop, *args):
-        # Window.close()
-        # App.get_running_app().root.remove_widget(self)
-        # check game status before close
-
         pop.dismiss()
         App.get_running_app().root.current = 'home'
         App.get_running_app().root.remove_widget(GameUi.current_gameui)
         Clock.unschedule(self.clocks_job)
 
     
-
-
-        
     def redo(self, *args):
         print("redoing...")
         if len(self.redo_stack) > 0:
@@ -236,7 +241,6 @@ class ChessBoard(GridLayout):
             if (self.game.turn == "w" and isinstance(self.game.white_player, AiPlayer)) or (self.game.turn == "b" and isinstance(self.game.black_player, AiPlayer)):
                 self.redo()
 
-            
     def undo(self, *args):
         if len(self.undo_stack) > 0:
             undo_entry = self.undo_stack.pop()
@@ -310,7 +314,7 @@ class ChessBoard(GridLayout):
         #update captured pieces
         self.update_score()
 
-    def update_score(self):
+    def update_score(self, *args):
         black_ids = App.get_running_app().root.get_screen('gameUi').ids.black_captured_pieces.ids
         white_ids = App.get_running_app().root.get_screen('gameUi').ids.white_captured_pieces.ids
 
@@ -390,10 +394,8 @@ class ChessBoard(GridLayout):
     def on_exit(self):
         pass
 
-
 class WindowManager(ScreenManager):
     pass
-
 
 class HomePage(Screen):
     def __init__(self, **kwargs):
@@ -432,7 +434,6 @@ class HomePage(Screen):
         gameui.id = 'gameUi'
         App.get_running_app().root.add_widget(gameui)
         App.get_running_app().root.current = 'gameUi'
-
 
 class PvspScreen(Screen):
     color_clicked = BooleanProperty(True)
@@ -572,10 +573,16 @@ class SaveWind(Screen):
         Window.bind(on_request_close=show_popup)
 
 class serialisedGame:
-    def __init__(self, game_board:Board, turn: str, game_status: GameStatus):
+    def __init__(self, game_board:Board, turn: str, game_status: GameStatus, gameMode, white_timer, black_timer, playas, diff = 1):
         self.game_board = game_board
         self.turn = turn
         self.game_status = game_status
+        self.gameMode = gameMode
+        self.white_timer = white_timer
+        self.black_timer = black_timer
+        self.playas = playas
+        self.diff = diff
+        
         
 class ContentPopup(BoxLayout):
     def __init__(self,popup=None,  **kwargs):
@@ -584,7 +591,7 @@ class ContentPopup(BoxLayout):
 
     def withSave(self):
         game = ChessBoard.current_game
-        obj = serialisedGame(game.game_board, game.turn, game.game_status)
+        obj = serialisedGame(game.game_board, game.turn, game.game_status, GameUi.gameMode, game.white_timer, game.black_timer,GameUi.playAs, GameUi.diff)
         with open('GameObject', 'wb') as f:
             pickle.dump(obj,f)
         Window.close()
