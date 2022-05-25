@@ -89,6 +89,7 @@ class ChessBoard(GridLayout):
             GameUi.gameMode = ChessBoard.loaded_game.gameMode
             print("mode : ", ChessBoard.loaded_game.gameMode)
 
+            old_diff = GameUi.diff 
             GameUi.diff = ChessBoard.loaded_game.diff
 
             GameUi.playAs = ChessBoard.loaded_game.playas
@@ -106,6 +107,9 @@ class ChessBoard(GridLayout):
             self.game.game_status = ChessBoard.loaded_game.game_status
             self.game.white_timer = ChessBoard.loaded_game.white_timer
             self.game.black_timer = ChessBoard.loaded_game.black_timer
+
+            GameUi.diff = old_diff
+            # print("restores old diff to ", GameUi.diff)
         else:
             self.game = Game(self)
             ChessBoard.current_game = self.game
@@ -169,8 +173,7 @@ class ChessBoard(GridLayout):
         self.undo_btn.disabled = True
 
     def showHome(self):
-        ChessBoard.thread_flag = "ENDED"
-        GameUi.diff = 1
+        # GameUi.diff = 1
         btn1 = Button(text="Yes", size_hint=(1, None), height = 80)
         btn2 = Button(text="no", size_hint=(1, None), height = 80)
         Boxed_layout= BoxLayout(orientation = "horizontal")
