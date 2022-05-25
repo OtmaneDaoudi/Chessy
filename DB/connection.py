@@ -2,14 +2,11 @@ from msilib.schema import Error
 import sqlite3
 
 class Connection():
-    
     def Connect():
-
         try:
             global db
             db = sqlite3.connect("DB/chessdb.db")
             print("Connected To Database Successfully")
-
         except sqlite3.Error as er:
             print(er)
         return db
@@ -20,10 +17,8 @@ class Connection():
             cr = db.cursor()
             cr.execute("select path from saved_game")
             return cr.fetchone()[0]
-
         except sqlite3.Error as er:
             print(er)
-
 
     def setPath(path):
         try:
@@ -41,6 +36,5 @@ class Connection():
             cr = db.cursor()
             cr.execute("select * from stats")
             return cr.fetchall()
-        
         except sqlite3.Error as er:
             print(er)

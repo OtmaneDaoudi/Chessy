@@ -26,19 +26,18 @@ from kivy.config import Config
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import BooleanProperty
 from kivy.config import Config
-import os
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import BooleanProperty
 from kivy.core.window import Window
 from kivy.uix.popup import Popup
 from kivy.uix.boxlayout import BoxLayout
-from DB.connection import Connection
 import pickle
+import os
 
 Config.set('graphics', 'width', '900')
 Config.set('graphics', 'height', '630')
-Config.set('graphics', 'resizable', True)
+Config.set('graphics', 'resizable', False)
 # Window.borderless = True
 Config.write()
 
@@ -81,6 +80,7 @@ class GameUi(BoxLayout, Screen):
     current_gameui = None
 class ChessBoard(GridLayout):
     current_game = None
+    loaded_game = None
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         # print("game mode : ", self.parent.parent.gameMode)
@@ -89,6 +89,12 @@ class ChessBoard(GridLayout):
 
         self.game = Game(self)
         ChessBoard.current_game = self.game
+
+        if ChessBoard.loaded_game is not None:
+            print("Chessboard init : loading...")
+            self.game.game_board = ChessBoard.loaded_game.game_board
+            self.game.turn = ChessBoard.loaded_game.turn
+            self.game.game_status = ChessBoard.loaded_game.game_status
 
         self.undo_stack = []
         self.redo_stack = []
@@ -140,7 +146,7 @@ class ChessBoard(GridLayout):
     def setBtns(self, *args):
         # print("ids = ", App.get_running_app().root.get_screen('gameUi').ids)
 
-        # App.get_running_app().root.get_screen('gameUi').ids.options.ids.exit_btn.on_press = self.exit
+        App.get_running_app().root.get_screen('gameUi').ids.options.ids.go_home.on_press = self.showHome
 
         self.redo_btn = App.get_running_app().root.get_screen('gameUi').ids.options.ids.redo 
         self.redo_btn.on_press = self.redo
@@ -149,6 +155,20 @@ class ChessBoard(GridLayout):
         self.undo_btn = App.get_running_app().root.get_screen('gameUi').ids.options.ids.undo 
         self.undo_btn.on_press = self.undo
         self.undo_btn.disabled = True
+
+    def showHome(self):
+        btn1 = Button(text="Yes", size_hint=(1, None), height = 80)
+        btn2 = Button(text="no", size_hint=(1, None), height = 80)
+        Boxed_layout= BoxLayout(orientation = "horizontal")
+        Boxed_layout.add_widget(btn1)
+        Boxed_layout.add_widget(btn2)
+        pop = Popup(title="Are you sure?",content=Boxed_layout, size_hint=(.5,.25))
+        btn1.bind(on_release=partial(self.apply_exiting, pop))
+        # btn1.bind(on_release=partial(doit, pop)) # bind to whatever action is being confiirmed
+        btn2.bind(on_release=pop.dismiss)
+        pop.open()
+
+
     
     def exit(self, *args):
         #check game status before close
@@ -376,8 +396,43 @@ class WindowManager(ScreenManager):
 
 
 class HomePage(Screen):
-    pass
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        Clock.schedule_once(self.showSavedGameDialogue)
     # +--------- Player VS Player Screen ---------+
+
+    def showSavedGameDialogue(self, *args):
+        if os.path.exists("GameObject"):
+            if os.path.getsize("GameObject") != 0: #file is not empty
+                #show a pop up
+                btn1 = Button(text="Yes", size_hint=(1, None), height = 80)
+                btn2 = Button(text="no", size_hint=(1, None), height = 80)
+                Boxed_layout= BoxLayout(orientation = "horizontal")
+                Boxed_layout.add_widget(btn1)
+                Boxed_layout.add_widget(btn2)
+                pop = Popup(title="Do you want to load the last saved game?",content=Boxed_layout, size_hint=(.9,.3))
+                btn1.bind(on_release=partial(self.loadSavedGame, pop))
+                # btn1.bind(on_release=partial(doit, pop)) # bind to whatever action is being confiirmed
+                btn2.bind(on_release=pop.dismiss)
+                pop.open()
+                
+    def loadSavedGame(self, pop, *args):
+        print("loading saved game")
+        game_instance = None
+        with open('GameObject','rb') as f:
+                 game_instance = pickle.load(f) #serialised game instance
+        #clear file
+        to_clear = open("GameObject","w")
+        to_clear.close()
+        ChessBoard.loaded_game = game_instance
+        pop.dismiss()
+        gameui = GameUi()
+        GameUi.current_gameui = gameui
+        gameui.name = 'gameUi'
+        gameui.id = 'gameUi'
+        App.get_running_app().root.add_widget(gameui)
+        App.get_running_app().root.current = 'gameUi'
+
 
 class PvspScreen(Screen):
     color_clicked = BooleanProperty(True)
@@ -408,12 +463,6 @@ class PvspScreen(Screen):
         self.parent.add_widget(gameui)
         self.parent.current = 'gameUi'
 
-    #     Clock.schedule_once(self.setCurrent, .2)
-
-    # def setCurrent(self, *args):
-    #     self.parent.current = 'gameUi'
-
-    
     # +--------- Player VS Machine Screen ---------+
     
 class PvsmScreen(Screen):
@@ -434,8 +483,6 @@ class PvsmScreen(Screen):
                 self.color_clicked = True
             else:
                 self.color_clicked = False
-
-    
 
     def on_level_button_click(self, widget, id):
         if widget.state == "down":
@@ -508,7 +555,10 @@ def show_popup(*args):
         Boxed_layout.add_widget(btn1)
         Boxed_layout.add_widget(btn2)
         pop = Popup(title="Are you sure?",content=Boxed_layout, size_hint=(.5,.25))
-        btn1.bind(on_release=pop.dismiss)
+        pop.auto_dismiss = False
+        def closeApp(*args):
+            Window.close()
+        btn1.bind(on_release=closeApp)
         # btn1.bind(on_release=partial(doit, pop)) # bind to whatever action is being confiirmed
         btn2.bind(on_release=pop.dismiss)
         pop.open()
@@ -520,9 +570,6 @@ class SaveWind(Screen):
         super(SaveWind, self).__init__(**kwargs)
         
         Window.bind(on_request_close=show_popup)
-
-def test():
-    return "-------Otman is Gay--------"
 
 class serialisedGame:
     def __init__(self, game_board:Board, turn: str, game_status: GameStatus):

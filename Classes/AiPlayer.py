@@ -185,7 +185,7 @@ class AiPlayer(Player):
                     elif isinstance(position.board[line][column],Queen):
                         res += factor*(AiPlayer.QUEEN + AiPlayer.pst['Q'][line][column])
                     elif isinstance(position.board[line][column],King):
-                        res += factor*(AiPlayer.KING + + AiPlayer.pst['K'][line][column])
+                        res += factor*(AiPlayer.KING + AiPlayer.pst['K'][line][column])
         print("res = ", res)
         return res
 
