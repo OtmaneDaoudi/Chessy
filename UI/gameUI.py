@@ -79,6 +79,7 @@ class GameUi(BoxLayout, Screen):
     diff = 1
     current_gameui = None
 class ChessBoard(GridLayout):
+    thread_flag = "N/A"
     current_game = None
     loaded_game = None
     def __init__(self, **kwargs):
@@ -120,7 +121,6 @@ class ChessBoard(GridLayout):
         self.rows = 9
         self.padding = -1
         self.spacing = -2
-        # self.spacing = 30
 
         light_square = (242/255.0, 225/255.0, 195/255.0, 1)
         dark_square  = (195/255.0, 160/255.0, 130/255.0, 1)
@@ -169,6 +169,7 @@ class ChessBoard(GridLayout):
         self.undo_btn.disabled = True
 
     def showHome(self):
+        ChessBoard.thread_flag = "ENDED"
         GameUi.diff = 1
         btn1 = Button(text="Yes", size_hint=(1, None), height = 80)
         btn2 = Button(text="no", size_hint=(1, None), height = 80)
@@ -201,6 +202,7 @@ class ChessBoard(GridLayout):
             pop.open()
 
     def apply_exiting(self, pop, *args):
+        ChessBoard.thread_flag = "ENDED"
         pop.dismiss()
         App.get_running_app().root.current = 'home'
         App.get_running_app().root.remove_widget(GameUi.current_gameui)
@@ -282,6 +284,7 @@ class ChessBoard(GridLayout):
 
     def AiMoveThread(self, *args):
         myThread = threading.Thread(target=self.AiMove, name='AI')
+        ChessBoard.thread_flag = "STARTED"
         myThread.start()
             
     def AiMove(self, *args):
@@ -294,7 +297,7 @@ class ChessBoard(GridLayout):
         Clock.schedule_once(partial(self.playAiMove, move))
         
     def playAiMove(self,move, *args):
-        if not AiPlayer.Thread_exit_state:
+        if ChessBoard.thread_flag != "ENDED":
             self.undo_stack.append({"board" : deepcopy(self.game.game_board), "game_state" : self.game.game_status})
             self.game.playMove(move[0], move[1], self)
             self.update_board()
@@ -558,6 +561,7 @@ def show_popup(*args):
         pop = Popup(title="Are you sure?",content=Boxed_layout, size_hint=(.5,.25))
         pop.auto_dismiss = False
         def closeApp(*args):
+            ChessBoard.thread_flag = "ENDED"
             Window.close()
         btn1.bind(on_release=closeApp)
         # btn1.bind(on_release=partial(doit, pop)) # bind to whatever action is being confiirmed
@@ -594,8 +598,10 @@ class ContentPopup(BoxLayout):
         obj = serialisedGame(game.game_board, game.turn, game.game_status, GameUi.gameMode, game.white_timer, game.black_timer,GameUi.playAs, GameUi.diff)
         with open('GameObject', 'wb') as f:
             pickle.dump(obj,f)
+        ChessBoard.thread_flag = "ENDED"
         Window.close()
     def withoutSave(self):
+        ChessBoard.thread_flag = "ENDED"
         Window.close()
 
     def closePop(self):

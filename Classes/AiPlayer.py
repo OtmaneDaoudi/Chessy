@@ -9,6 +9,7 @@ from Classes.Pawn import Pawn
 from Classes.Player import Player
 from Classes.Queen import Queen
 from Classes.Rook import Rook
+import UI.gameUI as gameUi
 
 
 class AiPlayer(Player):
@@ -131,7 +132,7 @@ class AiPlayer(Player):
             
     def minimax(self, position: Board, depth: int,alpha, beta, maximizingPlayer: bool):
         #if the game ends at the current position or depth == 0
-        if depth == 0 or position.isGameOver():
+        if depth == 0 or position.isGameOver() or gameUi.ChessBoard.thread_flag == "ENDED":
             return self.evaluatePosition(position), None
 
         if maximizingPlayer:
