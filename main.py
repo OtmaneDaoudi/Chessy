@@ -1,4 +1,7 @@
 from kivy.app import App
+from UI.HomePage import HomePage
+from UI.PvspScreen import PvspScreen
+from UI.PvsmScreen import PvsmScreen
 from UI.gameUI import *
 from DB.connection import Connection
 

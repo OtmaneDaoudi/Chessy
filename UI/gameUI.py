@@ -4,8 +4,7 @@ from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.image import Image
 from functools import partial
 from Classes.AiPlayer import AiPlayer
-from Classes.Board import Board
-from Classes.Game import Game, GameStatus
+from Classes.Game import Game
 from Classes.Piece import Piece
 from kivy.uix.boxlayout import BoxLayout
 from kivy.clock import mainthread
@@ -33,7 +32,7 @@ from kivy.core.window import Window
 from kivy.uix.popup import Popup
 from kivy.uix.boxlayout import BoxLayout
 import pickle
-import os
+from Classes.serialisedGame import serialisedGame
 
 Config.set('graphics', 'width', '900')
 Config.set('graphics', 'height', '630')
@@ -52,8 +51,6 @@ class Cell(ToggleButton):
         self.img = None
         self.firstMake = True
         
-        
-
     def set_img_pos(self, *args):
         if self.img is not None:
             self.remove_widget(self.img)
@@ -421,150 +418,6 @@ class ChessBoard(GridLayout):
 class WindowManager(ScreenManager):
     pass
 
-class HomePage(Screen):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        Clock.schedule_once(self.showSavedGameDialogue)
-    # +--------- Player VS Player Screen ---------+
-
-    def showSavedGameDialogue(self, *args):
-        if os.path.exists("GameObject"):
-            if os.path.getsize("GameObject") != 0: #file is not empty
-                #show a pop up
-                btn1 = Button(text="Yes", size_hint=(1, None), height = 80)
-                btn2 = Button(text="no", size_hint=(1, None), height = 80)
-                Boxed_layout= BoxLayout(orientation = "horizontal")
-                Boxed_layout.add_widget(btn1)
-                Boxed_layout.add_widget(btn2)
-                pop = Popup(title="Do you want to load the last saved game?",content=Boxed_layout, size_hint=(.9,.3))
-                btn1.bind(on_release=partial(self.loadSavedGame, pop))
-                # btn1.bind(on_release=partial(doit, pop)) # bind to whatever action is being confiirmed
-                btn2.bind(on_release=pop.dismiss)
-                pop.open()
-                
-    def loadSavedGame(self, pop, *args):
-        print("loading saved game")
-        game_instance = None
-        with open('GameObject','rb') as f:
-                 game_instance = pickle.load(f) #serialised game instance
-        #clear file
-        to_clear = open("GameObject","w")
-        to_clear.close()
-        ChessBoard.loaded_game = game_instance
-        pop.dismiss()
-        gameui = GameUi()
-        GameUi.current_gameui = gameui
-        gameui.name = 'gameUi'
-        gameui.id = 'gameUi'
-        App.get_running_app().root.add_widget(gameui)
-        App.get_running_app().root.current = 'gameUi'
-
-class PvspScreen(Screen):
-    color_clicked = BooleanProperty(True)
-
-    def on_color_button_click(self, widget):
-        if widget.text == "Black":
-            print("play as black")
-            GameUi.playAs = "b"
-        else:
-            print("play as white")
-            GameUi.playAs = "w"
-        if widget.state == "down":
-            if self.color_clicked == False:
-                self.color_clicked = True
-            else:
-                self.color_clicked = False
-    
-    def init_game(self):
-        #player versus machine
-        #get UI data 
-        
-        GameUi.gameMode = "PvP"
-
-        gameui = GameUi()
-        GameUi.current_gameui = gameui
-        gameui.name = 'gameUi'
-        gameui.id = 'gameUi'
-        self.parent.add_widget(gameui)
-        self.parent.current = 'gameUi'
-
-    # +--------- Player VS Machine Screen ---------+
-    
-class PvsmScreen(Screen):
-    color_clicked = BooleanProperty(True)
-    level_clicked1 = BooleanProperty(True)
-    level_clicked2 = BooleanProperty(False)
-    level_clicked3 = BooleanProperty(False)
-
-    def on_color_button_click(self, widget):
-        if widget.text == "Black":
-            print("play as black")
-            GameUi.playAs = "b"
-        else:
-            print("play as white")
-            GameUi.playAs = "w"
-        if widget.state == "down":
-            if self.color_clicked == False:
-                self.color_clicked = True
-            else:
-                self.color_clicked = False
-
-    def on_level_button_click(self, widget, id):
-        if widget.state == "down":
-            if id == 1:
-                GameUi.diff = 1
-                print("diff updated to 1")
-                if self.level_clicked1 == False:
-                    self.level_clicked1 = True
-                    self.level_clicked2 = False
-                    self.level_clicked3 = False
-                else:
-                    self.level_clicked1 = False
-                    self.level_clicked2 = True
-                    self.level_clicked3 = True
-            elif id == 2:
-                GameUi.diff = 2
-                print("diff updated to 2")
-                if self.level_clicked2 == False:
-                    self.level_clicked2 = True
-                    self.level_clicked1 = False
-                    self.level_clicked3 = False
-                else:
-                    self.level_clicked2 = False
-                    self.level_clicked1 = True
-                    self.level_clicked3 = True
-            else:
-                GameUi.diff = 3
-                print("diff updated to 3")
-                if self.level_clicked3 == False:
-                    self.level_clicked3 = True
-                    self.level_clicked1 = False
-                    self.level_clicked2 = False
-                else:
-                    self.level_clicked3 = False
-                    self.level_clicked1 = True
-                    self.level_clicked2 = True
-
-    def init_game(self, *args):
-        #player versus machine
-        #get UI data 
-        
-        GameUi.gameMode = "PvM"
-
-        gameui = GameUi()
-        GameUi.current_gameui = gameui
-        print("done initialising")
-        gameui.name = 'gameUi'
-        gameui.id = 'gameUi'
-        self.parent.add_widget(gameui)
-        self.parent.current = 'gameUi'
-    #     Clock.schedule_once(self.setCurrent, .2)
-
-    # def setCurrent(self, *args):
-    #     self.parent.current = 'gameUi'
-
-    #============================================
-
 
 def show_popup(*args):
     if App.get_running_app().root.current == 'gameUi':
@@ -594,19 +447,7 @@ def show_popup(*args):
 class SaveWind(Screen):
     def __init__(self, **kwargs):
         super(SaveWind, self).__init__(**kwargs)
-        
         Window.bind(on_request_close=show_popup)
-
-class serialisedGame:
-    def __init__(self, game_board:Board, turn: str, game_status: GameStatus, gameMode, white_timer, black_timer, playas, diff = 1):
-        self.game_board = game_board
-        self.turn = turn
-        self.game_status = game_status
-        self.gameMode = gameMode
-        self.white_timer = white_timer
-        self.black_timer = black_timer
-        self.playas = playas
-        self.diff = diff
         
         
 class ContentPopup(BoxLayout):
