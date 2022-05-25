@@ -1,4 +1,5 @@
 from msilib.schema import Error
+from random import getstate
 import sqlite3
 
 class Connection():
@@ -10,26 +11,6 @@ class Connection():
         except sqlite3.Error as er:
             print(er)
         return db
-
-
-    def getPath():
-        try:
-            cr = db.cursor()
-            cr.execute("select path from saved_game")
-            return cr.fetchone()[0]
-        except sqlite3.Error as er:
-            print(er)
-
-    def setPath(path):
-        try:
-            cr = db.cursor()
-            cr.execute("delete from saved_game")
-            cr.execute(f"insert into saved_game(path) values('{path}')")
-            db.commit()
-            print("------------Inserted-----------")    
-        except sqlite3.Error as er:
-            print(er)
-        return True
 
     def getStats():
         try:
