@@ -13,7 +13,6 @@ from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.button import Button
-from kivy.clock import mainthread
 class Board:
     boards = []
     def __init__(self):

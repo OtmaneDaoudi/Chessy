@@ -3,7 +3,6 @@ from Classes.AiPlayer import AiPlayer
 from Classes.Board import Board
 from enum import Enum
 from Classes.OfflinePlayer import OfflinePlayer
-from UI.StatsScreen import StatsScreen
 import UI.gameUI as chessUI
 from kivy.app import App
 from kivy.core.audio import SoundLoader

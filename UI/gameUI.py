@@ -23,11 +23,9 @@ from kivy.core.window import Window
 from copy import deepcopy
 from kivy.config import Config
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.properties import BooleanProperty
 from kivy.config import Config
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.properties import BooleanProperty
 from kivy.core.window import Window
 from kivy.uix.popup import Popup
 from kivy.uix.boxlayout import BoxLayout

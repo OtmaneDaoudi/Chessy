@@ -1,6 +1,6 @@
 from kivy.uix.screenmanager import Screen
 from kivy.properties import NumericProperty
-from DB.connection import Connection, getstate
+from DB.connection import Connection
 
 class StatsScreen(Screen):
     PVPtotalPLayed = NumericProperty(0)

@@ -1,6 +1,4 @@
-from msilib.schema import Error
-from random import getstate
-from socket import gaierror
+# from msilib.schema import Error
 import sqlite3
 
 import UI.gameUI as ui
