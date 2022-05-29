@@ -1,4 +1,4 @@
-from chess import Board
+from Classes.Board import Board
 from Classes.Game import GameStatus
 
 class serialisedGame:
