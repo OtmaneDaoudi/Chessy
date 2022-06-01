@@ -213,7 +213,7 @@ class Game:
             #update stats in database
             popup.open()
         elif self.game_status == GameStatus.WHITE_WIN:
-            score = self.calculate_score()
+            # score = self.game.calculate_score()
             Connection.winner("w")
             Connection.update_score(self.game_board.calculate_score(chessUI.GameUi.playAs), self.white_timer if chessUI.GameUi.playAs == "w" else self.black_timer)
             Connection.update_best_time(self.white_timer if chessUI.GameUi.playAs == "w" else self.black_timer)

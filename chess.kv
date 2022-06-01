@@ -303,7 +303,7 @@ WindowManager:
         Rectangle:
             pos: self.pos
             size: self.size
-            source: './Assets/images/04.jpg'
+            source: './Assets/images/08.jpg'
     BoxLayout:
         orientation:"vertical"
         spacing:10
@@ -312,9 +312,10 @@ WindowManager:
             size_hint: (1, 0.2)
             #pos_hint: {"center_x": 0.5, "center_y": 0.3}
             Label:
-                text: "Chess"
-                font_size:80
-                color:1,0,0,1
+                text: "Chess game"
+                font_name: "./fonts/Caveat-VariableFont_wght.ttf"
+                font_size:90
+                color:1,1,1,1
                 bold:"true"
                 size_hint_y: self.texture_size[1]
 
@@ -444,7 +445,7 @@ WindowManager:
         Rectangle:
             pos: self.pos
             size: self.size
-            source: './Assets/images/04.jpg'
+            source: './Assets/images/08.jpg'
     BoxLayout:
         orientation:"vertical"
         spacing:10
@@ -453,9 +454,10 @@ WindowManager:
             size_hint: (1, 0.2)
             #pos_hint: {"center_x": 0.5, "center_y": 0.3}
             Label:
-                text: "Chess"
-                font_size:80
-                color:1,0,0,1
+                text: "Chess game"
+                font_name: "./fonts/Caveat-VariableFont_wght.ttf"
+                font_size:90
+                color:1,1,1,1
                 bold:"true"
                 size_hint_y: self.texture_size[1]
 
@@ -548,9 +550,10 @@ WindowManager:
         pos_hint: {"center_x": 0.5, "y": 0.25}
         Label:
             text:"Chess Game"
-            bold:"true"
-            font_size:80
-            color:0,0,0,1
+            bold: "True"
+            font_size:140
+            font_name: "./fonts/Caveat-VariableFont_wght.ttf"
+            color:1,1,1,1
             
         BoxLayout:
             orientation:"vertical"
@@ -561,24 +564,27 @@ WindowManager:
             pos_hint:{"center_x":0.52}
             
             Button:
-                text:"Player VS Player"
+                text:"Player VS. Player"
+                font_name: "./fonts/IndieFlower-Regular.ttf"
+                font_size: 30
                 on_press : 
                     root.manager.current = "pvsp"
                     root.manager.transition.direction = "left"
                 bold:"true"
-                font_size:18
                 
             Button:
-                text:"Player VS Machine"
+                text:"Player VS. Machine"
+                font_name: "./fonts/IndieFlower-Regular.ttf"
+                font_size: 30
                 bold:"true"
                 on_press:
                     root.manager.current = "pvsm"
                     root.manager.transition.direction = "left"
-                font_size:18
             Button:
                 text:"Statistics"
                 bold:"true"
-                font_size:18
+                font_name: "./fonts/IndieFlower-Regular.ttf"
+                font_size: 30
                 on_press:
                     root.manager.current = "stats"
                     root.manager.transition.direction = "left"
