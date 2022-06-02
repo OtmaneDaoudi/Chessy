@@ -5,6 +5,7 @@ WindowManager:
     PvspScreen:
     SaveWind:
     StatsScreen:
+    ConnectionPg:
 
 <ContentPopup>:
     orientation:"vertical"
@@ -581,6 +582,8 @@ WindowManager:
                     root.manager.current = "pvsm"
                     root.manager.transition.direction = "left"
             Button:
+                id:stat
+                disabled:True
                 text:"Statistics"
                 bold:"true"
                 font_name: "./fonts/IndieFlower-Regular.ttf"
@@ -588,6 +591,34 @@ WindowManager:
                 on_press:
                     root.manager.current = "stats"
                     root.manager.transition.direction = "left"
+            BoxLayout:
+                orientation:"horizontal"
+                size_hint:.8,.1
+                pos_hint:{"center_x":.52,"y":.05}
+                spacing:100
+
+                Button:
+                    id:con
+                    text: "Connexion"
+                    bold:"true"
+                    font_size:18
+                    opacity:1
+                    disabled:False
+                    on_press : 
+                        root.manager.current = "connect"
+                        root.manager.transition.direction = "left"
+                
+                Button:
+                    id:dec
+                    text: "Deconnexion"
+                    bold:"true"
+                    font_size:18
+                    opacity:0
+                    disabled:True
+                    on_press : 
+                        root.deconnexion()
+                        root.manager.current = "home"
+                        root.manager.transition.direction = "left"
 
 <StatsScreen>:
     name: "stats"
@@ -763,3 +794,80 @@ WindowManager:
                 root.manager.transition.direction = "right"
 
         
+# +------------ Connection Screen --------------+
+<ConnectionPg>:
+    username: username
+    psw: psw
+    name:"connect"
+    canvas.before:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: 'imgs/01.jpg'
+
+    BoxLayout:
+        orientation:"vertical"
+        size_hint:.6,.7
+        spacing:"100dp"
+        pos_hint: {"center_x": 0.5, "y": 0.25}
+        Label:
+            text:"Connection Screen"
+            bold:"true"
+            font_size:50
+            color:0,0,0,1
+            
+        BoxLayout:
+            orientation:"vertical"
+            spacing:"30dp"
+            size_hint_x:.95
+            #size: root.size
+            pos_hint:{"center_x":0.52}
+            
+            TextInput:
+                id: username
+                hint_text:'Enter your username'
+                pos_hint: {'center_x': 0.5, 'center_y': 0.705}
+                size_hint: 1, 1
+                multiline:False
+                
+            TextInput:
+                id: psw
+                hint_text:'Enter your password'
+                pos_hint: {'center_x': 0.5, 'center_y': 0.705}
+                size_hint: 1, 1
+                multiline:False
+
+            BoxLayout:
+                size_hint:1,.1 
+                Label:
+                    id: noti
+                    text:""
+                    color:8,8,0,1
+                    bold:True
+                    font_size:20
+    
+    BoxLayout:
+        orientation:"horizontal"
+        size_hint:.8,.1
+        pos_hint:{"center_x":.55,"y":.08}
+        spacing:30
+
+        Button:
+            text: "Back"
+            bold:"true"
+            font_size:18
+            size_hint_x:.5
+            on_press:
+                root.manager.transition.direction= "right"
+                root.manager.current = "home"
+        
+        Button:
+            text: "Sign Up"
+            bold:"true"
+            font_size:18
+            on_press:root.signUp()
+        Button:
+            text: "Sign In"
+            bold:"true"
+            font_size:18
+            on_press:root.signIn()

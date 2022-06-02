@@ -5,6 +5,7 @@ from UI.PvsmScreen import PvsmScreen
 from UI.gameUI import *
 from DB.connection import Connection
 from UI.StatsScreen import StatsScreen
+from UI.ConnectionPg import ConnectionPg
 class ChessApp(App):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

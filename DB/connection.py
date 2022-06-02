@@ -13,13 +13,52 @@ class Connection():
             print(er)
         return db
 
-    def getStats():
+    @staticmethod
+    def check_user(username):
         try:
             cr = db.cursor()
-            cr.execute("select * from stats")
-            return cr.fetchall()
+            cr.execute(f"select * from users where username='{username}'")
+            row = cr.fetchone()
+
+            if(row is None):
+                return False
+            return True
         except sqlite3.Error as er:
             print(er)
+    
+    @staticmethod
+    def get_user(username,psw):
+        try:
+            cr = db.cursor()
+            cr.execute(f"select * from users where username='{username}' and psw='{psw}'")
+            return cr.fetchone()
+        except sqlite3.Error as er:
+            print(er)
+
+
+    def add_user(username, psw):
+        try:
+            if(not Connection.check_user(username)):
+                cr = db.cursor()
+                cr.execute(
+                    f"insert into users(username,psw) values('{username}','{psw}')")
+                db.commit()
+                print("------------User Is Inserted-----------")
+                return True
+            else:
+                print("------------User Exists -----------")
+                return False
+        except sqlite3.Error as er:
+            print(er)
+
+    def getStats():
+        # try:
+        #     cr = db.cursor()
+        #     cr.execute("select * from stats")
+        #     return cr.fetchall()
+        # except sqlite3.Error as er:
+        #     print(er)
+        pass
 
     def increment_total_played(*args):
         cr = db.cursor()
