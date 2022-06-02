@@ -66,6 +66,13 @@ class HomePage(Screen):
         App.get_running_app().root.get_screen('home').ids.con.opacity = '1'
         App.get_running_app().root.get_screen('home').ids.dec.opacity = '0'
 
+    def playerVsPlayerInit(self, *args):
+        if os.path.getsize("data.json") == 2: #empty JSON file
+            App.get_running_app().root.current = 'pvsp'
+        else:
+            self.show_choice_pop(); 
+
+
     def show_choice_pop(self):
         show = ContentPopChoice()
         window = Popup(title="Player VS Player", content=show,

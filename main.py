@@ -7,6 +7,7 @@ from DB.connection import Connection
 from UI.StatsScreen import StatsScreen
 from UI.ConnectionPg import ConnectionPg
 from kivy.config import Config
+from kivy.storage.jsonstore import JsonStore
 
 Config.set('graphics', 'width', '900')
 Config.set('graphics', 'height', '630')
@@ -15,8 +16,13 @@ Config.set('kivy', 'keyboard_mode', 'system')
 # Window.borderless = True
 Config.write()
 
+
 class ChessApp(App):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         Connection.Connect() #initialise database connection
 ChessApp().run() 
+
+stored_data = JsonStore('data.json')
+if stored_data.exists('user'):
+    stored_data.delete('user')

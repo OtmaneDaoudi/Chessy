@@ -572,7 +572,7 @@ WindowManager:
                 #     root.manager.current = "pvsp"
                 #     root.manager.transition.direction = "left"
                 on_press : 
-                    root.show_choice_pop() 
+                    root.playerVsPlayerInit() 
                 bold:"true"
                 
             Button:
@@ -805,7 +805,7 @@ WindowManager:
         Rectangle:
             pos: self.pos
             size: self.size
-            source: 'imgs/01.jpg'
+            source: './Assets/images/04.jpg'
 
     BoxLayout:
         orientation:"vertical"
@@ -889,7 +889,6 @@ WindowManager:
             size_hint:1,0.3
             bold:True
             
-
         Button:
             text:"Login"
             size_hint:1,0.3
