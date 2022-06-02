@@ -546,9 +546,9 @@ WindowManager:
 
     BoxLayout:
         orientation:"vertical"
-        size_hint:.6,.7
+        # size_hint:.6,.7
         spacing:"100dp"
-        pos_hint: {"center_x": 0.5, "y": 0.25}
+        # pos_hint: {"center_x": 0.5, "y": 0.25}
         Label:
             text:"Chess Game"
             bold: "True"
@@ -568,9 +568,11 @@ WindowManager:
                 text:"Player VS. Player"
                 font_name: "./fonts/IndieFlower-Regular.ttf"
                 font_size: 30
+                # on_press : 
+                #     root.manager.current = "pvsp"
+                #     root.manager.transition.direction = "left"
                 on_press : 
-                    root.manager.current = "pvsp"
-                    root.manager.transition.direction = "left"
+                    root.show_choice_pop() 
                 bold:"true"
                 
             Button:
@@ -593,15 +595,15 @@ WindowManager:
                     root.manager.transition.direction = "left"
             BoxLayout:
                 orientation:"horizontal"
-                size_hint:.8,.1
-                pos_hint:{"center_x":.52,"y":.05}
-                spacing:100
+                # size_hint:.8,.1
+                # pos_hint:{"center_x":.52,"y":.05}
+                # spacing:100
 
                 Button:
                     id:con
                     text: "Connexion"
                     bold:"true"
-                    font_size:18
+                    font_size:30
                     opacity:1
                     disabled:False
                     on_press : 
@@ -871,3 +873,24 @@ WindowManager:
             bold:"true"
             font_size:18
             on_press:root.signIn()
+
+        #+---------------PopUpChoice -------------------+
+<ContentPopChoice>:
+    orientation:"vertical"
+    BoxLayout:
+        Label:
+            text:"Player 2 play as :"
+            bold:True
+            size_hint:1,0.2
+
+    BoxLayout:
+        Button:
+            text:"Anonyme"
+            size_hint:1,0.3
+            bold:True
+            
+
+        Button:
+            text:"Login"
+            size_hint:1,0.3
+            bold:True

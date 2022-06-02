@@ -8,7 +8,6 @@ from Classes.AiPlayer import AiPlayer
 from Classes.Game import Game
 from Classes.Piece import Piece
 from kivy.uix.boxlayout import BoxLayout
-from kivy.clock import mainthread
 from kivy.core.audio import SoundLoader
 from kivy.animation import Animation    
 from kivy.app import App
@@ -22,9 +21,7 @@ from kivy.uix.button import Button
 from kivy.uix.popup import Popup
 from kivy.core.window import Window
 from copy import deepcopy
-from kivy.config import Config
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.config import Config
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.core.window import Window
@@ -34,11 +31,7 @@ import pickle
 from Classes.serialisedGame import serialisedGame
 import DB.connection as con
 
-Config.set('graphics', 'width', '900')
-Config.set('graphics', 'height', '630')
-Config.set('graphics', 'resizable', True)
-# Window.borderless = True
-Config.write()
+
 
 class Cell(ToggleButton):
     def __init__(self,rank: int,column: int,color: tuple,piece: Piece,**kwargs):

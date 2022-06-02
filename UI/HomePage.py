@@ -11,9 +11,11 @@ from kivy.uix.popup import Popup
 from kivy.uix.boxlayout import BoxLayout
 import pickle
 import os
-
+from kivy.storage.jsonstore import JsonStore
 from UI.gameUI import ChessBoard, GameUi
 
+class ContentPopChoice(BoxLayout):
+    pass
 
 class HomePage(Screen):
     def __init__(self, **kwargs):
@@ -52,3 +54,21 @@ class HomePage(Screen):
         gameui.id = 'gameUi'
         App.get_running_app().root.add_widget(gameui)
         App.get_running_app().root.current = 'gameUi'
+
+    def deconnexion(self):
+        stored_data = JsonStore('data.json')
+        if stored_data.exists('user'):
+            stored_data.delete('user')
+            self.parent.current = "home"
+        App.get_running_app().root.get_screen('home').ids.con.disabled = False
+        App.get_running_app().root.get_screen('home').ids.dec.disabled = True
+        App.get_running_app().root.get_screen('home').ids.stat.disabled = True
+        App.get_running_app().root.get_screen('home').ids.con.opacity = '1'
+        App.get_running_app().root.get_screen('home').ids.dec.opacity = '0'
+
+    def show_choice_pop(self):
+        show = ContentPopChoice()
+        window = Popup(title="Player VS Player", content=show,
+                    size_hint=(None, None), size=(300, 300))
+        window.open()
+        return True

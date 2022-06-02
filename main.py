@@ -6,6 +6,15 @@ from UI.gameUI import *
 from DB.connection import Connection
 from UI.StatsScreen import StatsScreen
 from UI.ConnectionPg import ConnectionPg
+from kivy.config import Config
+
+Config.set('graphics', 'width', '900')
+Config.set('graphics', 'height', '630')
+Config.set('graphics', 'resizable', True)
+Config.set('kivy', 'keyboard_mode', 'system')
+# Window.borderless = True
+Config.write()
+
 class ChessApp(App):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
