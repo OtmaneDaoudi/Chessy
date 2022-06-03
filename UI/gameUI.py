@@ -30,6 +30,7 @@ from kivy.uix.boxlayout import BoxLayout
 import pickle
 from Classes.serialisedGame import serialisedGame
 import DB.connection as con
+from kivy.storage.jsonstore import JsonStore
 
 
 
@@ -69,6 +70,7 @@ class Cell(ToggleButton):
             self.img.pos = [self.pos[0] + 3, self.pos[1]]
 
 class GameUi(BoxLayout, Screen):
+    authType = "Anonymous"
     gameMode = None
     playAs = "w"
     diff = 1
@@ -80,9 +82,7 @@ class ChessBoard(GridLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         if ChessBoard.loaded_game is not None:
-            print("Chessboard init : loading...")
             GameUi.gameMode = ChessBoard.loaded_game.gameMode
-            print("mode : ", ChessBoard.loaded_game.gameMode)
 
             old_diff = GameUi.diff 
             GameUi.diff = ChessBoard.loaded_game.diff
@@ -159,6 +159,23 @@ class ChessBoard(GridLayout):
             Clock.schedule_once(self.AiMoveThread, 1)
 
         Clock.schedule_once(con.Connection.increment_total_played)
+        Clock.schedule_once(self.init_names)
+
+        
+
+    def init_names(self, *agrs):
+        #set player names
+        if GameUi.authType == "Auth":
+            stored_data = JsonStore('data.json')
+            black_banner = App.get_running_app().root.get_screen('gameUi').ids.boardNclocks.ids.black_player_banner
+            white_banner = App.get_running_app().root.get_screen('gameUi').ids.boardNclocks.ids.white_player_banner
+            if GameUi.playAs == "w":
+                white_banner.text = stored_data.get('user1')['userName']
+                black_banner.text = stored_data.get('user2')['userName']
+            else:
+                black_banner.text = stored_data.get('user1')['userName']
+                white_banner.text = stored_data.get('user2')['userName']
+            GameUi.authType = "Anonymous"
 
     def init_lables(self, *args):
         #first rank

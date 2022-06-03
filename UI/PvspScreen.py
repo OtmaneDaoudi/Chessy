@@ -25,7 +25,6 @@ class PvspScreen(Screen):
         #get UI data 
         
         GameUi.gameMode = "PvP"
-
         gameui = GameUi()
         GameUi.current_gameui = gameui
         gameui.name = 'gameUi'

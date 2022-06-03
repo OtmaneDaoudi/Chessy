@@ -61,15 +61,16 @@ class Connection():
         pass
 
     def increment_total_played(*args):
-        cr = db.cursor()
-        if ui.GameUi.gameMode == 'PvP':
-            cr.execute("update stats set total_played = total_played + 1 where mode = 'PVP'")
-            db.commit()
-            print("updated")
-        else:
-            cr.execute("update stats set total_played = total_played + 1 where mode = 'PVM'")
-            db.commit()
-            print("updated")
+        pass
+        # cr = db.cursor()
+        # if ui.GameUi.gameMode == 'PvP':
+        #     cr.execute("update stats set total_played = total_played + 1 where mode = 'PVP'")
+        #     db.commit()
+        #     print("updated")
+        # else:
+        #     cr.execute("update stats set total_played = total_played + 1 where mode = 'PVM'")
+        #     db.commit()
+        #     print("updated")
 
     def winner(color):
         cr = db.cursor()

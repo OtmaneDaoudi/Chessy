@@ -15,7 +15,19 @@ from kivy.storage.jsonstore import JsonStore
 from UI.gameUI import ChessBoard, GameUi
 
 class ContentPopChoice(BoxLayout):
-    pass
+    def __init__(self, pop, **kwargs):
+        super().__init__(**kwargs)
+        self.linkedPopUp = pop
+
+    def anonymousInit(self):
+        print("anony pressed")
+        self.linkedPopUp.dismiss()
+        App.get_running_app().root.current = 'pvsp'
+    
+    def loginInit(self):
+        GameUi.authType = "Auth"
+        self.linkedPopUp.dismiss()
+        App.get_running_app().root.current = 'connect'
 
 class HomePage(Screen):
     def __init__(self, **kwargs):
@@ -57,9 +69,10 @@ class HomePage(Screen):
 
     def deconnexion(self):
         stored_data = JsonStore('data.json')
-        if stored_data.exists('user'):
-            stored_data.delete('user')
-            self.parent.current = "home"
+        stored_data.delete('user1')
+        if stored_data.exists('user2'):
+            stored_data.delete('user2')
+            # self.parent.current = "home"
         App.get_running_app().root.get_screen('home').ids.con.disabled = False
         App.get_running_app().root.get_screen('home').ids.dec.disabled = True
         App.get_running_app().root.get_screen('home').ids.stat.disabled = True
@@ -72,10 +85,9 @@ class HomePage(Screen):
         else:
             self.show_choice_pop(); 
 
-
     def show_choice_pop(self):
-        show = ContentPopChoice()
-        window = Popup(title="Player VS Player", content=show,
-                    size_hint=(None, None), size=(300, 300))
+        window = Popup(title="Player VS Player", size_hint=(None, None), size=(300, 300))
+        show = ContentPopChoice(window)
+        window.content = show
         window.open()
         return True

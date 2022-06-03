@@ -879,7 +879,7 @@ WindowManager:
     orientation:"vertical"
     BoxLayout:
         Label:
-            text:"Player 2 play as :"
+            text:"Players Auth type:"
             bold:True
             size_hint:1,0.2
 
@@ -888,8 +888,11 @@ WindowManager:
             text:"Anonyme"
             size_hint:1,0.3
             bold:True
-            
+            on_press :  
+                root.anonymousInit()
         Button:
             text:"Login"
             size_hint:1,0.3
             bold:True
+            on_press: 
+                root.loginInit()
