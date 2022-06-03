@@ -202,31 +202,34 @@ class Game:
             Connection.winner("b")
             Connection.update_score(self.game_board.calculate_score(chessUI.GameUi.playAs), self.white_timer if chessUI.GameUi.playAs == "w" else self.black_timer)
             Connection.update_best_time(self.white_timer if chessUI.GameUi.playAs == "w" else self.black_timer)
-            # App.get_running_app().root.remove_widget(App.get_running_app().root.get_screen('stats'))
-            # sc = StatsScreen(name='stats')
-            # App.get_running_app().root.add_widget(sc)
-            popup.title = "Game is Over, black team wins"
+            username = "balck team"
+            if chessUI.GameUi.authType == "Auth":
+                username = App.get_running_app().root.get_screen('gameUi').ids.boardNclocks.ids.black_player_banner.text
+            popup.title = f"Game is Over, {username} wins"
             btn.text= "Exit"
             def clicked():
                 popup.dismiss()
+                App.get_running_app().root.current = 'home'
             btn.on_press = clicked
             #update stats in database
             popup.open()
+            chessUI.GameUi.authType = "Anonymous"
         elif self.game_status == GameStatus.WHITE_WIN:
-            # score = self.game.calculate_score()
             Connection.winner("w")
             Connection.update_score(self.game_board.calculate_score(chessUI.GameUi.playAs), self.white_timer if chessUI.GameUi.playAs == "w" else self.black_timer)
             Connection.update_best_time(self.white_timer if chessUI.GameUi.playAs == "w" else self.black_timer)
-            # App.get_running_app().root.remove_widget(App.get_running_app().root.get_screen('stats'))
-            # sc = StatsScreen(name='stats')
-            # App.get_running_app().root.add_widget(sc)
-            popup.title = "Game is Over, white team wins"
+            username = "white team"
+            if chessUI.GameUi.authType == "Auth" and chessUI.GameUi.gameMode == "PvP":
+                username = App.get_running_app().root.get_screen('gameUi').ids.boardNclocks.ids.white_player_banner.text
+            popup.title = f"Game is Over, {username} wins"
             btn.text= "Exit"
             def clicked():
                 popup.dismiss()
+                App.get_running_app().root.current = 'home'
             btn.on_press = clicked
             #update stats in database
             popup.open()
+            chessUI.GameUi.authType = "Anonymous"
         elif self.game_status in  (GameStatus.WHITE_KING_CHECKED,GameStatus.BLACK_KING_CHECKED): 
             name_ = 'white' if self.game_status == GameStatus.WHITE_KING_CHECKED else 'black'
             popup.title = f"{name_} king is under check"
@@ -240,6 +243,7 @@ class Game:
             btn.text= "EXIT"
             def clicked():
                 popup.dismiss()
+                App.get_running_app().root.current = 'home'
             btn.on_press = clicked
             popup.open()
         elif self.game_status == GameStatus.INSUFFICIENT_MATERIAL: 
@@ -248,5 +252,6 @@ class Game:
             btn.text= "EXIT"
             def clicked():
                 popup.dismiss()
+                App.get_running_app().root.current = 'home'
             btn.on_press = clicked
             popup.open()

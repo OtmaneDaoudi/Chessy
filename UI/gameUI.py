@@ -175,7 +175,7 @@ class ChessBoard(GridLayout):
             else:
                 black_banner.text = stored_data.get('user1')['userName']
                 white_banner.text = stored_data.get('user2')['userName']
-            GameUi.authType = "Anonymous"
+            
 
     def init_lables(self, *args):
         #first rank
@@ -220,6 +220,7 @@ class ChessBoard(GridLayout):
     def exit(self, *args):
         #check game status before close
         if self.game.game_status.value in (1,6,7):
+            print("yp game type is anony")
             #show game save dialogue
             show_popup()
         else:
@@ -436,7 +437,7 @@ class WindowManager(ScreenManager):
 
 
 def show_popup(*args):
-    if App.get_running_app().root.current == 'gameUi':
+    if App.get_running_app().root.current == 'gameUi'  and GameUi.authType == "Anonymous" :
         show = ContentPopup()
         window = Popup(title="Exit Chess Game", content=show,
                     size_hint=(None, None), size=(400, 400))

@@ -73,30 +73,34 @@ class Connection():
         #     print("updated")
 
     def winner(color):
-        cr = db.cursor()
-        mode = "PVP" if ui.GameUi.gameMode == "PvP" else "PVM"
-        if color == ui.GameUi.playAs:
-            cr.execute(f"update stats set wins = wins + 1 where mode = '{mode}'")
-        else:
-            cr.execute(f"update stats set lost = lost + 1 where mode = '{mode}'")
-        db.commit()
+        # cr = db.cursor()
+        # mode = "PVP" if ui.GameUi.gameMode == "PvP" else "PVM"
+        # if color == ui.GameUi.playAs:
+        #     cr.execute(f"update stats set wins = wins + 1 where mode = '{mode}'")
+        # else:
+        #     cr.execute(f"update stats set lost = lost + 1 where mode = '{mode}'")
+        # db.commit()
+        pass
 
     def draw():
-        cr = db.cursor()
-        mode = "PVP" if ui.GameUi.gameMode == "PvP" else "PVM"
-        cr.execute(f"update stats set draws = draws + 1 where mode = '{mode}'")
-        db.commit()
+        # cr = db.cursor()s
+        # mode = "PVP" if ui.GameUi.gameMode == "PvP" else "PVM"
+        # cr.execute(f"update stats set draws = draws + 1 where mode = '{mode}'")
+        # db.commit()
+        pass
 
     def update_score(newScore, score_time):
-        cr = db.cursor()
-        mode = "PVP" if ui.GameUi.gameMode == "PvP" else "PVM"
-        cr.execute(f"update stats set best_score = {newScore}, best_score_time = {300-score_time} where mode = '{mode}' and best_score < {newScore}")
-        print(f"score updated to {newScore} | time = {300-score_time}")
-        db.commit()
+        # cr = db.cursor()
+        # mode = "PVP" if ui.GameUi.gameMode == "PvP" else "PVM"
+        # cr.execute(f"update stats set best_score = {newScore}, best_score_time = {300-score_time} where mode = '{mode}' and best_score < {newScore}")
+        # print(f"score updated to {newScore} | time = {300-score_time}")
+        # db.commit()
+        pass
 
     def update_best_time(newTime):
-        cr = db.cursor()
-        mode = "PVP" if ui.GameUi.gameMode == "PvP" else "PVM"
-        cr.execute(f"update stats set best_time = {300-newTime} where mode = '{mode}' and (best_time > {300-newTime} or best_time=0)")
-        print(f"best time updated to {300-newTime}")
-        db.commit()
+        # cr = db.cursor()
+        # mode = "PVP" if ui.GameUi.gameMode == "PvP" else "PVM"
+        # cr.execute(f"update stats set best_time = {300-newTime} where mode = '{mode}' and (best_time > {300-newTime} or best_time=0)")
+        # print(f"best time updated to {300-newTime}")
+        # db.commit()
+        pass
