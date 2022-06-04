@@ -154,14 +154,11 @@ class Game:
         return self.getGameStatus
 
     def showGameStatus(self):
-        print(f"turn = {self.turn} stat = {self.game_status.value}")
         if self.turn == 'b' and isinstance(self.white_player,AiPlayer) and self.game_status.value in (1,6,7):
             self.game_status = GameStatus.ACTIVE
-            print("returning 1 ")
             return
         elif self.turn == 'w' and isinstance(self.black_player,AiPlayer) and self.game_status.value in (1,6,7):
             self.game_status = GameStatus.ACTIVE
-            print("returning")
             return 
 
         popup = Popup(title="Game status",size_hint=(.5, None), height= 120)
@@ -173,8 +170,16 @@ class Game:
 
         if self.game_status == GameStatus.BLACK_WIN:
             Connection.winner("b")
-            # Connection.update_score(self.game_board.calculate_score(chessUI.GameUi.playAs), self.white_timer if chessUI.GameUi.playAs == "w" else self.black_timer)
-            # Connection.update_best_time(self.white_timer if chessUI.GameUi.playAs == "w" else self.black_timer)
+            stored_data = JsonStore('data.json')
+            user1Score = self.game_board.calculate_score(chessUI.GameUi.playAs)
+            user1Time = self.white_timer if chessUI.GameUi.playAs == "w" else self.black_timer
+            if chessUI.GameUi.gameMode == "PvP" and chessUI.GameUi.authType == "Auth":
+                user2Score = self.game_board.calculate_score("b" if chessUI.GameUi.playAs == "w" else "w")
+                user2Time = self.white_timer if chessUI.GameUi.playAs == "b" else self.black_timer
+                Connection.update_score(user1Score, user1Time, user2Score, user2Time)
+            elif chessUI.GameUi.gameMode == 'PvM' and stored_data.exists('user1'):
+                Connection.update_score(user1Score, user1Time)
+                
             username = "balck team"
             if chessUI.GameUi.authType == "Auth":
                 username = App.get_running_app().root.get_screen('gameUi').ids.boardNclocks.ids.black_player_banner.text
@@ -185,14 +190,22 @@ class Game:
                 App.get_running_app().root.current = 'home'
                 App.get_running_app().root.remove_widget(chessUI.GameUi.current_gameui)
             btn.on_press = clicked
-            #update stats in database
             popup.open()
             #clear user 2 data 
             self.clear_data()
         elif self.game_status == GameStatus.WHITE_WIN:
             Connection.winner("w")
-            # Connection.update_score(self.game_board.calculate_score(chessUI.GameUi.playAs), self.white_timer if chessUI.GameUi.playAs == "w" else self.black_timer)
-            # Connection.update_best_time(self.white_timer if chessUI.GameUi.playAs == "w" else self.black_timer)
+
+            stored_data = JsonStore('data.json')
+            user1Score = self.game_board.calculate_score(chessUI.GameUi.playAs)
+            user1Time = self.white_timer if chessUI.GameUi.playAs == "w" else self.black_timer
+            if chessUI.GameUi.gameMode == "PvP" and chessUI.GameUi.authType == "Auth":
+                user2Score = self.game_board.calculate_score("b" if chessUI.GameUi.playAs == "w" else "w")
+                user2Time = self.white_timer if chessUI.GameUi.playAs == "b" else self.black_timer
+                Connection.update_score(user1Score, user1Time, user2Score, user2Time)
+            elif chessUI.GameUi.gameMode == 'PvM' and stored_data.exists('user1'):
+                Connection.update_score(user1Score, user1Time)
+
             username = "white team"
             if chessUI.GameUi.authType == "Auth" and chessUI.GameUi.gameMode == "PvP":
                 username = App.get_running_app().root.get_screen('gameUi').ids.boardNclocks.ids.white_player_banner.text

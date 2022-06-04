@@ -1,4 +1,3 @@
-# from msilib.schema import Error
 import sqlite3
 
 import UI.gameUI as ui
@@ -102,18 +101,16 @@ class Connection():
             cr.execute(f"update stats set draws = draws + 1 where mode = 'PvM' and user = {stored_data.get('user1')['id']}")
         db.commit()
 
-    def update_score(newScore, score_time):
-        # cr = db.cursor()
-        # mode = "PVP" if ui.GameUi.gameMode == "PvP" else "PVM"
-        # cr.execute(f"update stats set best_score = {newScore}, best_score_time = {300-score_time} where mode = '{mode}' and best_score < {newScore}")
-        # print(f"score updated to {newScore} | time = {300-score_time}")
-        # db.commit()
-        pass
-
-    def update_best_time(newTime):
-        # cr = db.cursor()
-        # mode = "PVP" if ui.GameUi.gameMode == "PvP" else "PVM"
-        # cr.execute(f"update stats set best_time = {300-newTime} where mode = '{mode}' and (best_time > {300-newTime} or best_time=0)")
-        # print(f"best time updated to {300-newTime}")
-        # db.commit()
-        pass
+    def update_score(user1Score, user1ScoreTime, user2Score = None, user2ScoreTime = None):
+        print("updating scores")
+        cr = db.cursor()
+        stored_data = JsonStore('data.json')
+        #update best score and best score time
+        cr.execute(f"update stats set best_score = {user1Score},best_score_time = {user1ScoreTime} where user = {stored_data.get('user1')['id']} and mode = '{ui.GameUi.gameMode}' and best_score < {user1Score}")
+        #update user1 absolute best time
+        cr.execute(f"update stats set best_time = {user1ScoreTime} where mode = '{ui.GameUi.gameMode}' and user = {stored_data.get('user1')['id']} and best_time < {user1ScoreTime}")
+        if user2Score is not None and user1ScoreTime is not None:
+            cr.execute(f"update stats set best_score = {user2Score},best_score_time = {user2ScoreTime} where user = {stored_data.get('user2')['id']} and mode = '{ui.GameUi.gameMode}' and best_score < {user2Score}")
+            #update user2 absolute best time
+            cr.execute(f"update stats set best_time = {user2ScoreTime} where mode = '{ui.GameUi.gameMode}' and user = {stored_data.get('user2')['id']} and best_time < {user2ScoreTime}")
+        db.commit()

@@ -23,6 +23,6 @@ class ChessApp(App):
         Connection.Connect() #initialise database connection
 ChessApp().run() 
 
-stored_data = JsonStore('data.json')
-if stored_data.exists('user'):
-    stored_data.delete('user')
+stored_data = JsonStore('./data.json')
+if stored_data.exists('user1'):
+    stored_data.delete('user1')
