@@ -44,24 +44,24 @@ class Pawn(Piece):
     def checkSquare(self,board,rank,column):
         return board[rank][column] is not None and board[rank][column].color != self.color
 
-    def getPossibleEnPassantCaptures(self,board):
+    def getPossibleEnPassantCaptures(self,board, lastMovedPiece):
         res = {}
         #check right diagonal en passant moves
         if self.column < 7 :
             targetObject = board[self.rank][self.column + 1]
-            if targetObject is not None and isinstance(targetObject,Pawn) and targetObject.color != self.color and targetObject.forwardMoveOffset == 2:
+            if targetObject is not None and isinstance(targetObject,Pawn) and targetObject.color != self.color and targetObject.forwardMoveOffset == 2 and targetObject == lastMovedPiece:
                 if self.color == "w":
                         res[(self.rank + 1,self.column + 1)] = (self.rank,self.column + 1) #map each en passant move its captures piece as {move : capture}
                 if self.color == "b":
                         res[(self.rank - 1,self.column + 1)] = (self.rank,self.column + 1)
         #check left diagonal en passant moves
         if self.column > 0:
-                targetObject = board[self.rank][self.column - 1]
-                if targetObject is not None and isinstance(targetObject,Pawn) and targetObject.color != self.color and targetObject.forwardMoveOffset == 2:
-                    if self.color == "w":
-                        res[(self.rank + 1,self.column - 1)] = (self.rank,self.column - 1)
-                    if self.color == "b":
-                        res[(self.rank - 1,self.column - 1)] = (self.rank,self.column - 1)
+            targetObject = board[self.rank][self.column - 1]
+            if targetObject is not None and isinstance(targetObject,Pawn) and targetObject.color != self.color and targetObject.forwardMoveOffset == 2 and targetObject == lastMovedPiece:
+                if self.color == "w":
+                    res[(self.rank + 1,self.column - 1)] = (self.rank,self.column - 1)
+                if self.color == "b":
+                    res[(self.rank - 1,self.column - 1)] = (self.rank,self.column - 1)
         return res
 
     def __str__(self):

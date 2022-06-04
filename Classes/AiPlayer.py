@@ -203,7 +203,7 @@ class AiPlayer(Player):
                 if position.board[line][column] is not None and position.board[line][column].color == color:
                     possibleEndMoves = position.board[line][column].getPossibleMoves(position.board)
                     if isinstance(position.board[line][column],Pawn):
-                        possibleEndMoves.extend(list(position.board[line][column].getPossibleEnPassantCaptures(position.board).keys()))
+                        possibleEndMoves.extend(list(position.board[line][column].getPossibleEnPassantCaptures(position.board, position.LastMovedPiece).keys()))
                     if isinstance(position.board[line][column],King):
                         possibleEndMoves.extend(position.getPossibleCastleMoves(position.board[line][column].color))
                     temp = []

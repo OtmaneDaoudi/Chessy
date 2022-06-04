@@ -235,7 +235,7 @@ class Game:
             btn.on_press = clicked
             popup.open()
             self.clear_data()
-
+            
         elif self.game_status == GameStatus.INSUFFICIENT_MATERIAL: 
             Connection.draw()
             popup.title = "Game is Over, draw by insufficient material"
@@ -246,6 +246,7 @@ class Game:
                 App.get_running_app().root.remove_widget(chessUI.GameUi.current_gameui)
             btn.on_press = clicked
             popup.open()
+            self.clear_data()
 
     def clear_data(self):
         if chessUI.GameUi.gameMode == "PvP" and chessUI.GameUi.authType == "Auth":

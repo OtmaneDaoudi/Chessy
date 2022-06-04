@@ -146,6 +146,7 @@ class Board:
                 else:
                     self.white_king_position = end_pos
 
+            print("last moved piece updated")
             self.LastMovedPiece = self.board[end_pos[0]][end_pos[1]]
 
             isMoved = True #marks the piece as moved
@@ -158,12 +159,14 @@ class Board:
         #detect en passant captures for pawn 
         #en passant happens only in rank 4 and 3 so we can't have promotion + en passant
         elif isinstance(self.board[start_pos[0]][start_pos[1]],Pawn):
-            temp_res = self.board[start_pos[0]][start_pos[1]].getPossibleEnPassantCaptures(self.board)
+            temp_res = self.board[start_pos[0]][start_pos[1]].getPossibleEnPassantCaptures(self.board, self.LastMovedPiece)
+            print("temp res = ", temp_res)
             # print("temp_res : ",temp_res)
             if (end_pos[0],end_pos[1]) in temp_res.keys():
                 print("capturing en passant")
                 captured_piece_index = temp_res[(end_pos[0],end_pos[1])]
                 if self.board[captured_piece_index[0]][captured_piece_index[1]] == self.LastMovedPiece:
+                    print("heheheh : ", captured_piece_index)
                     # print("capturing en passant")
                     self.board[end_pos[0]][end_pos[1]] = self.board[start_pos[0]][start_pos[1]]
                     self.board[start_pos[0]][start_pos[1]] = None
@@ -177,6 +180,7 @@ class Board:
                     self.board[captured_piece_index[0]][captured_piece_index[1]] = None
                     
                     self.LastMovedPiece = self.board[end_pos[0]][end_pos[1]]
+                    print("last moved piece updated")
                     isMoved = True
 
         #detect castling moves
@@ -324,12 +328,12 @@ class Board:
                     elif selection == "r":
                         self.board[position[0]][position[1]] = Rook(position[0],position[1],old_pawn_color)
                         self.LastMovedPiece = self.board[position[0]][position[1]]
+                        print("last moved piece updated")
 
                     #update the board
                     gui.update_board()
                     gui.game.switchTurnes()
                     view.dismiss()
-                print("selection = ",selection)
 
             submit.on_press= onclick
             bx_lywt1.add_widget(submit)
@@ -361,7 +365,7 @@ class Board:
                     if self.board[line][column] is not None and self.board[line][column].color == color:
                         possibleEndMoves = self.board[line][column].getPossibleMoves(self.board)
                         if isinstance(self.board[line][column],Pawn):
-                            possibleEndMoves.extend(list(self.board[line][column].getPossibleEnPassantCaptures(self.board).keys()))
+                            possibleEndMoves.extend(list(self.board[line][column].getPossibleEnPassantCaptures(self.board, self.LastMovedPiece).keys()))
                         for move in possibleEndMoves:
                             if not self.MoveCauseCheck((line,column),move):
                                 return False
@@ -473,7 +477,7 @@ class Board:
         PossibleEndMoves = []
         PossibleEndMoves.extend(self.board[rank][column].getPossibleMoves(self.board))
         if isinstance(self.board[rank][column],Pawn):
-            PossibleEndMoves.extend(self.board[rank][column].getPossibleEnPassantCaptures(self.board).keys())
+            PossibleEndMoves.extend(self.board[rank][column].getPossibleEnPassantCaptures(self.board, self.LastMovedPiece).keys())
         if isinstance(self.board[rank][column],King):
             PossibleEndMoves.extend(self.getPossibleCastleMoves(self.board[rank][column].color))
 

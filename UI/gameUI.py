@@ -388,12 +388,10 @@ class ChessBoard(GridLayout):
     def selected(self, rank, column, cell: Cell):
         if cell.piece is None:
             if (rank,column) in self.marked_moved:
-                print("self type ",type(self))
                 self.undo_stack.append({"board" : deepcopy(self.game.game_board) , "game_state" : self.game.game_status})
                 self.game.playMove((self.selected_cell.rank,self.selected_cell.column),(rank,column), self)
                 self.move_piece_sound.play()
                 self.update_board()
-                # self.animate_move(self.selected_cell,cell)
                 self.selected_cell.state = "normal"
                 self.selected_cell = None
                 for oldTarget in self.marked_moved:

@@ -21,7 +21,7 @@ class OfflinePlayer(Player):
             PossibleEndMoves = []
             PossibleEndMoves.extend(game_board.board[start_pos[0]][start_pos[1]].getPossibleMoves(game_board.board))
             if isinstance(game_board.board[start_pos[0]][start_pos[1]],Pawn):
-                PossibleEndMoves.extend(game_board.board[start_pos[0]][start_pos[1]].getPossibleEnPassantCaptures(game_board.board).keys())
+                PossibleEndMoves.extend(game_board.board[start_pos[0]][start_pos[1]].getPossibleEnPassantCaptures(game_board.board, game_board.LastMovedPiece).keys())
             if isinstance(game_board.board[start_pos[0]][start_pos[1]],King):
                 PossibleEndMoves.extend(game_board.getPossibleCastleMoves(self.color))
             end_pos = ast.literal_eval(input(f"Enter end position : "))
