@@ -230,7 +230,6 @@ class ChessBoard(GridLayout):
     def exit(self, *args):
         #check game status before close
         if self.game.game_status.value in (1,6,7):
-            print("yp game type is anony")
             #show game save dialogue
             show_popup()
         else:
@@ -447,7 +446,7 @@ class WindowManager(ScreenManager):
 
 
 def show_popup(*args):
-    if App.get_running_app().root.current == 'gameUi'  and GameUi.authType == "Anonymous" :
+    if App.get_running_app().root.current == 'gameUi'  and GameUi.gameMode == "PvM" :
         show = ContentPopup()
         window = Popup(title="Exit Chess Game", content=show,
                     size_hint=(None, None), size=(400, 400))

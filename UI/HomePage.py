@@ -36,6 +36,13 @@ class HomePage(Screen):
     # +--------- Player VS Player Screen ---------+
 
     def showSavedGameDialogue(self, *args):
+        stored_data = JsonStore('data.json')
+        if stored_data.exists('user1'):
+            App.get_running_app().root.get_screen('home').ids.con.disabled = True
+            App.get_running_app().root.get_screen('home').ids.dec.disabled = False
+            App.get_running_app().root.get_screen('home').ids.stat.disabled = False
+            App.get_running_app().root.get_screen('home').ids.con.opacity = '0'
+            App.get_running_app().root.get_screen('home').ids.dec.opacity = '1'
         if os.path.exists("GameObject"):
             if os.path.getsize("GameObject") != 0: #file is not empty
                 #show a pop up
