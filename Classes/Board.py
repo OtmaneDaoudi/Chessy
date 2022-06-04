@@ -146,7 +146,6 @@ class Board:
                 else:
                     self.white_king_position = end_pos
 
-            print("last moved piece updated")
             self.LastMovedPiece = self.board[end_pos[0]][end_pos[1]]
 
             isMoved = True #marks the piece as moved
@@ -180,7 +179,6 @@ class Board:
                     self.board[captured_piece_index[0]][captured_piece_index[1]] = None
                     
                     self.LastMovedPiece = self.board[end_pos[0]][end_pos[1]]
-                    print("last moved piece updated")
                     isMoved = True
 
         #detect castling moves
@@ -328,7 +326,6 @@ class Board:
                     elif selection == "r":
                         self.board[position[0]][position[1]] = Rook(position[0],position[1],old_pawn_color)
                         self.LastMovedPiece = self.board[position[0]][position[1]]
-                        print("last moved piece updated")
 
                     #update the board
                     gui.update_board()

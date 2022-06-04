@@ -10,6 +10,8 @@ from Classes.Player import Player
 from Classes.Queen import Queen
 from Classes.Rook import Rook
 import UI.gameUI as gameUi
+from functools import lru_cache
+
 
 
 class AiPlayer(Player):
@@ -130,6 +132,8 @@ class AiPlayer(Player):
     #                     best_move = [start,end]
     #         return minEval, best_move
             
+    # @lru_cache(maxsize=128, typed=False)
+    # @lru_cache(maxsize=5000, typed=False)
     def minimax(self, position: Board, depth: int,alpha, beta, maximizingPlayer: bool):
         #if the game ends at the current position or depth == 0
         if depth == 0 or position.isGameOver() or gameUi.ChessBoard.thread_flag == "ENDED":
@@ -169,6 +173,7 @@ class AiPlayer(Player):
             return minEval, best_move
 
     #static evaluation of a po sition
+    @lru_cache(maxsize=5000, typed=False)
     def evaluatePosition(self,position : Board):
         res = 0
         for line in range(8):
@@ -189,6 +194,7 @@ class AiPlayer(Player):
                         res += factor*(AiPlayer.KING + AiPlayer.pst['K'][line][column])
         return res
 
+    # @lru_cache(maxsize=None, typed=False)
     def getAllMoves(self,position: Board,color):
         res = {}
         #random indexes shuflling allows for random best move selection
