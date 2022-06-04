@@ -7,7 +7,6 @@ from DB.connection import Connection
 from UI.StatsScreen import StatsScreen
 from UI.ConnectionPg import ConnectionPg
 from kivy.config import Config
-from kivy.storage.jsonstore import JsonStore
 
 Config.set('graphics', 'width', '900')
 Config.set('graphics', 'height', '630')

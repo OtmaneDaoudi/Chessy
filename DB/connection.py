@@ -55,12 +55,14 @@ class Connection():
             print(er)
 
     def getStats():
-        # try:
-        #     cr = db.cursor()
-        #     cr.execute("select * from stats")
-        #     return cr.fetchall()
-        # except sqlite3.Error as er:
-        #     print(er) 
+        #get current player stats 
+        try:
+            cr = db.cursor()
+            stored_data = JsonStore('data.json')
+            cr.execute(f"select * from stats where user = {stored_data.get('user1')['id']}")
+            return cr.fetchall()
+        except sqlite3.Error as er:
+            print(er) 
         pass
 
     def increment_total_played(*args):
