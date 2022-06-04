@@ -2,6 +2,7 @@
 import sqlite3
 
 import UI.gameUI as ui
+from kivy.storage.jsonstore import JsonStore
 
 class Connection():
     def Connect():
@@ -19,7 +20,6 @@ class Connection():
             cr = db.cursor()
             cr.execute(f"select * from users where username='{username}'")
             row = cr.fetchone()
-
             if(row is None):
                 return False
             return True
@@ -40,8 +40,12 @@ class Connection():
         try:
             if(not Connection.check_user(username)):
                 cr = db.cursor()
-                cr.execute(
-                    f"insert into users(username,psw) values('{username}','{psw}')")
+                cr.execute(f"insert into users(username,psw) values('{username}','{psw}')")
+                cr.execute(f"select id from users where username = '{username}' and psw = '{psw}'")
+                user = cr.fetchone(); 
+                print("user = ", user)
+                cr.execute(f"insert into stats values (NULL, 0, 0, 0, 'PvP', 0, 0, 0, 0, {user[0]})")
+                cr.execute(f"insert into stats values (NULL, 0, 0, 0, 'PvM', 0, 0, 0, 0, {user[0]})")
                 db.commit()
                 print("------------User Is Inserted-----------")
                 return True
@@ -61,16 +65,16 @@ class Connection():
         pass
 
     def increment_total_played(*args):
-        pass
-        # cr = db.cursor()
-        # if ui.GameUi.gameMode == 'PvP':
-        #     cr.execute("update stats set total_played = total_played + 1 where mode = 'PVP'")
-        #     db.commit()
-        #     print("updated")
-        # else:
-        #     cr.execute("update stats set total_played = total_played + 1 where mode = 'PVM'")
-        #     db.commit()
-        #     print("updated")
+        stored_data = JsonStore('data.json')
+        cr = db.cursor()
+        if ui.GameUi.gameMode == 'PvM':
+            cr.execute(f"update stats set total_played = total_played + 1 where mode = 'PvM' and user = {stored_data.get('user1')['id']}")
+        else:
+            if ui.GameUi.authType != "Anonymous":
+                cr.execute(f"update stats set total_played = total_played + 1 where mode = 'PvP' and user = {stored_data.get('user1')['id']}")
+                cr.execute(f"update stats set total_played = total_played + 1 where mode = 'PvP' and user = {stored_data.get('user2')['id']}")
+        print("total played updated")
+        db.commit()
 
     def winner(color):
         # cr = db.cursor()

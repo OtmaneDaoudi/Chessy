@@ -10,6 +10,7 @@ from kivy.uix.popup import Popup
 from kivy.uix.button import Button
 from kivy.clock import Clock
 from DB.connection import Connection
+from kivy.storage.jsonstore import JsonStore
 
 class GameStatus(Enum):
     ACTIVE = 1
@@ -45,34 +46,6 @@ class Game:
         self.black_timer = 300
 
         self.clock_ticking_sound = SoundLoader.load('./Assets/audio/ticking_clock.wav')
-        
-    def start_game(self):
-        #initialise Game UI
-        while self.game_status == GameStatus.ACTIVE:
-            turn_var = "white" if self.turn == "w" else "black"
-            print(f"{turn_var}'s turn")
-            if self.turn == "b":
-                move = self.black_player.getMove(self.game_board) #returns a valid move
-                black_AI_autopromotion = (True if isinstance(self.black_player,AiPlayer) else False)
-                print(f"move stat : {self.game_board.move_piece(move[0],move[1],black_AI_autopromotion)}")
-                if self.game_board.isCheck("w") :
-                    if self.game_board.isCheckMate("w"):
-                        print("Game is over, black team wins")
-                        self.game_status = GameStatus.BLACK_WIN
-                    else :
-                        print("White king is under check")
-                self.turn = "w"
-            else:
-                move = self.white_player.getMove(self.game_board) #returns a valid move
-                white_AI_autopromotion = (True if isinstance(self.white_player,AiPlayer) else False)
-                print(f"move stat : {self.game_board.move_piece(move[0],move[1],white_AI_autopromotion)}")
-                if self.game_board.isCheck("b") :
-                    if self.game_board.isCheckMate("b"):
-                        print("Game is over, white team wins")
-                        self.game_status = GameStatus.WHITE_WIN
-                    else :
-                        print("black king is under check")
-                self.turn = "b"
 
     def update_clocks(self, isFirstLaunch, *args):
         if self.turn == "w":
@@ -199,9 +172,9 @@ class Game:
         popup.content = btn
 
         if self.game_status == GameStatus.BLACK_WIN:
-            Connection.winner("b")
-            Connection.update_score(self.game_board.calculate_score(chessUI.GameUi.playAs), self.white_timer if chessUI.GameUi.playAs == "w" else self.black_timer)
-            Connection.update_best_time(self.white_timer if chessUI.GameUi.playAs == "w" else self.black_timer)
+            # Connection.winner("b")
+            # Connection.update_score(self.game_board.calculate_score(chessUI.GameUi.playAs), self.white_timer if chessUI.GameUi.playAs == "w" else self.black_timer)
+            # Connection.update_best_time(self.white_timer if chessUI.GameUi.playAs == "w" else self.black_timer)
             username = "balck team"
             if chessUI.GameUi.authType == "Auth":
                 username = App.get_running_app().root.get_screen('gameUi').ids.boardNclocks.ids.black_player_banner.text
@@ -210,14 +183,16 @@ class Game:
             def clicked():
                 popup.dismiss()
                 App.get_running_app().root.current = 'home'
+                App.get_running_app().root.remove_widget(chessUI.GameUi.current_gameui)
             btn.on_press = clicked
             #update stats in database
             popup.open()
-            chessUI.GameUi.authType = "Anonymous"
+            #clear user 2 data 
+            self.clear_data()
         elif self.game_status == GameStatus.WHITE_WIN:
-            Connection.winner("w")
-            Connection.update_score(self.game_board.calculate_score(chessUI.GameUi.playAs), self.white_timer if chessUI.GameUi.playAs == "w" else self.black_timer)
-            Connection.update_best_time(self.white_timer if chessUI.GameUi.playAs == "w" else self.black_timer)
+            # Connection.winner("w")
+            # Connection.update_score(self.game_board.calculate_score(chessUI.GameUi.playAs), self.white_timer if chessUI.GameUi.playAs == "w" else self.black_timer)
+            # Connection.update_best_time(self.white_timer if chessUI.GameUi.playAs == "w" else self.black_timer)
             username = "white team"
             if chessUI.GameUi.authType == "Auth" and chessUI.GameUi.gameMode == "PvP":
                 username = App.get_running_app().root.get_screen('gameUi').ids.boardNclocks.ids.white_player_banner.text
@@ -226,10 +201,13 @@ class Game:
             def clicked():
                 popup.dismiss()
                 App.get_running_app().root.current = 'home'
+                App.get_running_app().root.remove_widget(chessUI.GameUi.current_gameui)
             btn.on_press = clicked
             #update stats in database
             popup.open()
-            chessUI.GameUi.authType = "Anonymous"
+            #clear user2 data 
+            self.clear_data(); 
+
         elif self.game_status in  (GameStatus.WHITE_KING_CHECKED,GameStatus.BLACK_KING_CHECKED): 
             name_ = 'white' if self.game_status == GameStatus.WHITE_KING_CHECKED else 'black'
             popup.title = f"{name_} king is under check"
@@ -244,6 +222,7 @@ class Game:
             def clicked():
                 popup.dismiss()
                 App.get_running_app().root.current = 'home'
+                App.get_running_app().root.remove_widget(chessUI.GameUi.current_gameui)
             btn.on_press = clicked
             popup.open()
         elif self.game_status == GameStatus.INSUFFICIENT_MATERIAL: 
@@ -253,5 +232,14 @@ class Game:
             def clicked():
                 popup.dismiss()
                 App.get_running_app().root.current = 'home'
+                App.get_running_app().root.remove_widget(chessUI.GameUi.current_gameui)
             btn.on_press = clicked
             popup.open()
+
+    def clear_data(self):
+        if chessUI.GameUi.gameMode == "PvP" and chessUI.GameUi.authType == "Auth":
+                stored_data = JsonStore('data.json')
+                if stored_data.exists('user2'):
+                    stored_data.delete('user2')
+        #restore old behaviour
+        chessUI.GameUi.authType = "Anonymous"

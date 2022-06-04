@@ -17,7 +17,12 @@ class ConnectionPg(Screen):
                 obj = Connection.get_user(username, psw)
                 if(obj is not None):
                     stored_data = JsonStore('data.json')
-                    stored_data.put('users', myobjet=obj)
+                    if stored_data.exists('user1'):
+                        stored_data.put('user2', id=obj[0], userName = obj[1])
+                        self.parent.current = "pvsp"
+                        return
+                    else:   
+                        stored_data.put('user1', id=obj[0], userName = obj[1])
                     App.get_running_app().root.get_screen('home').ids.con.disabled = True
                     App.get_running_app().root.get_screen('home').ids.dec.disabled = False
                     App.get_running_app().root.get_screen('home').ids.stat.disabled = False

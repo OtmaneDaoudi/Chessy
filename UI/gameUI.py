@@ -155,26 +155,36 @@ class ChessBoard(GridLayout):
 
         if isinstance(self.game.white_player, AiPlayer):
             #make the algorithm go firs
-            print("ok")
             Clock.schedule_once(self.AiMoveThread, 1)
-
-        Clock.schedule_once(con.Connection.increment_total_played)
+            
         Clock.schedule_once(self.init_names)
 
-        
 
     def init_names(self, *agrs):
         #set player names
-        if GameUi.authType == "Auth":
+        if GameUi.gameMode == "PvP":
+            if GameUi.authType == "Auth":
+                #increment total player for both players
+                con.Connection.increment_total_played()
+                stored_data = JsonStore('data.json')
+                black_banner = App.get_running_app().root.get_screen('gameUi').ids.boardNclocks.ids.black_player_banner
+                white_banner = App.get_running_app().root.get_screen('gameUi').ids.boardNclocks.ids.white_player_banner
+                if GameUi.playAs == "w":
+                    white_banner.text = stored_data.get('user1')['userName']
+                    black_banner.text = stored_data.get('user2')['userName']
+                else:
+                    black_banner.text = stored_data.get('user1')['userName']
+                    white_banner.text = stored_data.get('user2')['userName']    
+        else:
             stored_data = JsonStore('data.json')
-            black_banner = App.get_running_app().root.get_screen('gameUi').ids.boardNclocks.ids.black_player_banner
-            white_banner = App.get_running_app().root.get_screen('gameUi').ids.boardNclocks.ids.white_player_banner
-            if GameUi.playAs == "w":
-                white_banner.text = stored_data.get('user1')['userName']
-                black_banner.text = stored_data.get('user2')['userName']
-            else:
-                black_banner.text = stored_data.get('user1')['userName']
-                white_banner.text = stored_data.get('user2')['userName']
+            if stored_data.exists('user1'):
+                #user connected 
+                #increment total played
+                con.Connection.increment_total_played(); 
+                if GameUi.playAs == "w":
+                    App.get_running_app().root.get_screen('gameUi').ids.boardNclocks.ids.white_player_banner.text = stored_data.get('user1')['userName']
+                else:
+                    App.get_running_app().root.get_screen('gameUi').ids.boardNclocks.ids.black_player_banner.text = stored_data.get('user1')['userName']
             
 
     def init_lables(self, *args):
