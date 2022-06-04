@@ -61,7 +61,7 @@ class Connection():
         #     cr.execute("select * from stats")
         #     return cr.fetchall()
         # except sqlite3.Error as er:
-        #     print(er)
+        #     print(er) 
         pass
 
     def increment_total_played(*args):
@@ -77,21 +77,30 @@ class Connection():
         db.commit()
 
     def winner(color):
-        # cr = db.cursor()
-        # mode = "PVP" if ui.GameUi.gameMode == "PvP" else "PVM"
-        # if color == ui.GameUi.playAs:
-        #     cr.execute(f"update stats set wins = wins + 1 where mode = '{mode}'")
-        # else:
-        #     cr.execute(f"update stats set lost = lost + 1 where mode = '{mode}'")
-        # db.commit()
-        pass
+        cr = db.cursor()
+        stored_data = JsonStore('data.json')
+        if ui.GameUi.gameMode == "PvP" and ui.GameUi.authType == "Auth":
+            if color == ui.GameUi.playAs:
+                cr.execute(f"update stats set wins = wins + 1 where mode = 'PvP' and user = {stored_data.get('user1')['id']}")
+                cr.execute(f"update stats set lost = lost + 1 where mode = 'PvP' and user = {stored_data.get('user2')['id']}")
+            else:
+                cr.execute(f"update stats set lost = lost + 1 where mode = 'PvP' and user = {stored_data.get('user1')['id']}")
+                cr.execute(f"update stats set wins = wins + 1 where mode = 'PvP' and user = {stored_data.get('user2')['id']}")
+        elif ui.GameUi.gameMode == 'PvM' and stored_data.exists('user1'):
+            if color == ui.GameUi.playAs:
+                cr.execute(f"update stats set wins = wins + 1 where mode = 'PvM' and user = {stored_data.get('user1')['id']}")
+            else:   
+                cr.execute(f"update stats set lost = lost + 1 where mode = 'PvM' and user = {stored_data.get('user1')['id']}")
+        db.commit()
 
     def draw():
-        # cr = db.cursor()s
-        # mode = "PVP" if ui.GameUi.gameMode == "PvP" else "PVM"
-        # cr.execute(f"update stats set draws = draws + 1 where mode = '{mode}'")
-        # db.commit()
-        pass
+        cr = db.cursor()
+        stored_data = JsonStore('data.json')
+        if ui.GameUi.gameMode == "PvP" and ui.GameUi.authType == "Auth":
+            cr.execute(f"update stats set draws = draws + 1 where mode = 'PvP' and user IN ({stored_data.get('user1')['id']},{stored_data.get('user2')['id']})")
+        elif ui.GameUi.gameMode == 'PvM' and stored_data.exists('user1'):
+            cr.execute(f"update stats set draws = draws + 1 where mode = 'PvM' and user = {stored_data.get('user1')['id']}")
+        db.commit()
 
     def update_score(newScore, score_time):
         # cr = db.cursor()

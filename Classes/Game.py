@@ -26,21 +26,21 @@ class Game:
         self.turn = turn
         self.game_status = GameStatus.ACTIVE
         self.boardUI = boardUI
+
+        self.white_player = OfflinePlayer("w")
+        self.black_player = OfflinePlayer("b")
         
         # print("game class : gamemode = ", chessUI.GameUi.gameMode, "play as =  ", chessUI.GameUi.playAs)
-        if chessUI.GameUi.gameMode == "PvP":
-            print("init 1")
-            self.white_player = OfflinePlayer("w")
-            self.black_player = OfflinePlayer("b")
-        else:
-            if chessUI.GameUi.playAs == "w":
-                print("init 2 ")
-                self.white_player = OfflinePlayer("w")
-                self.black_player = AiPlayer("b", chessUI.GameUi.diff)
-            else:
-                print("init 3")
-                self.white_player = AiPlayer("w", chessUI.GameUi.diff)
-                self.black_player = OfflinePlayer("b")
+        # if chessUI.GameUi.gameMode == "PvP":
+        #     self.white_player = OfflinePlayer("w")
+        #     self.black_player = OfflinePlayer("b")
+        # else:
+        #     if chessUI.GameUi.playAs == "w":
+        #         self.white_player = OfflinePlayer("w")
+        #         self.black_player = AiPlayer("b", chessUI.GameUi.diff)
+        #     else:
+        #         self.white_player = AiPlayer("w", chessUI.GameUi.diff)
+        #         self.black_player = OfflinePlayer("b")
 
         self.white_timer = 300
         self.black_timer = 300
@@ -172,7 +172,7 @@ class Game:
         popup.content = btn
 
         if self.game_status == GameStatus.BLACK_WIN:
-            # Connection.winner("b")
+            Connection.winner("b")
             # Connection.update_score(self.game_board.calculate_score(chessUI.GameUi.playAs), self.white_timer if chessUI.GameUi.playAs == "w" else self.black_timer)
             # Connection.update_best_time(self.white_timer if chessUI.GameUi.playAs == "w" else self.black_timer)
             username = "balck team"
@@ -190,7 +190,7 @@ class Game:
             #clear user 2 data 
             self.clear_data()
         elif self.game_status == GameStatus.WHITE_WIN:
-            # Connection.winner("w")
+            Connection.winner("w")
             # Connection.update_score(self.game_board.calculate_score(chessUI.GameUi.playAs), self.white_timer if chessUI.GameUi.playAs == "w" else self.black_timer)
             # Connection.update_best_time(self.white_timer if chessUI.GameUi.playAs == "w" else self.black_timer)
             username = "white team"
@@ -206,8 +206,7 @@ class Game:
             #update stats in database
             popup.open()
             #clear user2 data 
-            self.clear_data(); 
-
+            self.clear_data()
         elif self.game_status in  (GameStatus.WHITE_KING_CHECKED,GameStatus.BLACK_KING_CHECKED): 
             name_ = 'white' if self.game_status == GameStatus.WHITE_KING_CHECKED else 'black'
             popup.title = f"{name_} king is under check"
@@ -225,6 +224,8 @@ class Game:
                 App.get_running_app().root.remove_widget(chessUI.GameUi.current_gameui)
             btn.on_press = clicked
             popup.open()
+            self.clear_data()
+
         elif self.game_status == GameStatus.INSUFFICIENT_MATERIAL: 
             Connection.draw()
             popup.title = "Game is Over, draw by insufficient material"
