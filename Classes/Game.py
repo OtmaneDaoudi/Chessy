@@ -26,21 +26,18 @@ class Game:
         self.turn = turn
         self.game_status = GameStatus.ACTIVE
         self.boardUI = boardUI
-
-        self.white_player = OfflinePlayer("w")
-        self.black_player = OfflinePlayer("b")
         
         # print("game class : gamemode = ", chessUI.GameUi.gameMode, "play as =  ", chessUI.GameUi.playAs)
-        # if chessUI.GameUi.gameMode == "PvP":
-        #     self.white_player = OfflinePlayer("w")
-        #     self.black_player = OfflinePlayer("b")
-        # else:
-        #     if chessUI.GameUi.playAs == "w":
-        #         self.white_player = OfflinePlayer("w")
-        #         self.black_player = AiPlayer("b", chessUI.GameUi.diff)
-        #     else:
-        #         self.white_player = AiPlayer("w", chessUI.GameUi.diff)
-        #         self.black_player = OfflinePlayer("b")
+        if chessUI.GameUi.gameMode == "PvP":
+            self.white_player = OfflinePlayer("w")
+            self.black_player = OfflinePlayer("b")
+        else:
+            if chessUI.GameUi.playAs == "w":
+                self.white_player = OfflinePlayer("w")
+                self.black_player = AiPlayer("b", chessUI.GameUi.diff)
+            else:
+                self.white_player = AiPlayer("w", chessUI.GameUi.diff)
+                self.black_player = OfflinePlayer("b")
 
         self.white_timer = 300
         self.black_timer = 300
