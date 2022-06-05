@@ -12,6 +12,7 @@ from kivy.uix.boxlayout import BoxLayout
 import pickle
 import os
 from kivy.storage.jsonstore import JsonStore
+import UI.StatsScreen
 from UI.gameUI import ChessBoard, GameUi
 
 class ContentPopChoice(BoxLayout):
@@ -20,7 +21,6 @@ class ContentPopChoice(BoxLayout):
         self.linkedPopUp = pop
 
     def anonymousInit(self):
-        print("anony pressed")
         self.linkedPopUp.dismiss()
         App.get_running_app().root.current = 'pvsp'
     
@@ -98,3 +98,6 @@ class HomePage(Screen):
         window.content = show
         window.open()
         return True
+
+    def init_stats_screen(self):
+        App.get_running_app().root.add_widget(UI.StatsScreen.StatsScreen())

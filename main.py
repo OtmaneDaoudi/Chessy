@@ -21,7 +21,3 @@ class ChessApp(App):
         super().__init__(**kwargs)
         Connection.Connect() #initialise database connection
 ChessApp().run() 
-
-# stored_data = JsonStore('./data.json')
-# if stored_data.exists('user1'):
-#     stored_data.delete('user1')

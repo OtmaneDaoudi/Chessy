@@ -1,3 +1,4 @@
 {
-    "materialkv.pythonFile": "main.py"
+    "materialkv.pythonFile": "main.py",
+    "python.formatting.provider": "yapf"
 }

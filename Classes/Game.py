@@ -9,7 +9,7 @@ from kivy.core.audio import SoundLoader
 from kivy.uix.popup import Popup
 from kivy.uix.button import Button
 from kivy.clock import Clock
-from DB.connection import Connection
+import DB.connection as Connection
 from kivy.storage.jsonstore import JsonStore
 
 class GameStatus(Enum):

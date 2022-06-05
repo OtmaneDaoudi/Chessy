@@ -13,6 +13,7 @@ from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.button import Button
+from kivy.uix.image import Image
 class Board:
     boards = []
     def __init__(self):
@@ -165,7 +166,6 @@ class Board:
                 print("capturing en passant")
                 captured_piece_index = temp_res[(end_pos[0],end_pos[1])]
                 if self.board[captured_piece_index[0]][captured_piece_index[1]] == self.LastMovedPiece:
-                    print("heheheh : ", captured_piece_index)
                     # print("capturing en passant")
                     self.board[end_pos[0]][end_pos[1]] = self.board[start_pos[0]][start_pos[1]]
                     self.board[start_pos[0]][start_pos[1]] = None
@@ -260,47 +260,45 @@ class Board:
             return
         else:
             color = self.board[position[0]][position[1]].color
-            view = ModalView(size_hint=(None, None), size=(400, 400))
+            view = ModalView(size_hint=(.6, .5))
             
             bx_lywt2 = BoxLayout(orientation="horizontal")
-            bx_lywt2.size_hint = (1,None)
-            bx_lywt2.height = 105
-            bx_lywt2.padding = 5
+            # bx_lywt2.size_hint = (1,None)
+            # bx_lywt2.height = 105
+            # bx_lywt2.padding = 5
             bx_lywt1 = BoxLayout(orientation="vertical")
             bx_lywt1.add_widget(Label(text='Select whiche piece to promote pawn to:'))
             bx_lywt1.add_widget(bx_lywt2)
-
-            selection = "q"
-        
+            # selection = "q"        
             queen = ToggleButton(
-                     background_normal = f'./Assets/images/{color}_queen.png',
-                     pos_hint = {"x":0.35, "y":0.3},
-                     group = "promotion"
-                   ) 
+                background_normal = f'./Assets/images/{color}_queen.png',
+                pos_hint = {"x":0.35, "y":0.3},
+                group = "promotion"
+            ) 
                 
             queen.state = "down"
         
             bishop = ToggleButton(
-                     background_normal = f'./Assets/images/{color}_bishop.png',
-                     pos_hint = {"x":0.35, "y":0.3},
-                     group = "promotion"
-                   ) 
+                background_normal = f'./Assets/images/{color}_bishop.png',
+                pos_hint = {"x":0.35, "y":0.3},
+                group = "promotion"
+            ) 
         
             knight = ToggleButton(
-                     background_normal = f'./Assets/images/{color}_knight.png',
-                     pos_hint = {"x":0.35, "y":0.3},
-                     group = "promotion"
+                    background_normal = f'./Assets/images/{color}_knight.png',
+                    pos_hint = {"x":0.35, "y":0.3},
+                    group = "promotion"
                    ) 
         
             rook = ToggleButton(
-                     background_normal = f'./Assets/images/{color}_rook.png',
-                     pos_hint = {"x":0.35, "y":0.3},
-                     group = "promotion"
+                    background_normal = f'./Assets/images/{color}_rook.png',
+                    pos_hint = {"x":0.35, "y":0.3},
+                    group = "promotion"
                    ) 
 
             submit = Button(text = "Promote")
-            submit.size_hint = (1,None)
-            submit.height = 100
+            # submit.size_hint = (1,None)
+            # submit.height = 100
 
             def onclick():
                 selection = None

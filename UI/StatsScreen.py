@@ -1,6 +1,7 @@
 from kivy.uix.screenmanager import Screen
 from kivy.properties import NumericProperty
 from DB.connection import Connection
+from kivy.storage.jsonstore import JsonStore
 
 class StatsScreen(Screen):
     PVPtotalPLayed = NumericProperty(0)
@@ -30,34 +31,36 @@ class StatsScreen(Screen):
         self.fetch_stats()
         
     def fetch_stats(self, *args):
-        data = Connection.getStats()
-        print("fetched data = ", data)
-        pvp = data[0]
-        pvm = data[1]
-        #pvp data
-        StatsScreen.PVPtotalPLayed = pvp[1]
-        StatsScreen.PVPwins = pvp[2]
-        StatsScreen.PVPlost = pvp[5]
-        StatsScreen.PVPdraw = pvp[6]
-        if StatsScreen.PVPtotalPLayed != 0:
-            StatsScreen.PVPwinsPercentage = StatsScreen.PVPwins/StatsScreen.PVPtotalPLayed*100
-            StatsScreen.PVPlostPercentage = StatsScreen.PVPlost/StatsScreen.PVPtotalPLayed*100
-            StatsScreen.PVPdrawPercentage = StatsScreen.PVPdraw/StatsScreen.PVPtotalPLayed*100
-        StatsScreen.PVPbestScore = pvp[3]
-        
-        StatsScreen.PVPbestScoreTime = pvp[7]
-        StatsScreen.PVPbestTime = pvp[8]
-
-        #pvm data 
-        pvm = data[1]
-        StatsScreen.PVMtotalPLayed = pvm[1]
-        StatsScreen.PVMwins = pvm[2]
-        StatsScreen.PVMlost = pvm[5]
-        StatsScreen.PVMdraw = pvm[6]
-        if StatsScreen.PVMtotalPLayed != 0:
-            StatsScreen.PVMwinsPercentage = StatsScreen.PVMwins/StatsScreen.PVMtotalPLayed*100
-            StatsScreen.PVMdrawPercentage = StatsScreen.PVMdraw/StatsScreen.PVMtotalPLayed*100
-            StatsScreen.PVMlostPercentage = StatsScreen.PVMlost/StatsScreen.PVMtotalPLayed*100
-        StatsScreen.PVMbestScore = pvm[3]
-        StatsScreen.PVMbestScoreTime = pvm[7]
-        StatsScreen.PVMbestTime = pvm[8]
+        stored_data = JsonStore("data.json")
+        if stored_data.exists('user1'):
+            data = Connection.getStats()
+            print("fetched data = ", data)
+            pvp = data[0]
+            pvm = data[1]
+            #pvp data
+            StatsScreen.PVPtotalPLayed = pvp[1]
+            StatsScreen.PVPwins = pvp[2]
+            StatsScreen.PVPlost = pvp[5]
+            StatsScreen.PVPdraw = pvp[6]
+            if StatsScreen.PVPtotalPLayed != 0:
+                StatsScreen.PVPwinsPercentage = StatsScreen.PVPwins/StatsScreen.PVPtotalPLayed*100
+                StatsScreen.PVPlostPercentage = StatsScreen.PVPlost/StatsScreen.PVPtotalPLayed*100
+                StatsScreen.PVPdrawPercentage = StatsScreen.PVPdraw/StatsScreen.PVPtotalPLayed*100
+            StatsScreen.PVPbestScore = pvp[3]
+            
+            StatsScreen.PVPbestScoreTime = pvp[7]
+            StatsScreen.PVPbestTime = pvp[8]
+    
+            #pvm data 
+            pvm = data[1]
+            StatsScreen.PVMtotalPLayed = pvm[1]
+            StatsScreen.PVMwins = pvm[2]
+            StatsScreen.PVMlost = pvm[5]
+            StatsScreen.PVMdraw = pvm[6]
+            if StatsScreen.PVMtotalPLayed != 0:
+                StatsScreen.PVMwinsPercentage = StatsScreen.PVMwins/StatsScreen.PVMtotalPLayed*100
+                StatsScreen.PVMdrawPercentage = StatsScreen.PVMdraw/StatsScreen.PVMtotalPLayed*100
+                StatsScreen.PVMlostPercentage = StatsScreen.PVMlost/StatsScreen.PVMtotalPLayed*100
+            StatsScreen.PVMbestScore = pvm[3]
+            StatsScreen.PVMbestScoreTime = pvm[7]
+            StatsScreen.PVMbestTime = pvm[8]
