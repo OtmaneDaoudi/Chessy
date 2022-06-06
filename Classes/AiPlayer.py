@@ -191,12 +191,10 @@ class AiPlayer(Player):
     #         return minEval, best_move
             
     # @lru_cache(maxsize=128, typed=False)
-    # @lru_cache(maxsize=5000, typed=False)
+    # @lru_cache(maxsize=False, typed=False)
     def minimax(self, position: Board, depth: int,alpha, beta, maximizingPlayer: bool):
-        #if the game ends at the current position or depth == 0
         if depth == 0 or position.isGameOver() or gameUi.ChessBoard.thread_flag == "ENDED":
             return self.evaluatePosition(position), None
-
         if maximizingPlayer:
             possibleMoves = self.getAllMoves(position, "w")
             maxEval = -math.inf

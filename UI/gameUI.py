@@ -145,13 +145,11 @@ class ChessBoard(GridLayout):
                     current_color = dark_square
             else: 
                 current_color = light_square
-        self.init_lables()
         self.move_piece_sound = SoundLoader.load('./Assets/audio/piece_move.wav')
         
         #schedule clock updates
         self.clocks_job = Clock.schedule_interval(self.game.update_clocks, 1)
         Clock.schedule_once(self.setBtns)
-        # Clock.schedule_once(self.init_lables)
 
         if isinstance(self.game.white_player, AiPlayer):
             #make the algorithm go firs
@@ -185,32 +183,16 @@ class ChessBoard(GridLayout):
                     App.get_running_app().root.get_screen('gameUi').ids.boardNclocks.ids.white_player_banner.text = stored_data.get('user1')['userName']
                 else:
                     App.get_running_app().root.get_screen('gameUi').ids.boardNclocks.ids.black_player_banner.text = stored_data.get('user1')['userName']
-            
 
-    def init_lables(self, *args):
-        #first rank
-        for col in range(8):
-            l = Label()
-            l.text = "hehe"
-            node_pos = self.cells[0][col].pos
-            l.pos = [node_pos[0], node_pos[1]]
-            self.cells[0][col].add_widget(l) 
-        #first col
-        for rank in range(8):
-            l = Label()
-            l.text = "hehe"
-            node_pos = self.cells[rank][0].pos
-            l.pos = [node_pos[0], node_pos[1]]
-            self.cells[rank][0].add_widget(l)
 
     def setBtns(self, *args):
-        App.get_running_app().root.get_screen('gameUi').ids.options.ids.go_home.on_press = self.showHome
+        App.get_running_app().root.get_screen('gameUi').ids.boardNclocks.ids.options.ids.go_home.on_press = self.showHome
 
-        self.redo_btn = App.get_running_app().root.get_screen('gameUi').ids.options.ids.redo 
+        self.redo_btn = App.get_running_app().root.get_screen('gameUi').ids.boardNclocks.ids.options.ids.redo 
         self.redo_btn.on_press = self.redo
         self.redo_btn.disabled = True
 
-        self.undo_btn = App.get_running_app().root.get_screen('gameUi').ids.options.ids.undo 
+        self.undo_btn = App.get_running_app().root.get_screen('gameUi').ids.boardNclocks.ids.options.ids.undo 
         self.undo_btn.on_press = self.undo
         self.undo_btn.disabled = True
 

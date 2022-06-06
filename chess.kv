@@ -27,7 +27,6 @@ WindowManager:
             bold:True
             on_press:
                 root.withoutSave()
-
         Button:
             text:"Cancel"
             size_hint:1,0.3
@@ -50,15 +49,109 @@ WindowManager:
     spacing: 0
     orientation: 'horizontal'
     BoxLayout:
+        size_hint: .25, 1
         orientation: 'vertical'
         BlackCapturedPieces:
             id: black_captured_pieces
         WhiteCapturedPieces:
             id: white_captured_pieces
+    BoxLayout:
+        size_hint: .03, 1
+        orientation: "vertical"
+        Label:
+            id: fixBox
+            background_color: (1,0,0,1)
+            canvas.before:
+                Color:
+                    rgba: self.background_color
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            size_hint: 1, None
+            height: 24
+            text: ""
+        Label:
+            canvas.before:
+                Color:
+                    rgba: (86/255,83/255,82/255,1)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            text: "8"
+        Label:
+            canvas.before:
+                Color:
+                    rgba: (86/255,83/255,82/255,1)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            text: "7"
+        Label:
+            canvas.before:
+                Color:
+                    rgba: (86/255,83/255,82/255,1)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            text: "6"
+        Label:
+            canvas.before:
+                Color:
+                    rgba: (86/255,83/255,82/255,1)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            text: "5"
+        Label:
+            canvas.before:
+                Color:
+                    rgba: (86/255,83/255,82/255,1)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            text: "4"
+        Label:
+            canvas.before:
+                Color:
+                    rgba: (86/255,83/255,82/255,1)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            text: "3"
+        Label:
+            canvas.before:
+                Color:
+                    rgba: (86/255,83/255,82/255,1)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            text: "2"
+        Label:  
+            canvas.before:
+                Color:
+                    rgba: (86/255,83/255,82/255,1)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            text: "1"
+        BoxLayout:
+            orientation: "vertical"
+            size_hint: 1, .6
+            Label:
+                canvas.before:
+                    Color:
+                        rgba: (86/255,83/255,82/255,1)
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                text: ""
+            Label:
+                size_hint: 1, None
+                height: 25
+                text: " "
     ChessBoardNClocks:
         id: boardNclocks
-    Options:
-        id: options
+    
 
 #black captured pieces
 <BlackCapturedPieces@BoxLayout>:
@@ -188,9 +281,9 @@ WindowManager:
 
 <ChessBoardNClocks@BoxLayout>:
     orientation: 'vertical'
-    size_hint: None,None
-    width: 600
-    height: 630
+    # size_hint: None,None
+    # width: 600
+    # height: 630
     BoxLayout:
         id: banners_box
         size_hint: 1,None
@@ -211,18 +304,43 @@ WindowManager:
         Label:
             id: black_player_clock
             size_hint: 1,None
-            text: "05:00"
+            text: "10:00"
             font_size: "30dp"
             height: 26
             font_name: "./fonts/Lcd.ttf"
     ChessBoard:
     BoxLayout:
+        size_hint: 1, .028
+        orientation: "horizontal"
+        canvas.before:
+            Color:
+                rgba: (86/255,83/255,82/255,1)
+            Rectangle:
+                size: self.size
+                pos: self.pos
+        Label:
+            text: "H"
+        Label:
+            text: "G"
+        Label:
+            text: "F"
+        Label:
+            text: "E"
+        Label:
+            text: "D"
+        Label:
+            text: "C"
+        Label:
+            text: "B"
+        Label:
+            text: "A"
+    BoxLayout:
         size_hint: 1,None
-        height: 25
+        height: 26
         Label:
             id: white_player_clock
             size_hint: 1,None
-            text: "05:00"
+            text: "10:00"
             font_size: "30dp"
             font_name: "./fonts/Lcd.ttf"
             height: 20
@@ -237,12 +355,15 @@ WindowManager:
                 Rectangle:
                     size: self.size
                     pos: self.pos
-            height: 22
+            height: 26
+    Options:
+        size_hint: 1, .1
+        id: options
 
 <Cell>:
 
 <Options@BoxLayout>:
-    orientation: "vertical"
+    orientation: "horizontal"
     spacing : 30
     canvas.before:
         Color:
@@ -253,38 +374,36 @@ WindowManager:
     BoxLayout:
         Button:
             id: undo
-            size_hint: 1,None
-            height: 200
+            # size_hint: 1,None
+            # height: 200
             Image:
                 source: "./Assets/images/undo.jpg"
                 allow_stretch: True
                 center_x: self.parent.center_x
                 center_y: self.parent.center_y
-                size: 50,50
+                # size: 50,50
         Button:
-            size_hint: 1,None
-            height: 200
+            # size_hint: 1,None
+            # height: 200
             id: redo
             Image:
                 source: "./Assets/images/redo.png"
                 allow_stretch: True
                 center_x: self.parent.center_x
                 center_y: self.parent.center_y
-                size: 50,50
-    Button: 
-        size_hint: 1,None
-        height: 80
-        id: go_home
-        text: 'home'
-        # Image:
-        #     source: "./Assets/images/exit.png"
-        #     allow_stretch: True
-        #     center_x: self.parent.center_x
-        #     center_y: self.parent.center_y
-        #     size: 50,50
-    Label:
-        size_hint: 1,None
-        height: 120
+                    # size: 50,50
+        Button: 
+            # size_hint: 1,None
+            # height: 80
+            id: go_home
+            text: 'home'
+            # Image:
+            #     source: "./Assets/images/exit.png"
+            #     allow_stretch: True
+            #     center_x: self.parent.center_x
+            #     center_y: self.parent.center_y
+            #     size: 50,50
+
 
 
 
@@ -559,7 +678,7 @@ WindowManager:
         Button:
             size_hint: .6, 1
             pos_hint: {"center_x": .5}
-            text:"Player VS. Player"
+            text:"Joueur VS. Joueur"
             font_name: "./fonts/IndieFlower-Regular.ttf"
             font_size: "30dp"
             on_press : 
@@ -568,7 +687,7 @@ WindowManager:
         Button:
             pos_hint: {"center_x": .5}
             size_hint: .6, 1
-            text:"Player VS. Machine"
+            text:"Joueur VS. Machine"
             font_name: "./fonts/IndieFlower-Regular.ttf"
             font_size: 30
             bold:"true"
@@ -638,7 +757,7 @@ WindowManager:
                 orientation: "vertical"
                 Label:
                     size_hint: 1, 2.5
-                    text: "PvP Mode"
+                    text: "Joueur Vs. Joueur"
                     underline: True
                     font_size : 30
                 BoxLayout:
@@ -712,7 +831,7 @@ WindowManager:
                 orientation: "vertical"
                 Label:
                     size_hint: 1, 2.5
-                    text: "PvM Mode"
+                    text: "Joueur Vs. Machine"
                     underline: True
                     font_size : 30
                 BoxLayout:

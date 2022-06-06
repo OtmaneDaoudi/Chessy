@@ -39,8 +39,8 @@ class Game:
                 self.white_player = AiPlayer("w", chessUI.GameUi.diff)
                 self.black_player = OfflinePlayer("b")
 
-        self.white_timer = 300
-        self.black_timer = 300
+        self.white_timer = 600
+        self.black_timer = 600
 
         self.clock_ticking_sound = SoundLoader.load('./Assets/audio/ticking_clock.wav')
 
@@ -95,13 +95,16 @@ class Game:
         green = (120/255,238/255,62/255,1)
         black_banner = App.get_running_app().root.get_screen('gameUi').ids.boardNclocks.ids.black_player_banner
         white_banner = App.get_running_app().root.get_screen('gameUi').ids.boardNclocks.ids.white_player_banner
+        FixBox =  App.get_running_app().root.get_screen('gameUi').ids.fixBox
 
         # switch label background colors
         if self.turn == "w":
             black_banner.background_color = red
+            FixBox.background_color = red
             white_banner.background_color = green
         else:
             black_banner.background_color = green
+            FixBox.background_color = green
             white_banner.background_color = red
         
         if launchFlag:
@@ -166,16 +169,16 @@ class Game:
         popup.content = btn
 
         if self.game_status == GameStatus.BLACK_WIN:
-            Connection.winner("b")
+            Connection.Connection.winner("b")
             stored_data = JsonStore('data.json')
             user1Score = self.game_board.calculate_score(chessUI.GameUi.playAs)
             user1Time = self.white_timer if chessUI.GameUi.playAs == "w" else self.black_timer
             if chessUI.GameUi.gameMode == "PvP" and chessUI.GameUi.authType == "Auth":
                 user2Score = self.game_board.calculate_score("b" if chessUI.GameUi.playAs == "w" else "w")
                 user2Time = self.white_timer if chessUI.GameUi.playAs == "b" else self.black_timer
-                Connection.update_score(user1Score, user1Time, user2Score, user2Time)
+                Connection.Connection.update_score(user1Score, user1Time, user2Score, user2Time)
             elif chessUI.GameUi.gameMode == 'PvM' and stored_data.exists('user1'):
-                Connection.update_score(user1Score, user1Time)
+                Connection.Connection.update_score(user1Score, user1Time)
                 
             username = "balck team"
             if chessUI.GameUi.authType == "Auth":
@@ -191,7 +194,7 @@ class Game:
             #clear user 2 data 
             self.clear_data()
         elif self.game_status == GameStatus.WHITE_WIN:
-            Connection.winner("w")
+            Connection.Connection.winner("w")
 
             stored_data = JsonStore('data.json')
             user1Score = self.game_board.calculate_score(chessUI.GameUi.playAs)
@@ -199,9 +202,9 @@ class Game:
             if chessUI.GameUi.gameMode == "PvP" and chessUI.GameUi.authType == "Auth":
                 user2Score = self.game_board.calculate_score("b" if chessUI.GameUi.playAs == "w" else "w")
                 user2Time = self.white_timer if chessUI.GameUi.playAs == "b" else self.black_timer
-                Connection.update_score(user1Score, user1Time, user2Score, user2Time)
+                Connection.Connection.update_score(user1Score, user1Time, user2Score, user2Time)
             elif chessUI.GameUi.gameMode == 'PvM' and stored_data.exists('user1'):
-                Connection.update_score(user1Score, user1Time)
+                Connection.Connection.update_score(user1Score, user1Time)
 
             username = "white team"
             if chessUI.GameUi.authType == "Auth" and chessUI.GameUi.gameMode == "PvP":
@@ -225,7 +228,7 @@ class Game:
             popup.open()
             self.game_status = GameStatus.ACTIVE
         elif self.game_status == GameStatus.STALEMATE: 
-            Connection.draw()
+            Connection.Connection.draw()
             popup.title = "Game is Over, draw by Stalemate"
             btn.text= "EXIT"
             def clicked():
@@ -237,7 +240,7 @@ class Game:
             self.clear_data()
             
         elif self.game_status == GameStatus.INSUFFICIENT_MATERIAL: 
-            Connection.draw()
+            Connection.Connection.draw()
             popup.title = "Game is Over, draw by insufficient material"
             btn.text= "EXIT"
             def clicked():
