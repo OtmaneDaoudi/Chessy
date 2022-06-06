@@ -134,21 +134,17 @@ WindowManager:
                     size: self.size
                     pos: self.pos
             text: "1"
-        BoxLayout:
-            orientation: "vertical"
-            size_hint: 1, .6
-            Label:
-                canvas.before:
-                    Color:
-                        rgba: (86/255,83/255,82/255,1)
-                    Rectangle:
-                        size: self.size
-                        pos: self.pos
-                text: ""
-            Label:
-                size_hint: 1, None
-                height: 25
-                text: " "
+        Label:  
+            size_hint: 1, None
+            height: 100
+            canvas.before:
+                Color:
+                    rgba: (86/255,83/255,82/255,1)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            text: ""
+       
     ChessBoardNClocks:
         id: boardNclocks
     
@@ -343,7 +339,7 @@ WindowManager:
             text: "10:00"
             font_size: "30dp"
             font_name: "./fonts/Lcd.ttf"
-            height: 20
+            height: 26
         Label:
             id: white_player_banner
             text: "White player"
@@ -364,7 +360,7 @@ WindowManager:
 
 <Options@BoxLayout>:
     orientation: "horizontal"
-    spacing : 30
+    spacing: 100
     canvas.before:
         Color:
             rgba: (129/255,133/255,137/255,1)
@@ -381,6 +377,7 @@ WindowManager:
                 allow_stretch: True
                 center_x: self.parent.center_x
                 center_y: self.parent.center_y
+                height: 50
                 # size: 50,50
         Button:
             # size_hint: 1,None
@@ -391,7 +388,8 @@ WindowManager:
                 allow_stretch: True
                 center_x: self.parent.center_x
                 center_y: self.parent.center_y
-                    # size: 50,50
+                height: 50
+
         Button: 
             # size_hint: 1,None
             # height: 80

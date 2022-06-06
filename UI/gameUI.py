@@ -61,13 +61,13 @@ class Cell(ToggleButton):
         else:
             self.img = Image(source = source_)
         self.img.allow_stretch = True
-        self.img.pos = [self.pos[0] + 3, self.pos[1]]
-        self.img.size = (70,70)
+        self.img.pos = [self.pos[0] + 5, self.pos[1]]
+        self.img.size = (75,75)
         self.add_widget(self.img)
 
     def reposition_img(self, *args):
         if self.img is not None:
-            self.img.pos = [self.pos[0] + 3, self.pos[1]]
+            self.img.pos = [self.pos[0] + 5, self.pos[1]]
 
 class GameUi(BoxLayout, Screen):
     authType = "Anonymous"
@@ -250,13 +250,16 @@ class ChessBoard(GridLayout):
             green = (120/255,238/255,62/255,1)
             black_banner = App.get_running_app().root.get_screen('gameUi').ids.boardNclocks.ids.black_player_banner
             white_banner = App.get_running_app().root.get_screen('gameUi').ids.boardNclocks.ids.white_player_banner
+            FixBox =  App.get_running_app().root.get_screen('gameUi').ids.fixBox
 
             # switch label background colors
             if self.game.turn == "w":
                 black_banner.background_color = red
+                FixBox.background_color = red
                 white_banner.background_color = green
             else:
                 black_banner.background_color = green
+                FixBox.background_color = green
                 white_banner.background_color = red
 
             self.update_board()
@@ -282,13 +285,16 @@ class ChessBoard(GridLayout):
             green = (120/255,238/255,62/255,1)
             black_banner = App.get_running_app().root.get_screen('gameUi').ids.boardNclocks.ids.black_player_banner
             white_banner = App.get_running_app().root.get_screen('gameUi').ids.boardNclocks.ids.white_player_banner
+            FixBox =  App.get_running_app().root.get_screen('gameUi').ids.fixBox
 
             # switch label background colors
             if self.game.turn == "w":
                 black_banner.background_color = red
+                FixBox.background_color = red
                 white_banner.background_color = green
             else:
                 black_banner.background_color = green
+                FixBox.background_color = green
                 white_banner.background_color = red
             self.update_board()
 
