@@ -14,6 +14,8 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.button import Button
 from kivy.uix.image import Image
+from kivy.clock import Clock
+from functools import partial
 class Board:
     boards = []
     def __init__(self):
@@ -270,41 +272,55 @@ class Board:
             bx_lywt1 = BoxLayout(orientation="vertical")
             bx_lywt1.add_widget(Label(text='Select whiche piece to promote pawn to:'))
             bx_lywt1.add_widget(bx_lywt2)
+
+            def setImg(btn: ToggleButton, img: Image, *args):
+                btn.add_widget(img)
+                img.pos = btn.pos
+                img.size = btn.size
             # selection = "q"        
             queen = ToggleButton(
-                background_normal = f'./Assets/images/{color}_queen.png',
-                background_down = './Assets/images/selected.png',
+                background_normal = './Assets/images/None.png',
                 pos_hint = {"x":0.35, "y":0.3},
                 group = "promotion",
                 size_hint = (.8, .8)
             ) 
-                
+            queenImg = Image(source = f'./Assets/images/{color}_queen.png', pos = queen.pos)
+            Clock.schedule_once(partial(setImg, queen, queenImg))
             queen.state = "down"
         
             bishop = ToggleButton(
-                background_normal = f'./Assets/images/{color}_bishop.png',
+                background_normal = './Assets/images/None.png',
                 pos_hint = {"x":0.35, "y":0.3},
                 group = "promotion",
                 size_hint = (.8, .8)
             ) 
+            bishopImage = Image(source = f'./Assets/images/{color}_bishop.png')
+            Clock.schedule_once(partial(setImg, bishop, bishopImage))
         
             knight = ToggleButton(
-                background_normal = f'./Assets/images/{color}_knight.png',
+                background_normal = './Assets/images/None.png',
                 pos_hint = {"x":0.35, "y":0.3},
                 group = "promotion",
                 size_hint = (.8, .8)
             ) 
+            knightImage = Image(source = f'./Assets/images/{color}_knight.png')
+            Clock.schedule_once(partial(setImg, knight, knightImage))
         
             rook = ToggleButton(
-                background_normal = f'./Assets/images/{color}_rook.png',
+                background_normal = './Assets/images/None.png',
                 pos_hint = {"x":0.35, "y":0.3},
                 group = "promotion",
                 size_hint = (.8, .8)
             ) 
+            rookImage = Image(source = f'./Assets/images/{color}_rook.png')
+            Clock.schedule_once(partial(setImg, rook, rookImage))
+            
 
             submit = Button(text = "Promote", size_hint = (.97, .6), pos_hint = {"center_x": .5})
             # submit.size_hint = (1,None)
             # submit.height = 100
+
+            
 
             def onclick():
                 selection = None
