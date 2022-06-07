@@ -1,5 +1,5 @@
 from kivy.uix.screenmanager import Screen
-from kivy.properties import NumericProperty
+from kivy.properties import NumericProperty, StringProperty
 from DB.connection import Connection
 from kivy.storage.jsonstore import JsonStore
 
@@ -25,6 +25,7 @@ class StatsScreen(Screen):
     PVMbestScore = NumericProperty(0)
     PVMbestScoreTime = NumericProperty(0)
     PVMbestTime = NumericProperty(0)
+    playerName = StringProperty("")
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -34,6 +35,7 @@ class StatsScreen(Screen):
         stored_data = JsonStore("data.json")
         if stored_data.exists('user1'):
             data = Connection.getStats()
+            StatsScreen.playerName = str(stored_data.get('user1')['userName'])
             print("fetched data = ", data)
             pvp = data[0]
             pvm = data[1]

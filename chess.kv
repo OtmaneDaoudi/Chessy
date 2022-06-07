@@ -743,15 +743,19 @@ WindowManager:
             size: self.size
             source: './Assets/images/03.jpg'
     BoxLayout:
+        padding: 0, 0, 0, 10
         orientation: "vertical"
         Label:
             text: "Statistiques du jeu"
             font_size: 40
             size_hint: 1, .3
+        Label:
+            text: "Joueur : "+root.playerName
+            font_size: 20
+            size_hint: 1, .1
         BoxLayout:
             orientation: "horizontal"
             BoxLayout:
-                #pvp stats
                 padding: 10
                 orientation: "vertical"
                 Label:
