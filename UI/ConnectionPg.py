@@ -31,7 +31,7 @@ class ConnectionPg(Screen):
                     App.get_running_app().root.get_screen('connect').ids.noti.text = ''
                     self.parent.current = "home"
             else:
-                App.get_running_app().root.get_screen('connect').ids.noti.text = 'user already exists!'
+                App.get_running_app().root.get_screen('connect').ids.noti.text = "l'utilisateur existe déjà!"
 
     def signIn(self):
         username = self.username.text.strip()
@@ -46,7 +46,7 @@ class ConnectionPg(Screen):
                 if stored_data.exists('user1'):
                     #consider current player as second one
                     if stored_data.get('user1')['id'] == obj[0]:
-                        App.get_running_app().root.get_screen('connect').ids.noti.text = 'first user already connected'
+                        App.get_running_app().root.get_screen('connect').ids.noti.text = 'Premier utilisateur déjà connecté'
                         return
                     else:
                         stored_data.put('user2', id=obj[0], userName = obj[1])
@@ -62,4 +62,4 @@ class ConnectionPg(Screen):
                 App.get_running_app().root.get_screen('connect').ids.noti.text = ''
                 self.parent.current = "home"
             else:
-                App.get_running_app().root.get_screen('connect').ids.noti.text = 'The username or password is invalid !'
+                App.get_running_app().root.get_screen('connect').ids.noti.text = "Le nom d'utilisateur ou le mot de passe est invalide !"

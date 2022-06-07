@@ -9,10 +9,8 @@ class PvspScreen(Screen):
 
     def on_color_button_click(self, widget):
         if widget.text == "Black":
-            print("play as black")
             GameUi.playAs = "b"
         else:
-            print("play as white")
             GameUi.playAs = "w"
         if widget.state == "down":
             if self.color_clicked == False:

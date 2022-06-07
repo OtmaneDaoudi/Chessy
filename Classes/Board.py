@@ -165,7 +165,7 @@ class Board:
             print("temp res = ", temp_res)
             # print("temp_res : ",temp_res)
             if (end_pos[0],end_pos[1]) in temp_res.keys():
-                print("capturing en passant")
+                # print("capturing en passant")
                 captured_piece_index = temp_res[(end_pos[0],end_pos[1])]
                 if self.board[captured_piece_index[0]][captured_piece_index[1]] == self.LastMovedPiece:
                     # print("capturing en passant")
@@ -186,7 +186,7 @@ class Board:
         #detect castling moves
         elif isinstance(self.board[start_pos[0]][start_pos[1]],King):
             if end_pos in self.getPossibleCastleMoves(self.board[start_pos[0]][start_pos[1]].color):
-                print("castel move detected")
+                # print("castel move detected")
                 #swap king and rook
                 if end_pos[1] == 6: #king side castling
                     if self.board[start_pos[0]][start_pos[1]].color == "w": #white king side castling
@@ -270,7 +270,7 @@ class Board:
             # bx_lywt2.height = 10
             # bx_lywt2.padding = 5
             bx_lywt1 = BoxLayout(orientation="vertical")
-            bx_lywt1.add_widget(Label(text='Select whiche piece to promote pawn to:'))
+            bx_lywt1.add_widget(Label(text='Promotion du pion à:'))
             bx_lywt1.add_widget(bx_lywt2)
 
             def setImg(btn: ToggleButton, img: Image, *args):
@@ -316,11 +316,7 @@ class Board:
             Clock.schedule_once(partial(setImg, rook, rookImage))
             
 
-            submit = Button(text = "Promote", size_hint = (.97, .6), pos_hint = {"center_x": .5})
-            # submit.size_hint = (1,None)
-            # submit.height = 100
-
-            
+            submit = Button(text = "Ok", size_hint = (.97, .6), pos_hint = {"center_x": .5})
 
             def onclick():
                 selection = None

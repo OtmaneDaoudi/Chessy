@@ -117,37 +117,27 @@ class Game:
     def playMove(self,start: tuple, end: tuple, gameUI):
         if self.turn == "b":
             black_AI_autopromotion = (True if isinstance(self.black_player,AiPlayer) else False)
-            print(f"move stat : {self.game_board.move_piece(start,end, self.boardUI ,black_AI_autopromotion)}")
+            self.game_board.move_piece(start,end, self.boardUI ,black_AI_autopromotion)
             if self.game_board.isCheck("w") :
                 self.game_status = GameStatus.WHITE_KING_CHECKED
                 if self.game_board.isCheckMate("w"): 
-                    print("Game is over, black team wins") #
                     self.game_status = GameStatus.BLACK_WIN
-                else :
-                    print("White king is under check")
         else:
             white_AI_autopromotion = (True if isinstance(self.white_player,AiPlayer) else False)
-            print(f"move stat : {self.game_board.move_piece(start,end, self.boardUI,white_AI_autopromotion)}")
+            self.game_board.move_piece(start,end, self.boardUI,white_AI_autopromotion)
             if self.game_board.isCheck("b") :
                 self.game_status = GameStatus.BLACK_KING_CHECKED
                 if self.game_board.isCheckMate("b"):
-                    print("Game is over, white team wins")
-                    self.game_status = GameStatus.WHITE_WIN
-                else :
-                    print("black king is under check")          
+                    self.game_status = GameStatus.WHITE_WIN    
 
         if self.game_board.isStaleMate("b") or self.game_board.isStaleMate("w"):
             self.game_status = GameStatus.STALEMATE
-            print("Game is over, Stalemate") #
         elif self.game_board.isInsufficientMaterial():
-            print("Game is Over, Draw by insufficient material")#
             self.game_status = GameStatus.INSUFFICIENT_MATERIAL
         
-        # print(f"before showing game status : turn = {self.turn} stats = {self.game_status.value}")
         self.showGameStatus()
         
         if self.game_status.value in (1,6,7):
-            # print("switching turns")
             self.switchTurnes()
 
     def getGameStatus(self):
@@ -161,7 +151,7 @@ class Game:
             self.game_status = GameStatus.ACTIVE
             return 
 
-        popup = Popup(title="Game status",size_hint=(.5, None), height= 120)
+        popup = Popup(title="État du jeu",size_hint=(.5, None), height= 120)
         popup.auto_dismiss = False
         btn = Button()
         btn.size_hint = (.2,None)
@@ -180,10 +170,10 @@ class Game:
             elif chessUI.GameUi.gameMode == 'PvM' and stored_data.exists('user1'):
                 Connection.Connection.update_score(user1Score, user1Time)
                 
-            username = "balck team"
+            username = "Le joueur noir"
             if chessUI.GameUi.authType == "Auth":
                 username = App.get_running_app().root.get_screen('gameUi').ids.boardNclocks.ids.black_player_banner.text
-            popup.title = f"Game is Over, {username} wins"
+            popup.title = f"La partie est terminée, {username} gagne"
             btn.text= "Exit"
             def clicked():
                 popup.dismiss()
@@ -206,10 +196,10 @@ class Game:
             elif chessUI.GameUi.gameMode == 'PvM' and stored_data.exists('user1'):
                 Connection.Connection.update_score(user1Score, user1Time)
 
-            username = "white team"
+            username = "Le joueur blanc"
             if chessUI.GameUi.authType == "Auth" and chessUI.GameUi.gameMode == "PvP":
                 username = App.get_running_app().root.get_screen('gameUi').ids.boardNclocks.ids.white_player_banner.text
-            popup.title = f"Game is Over, {username} wins"
+            popup.title = f"La partie est terminée, {username} gagne"
             btn.text= "Exit"
             def clicked():
                 popup.dismiss()
@@ -221,16 +211,16 @@ class Game:
             #clear user2 data 
             self.clear_data()
         elif self.game_status in  (GameStatus.WHITE_KING_CHECKED,GameStatus.BLACK_KING_CHECKED): 
-            name_ = 'white' if self.game_status == GameStatus.WHITE_KING_CHECKED else 'black'
-            popup.title = f"{name_} king is under check"
+            name_ = 'blanc' if self.game_status == GameStatus.WHITE_KING_CHECKED else 'noir'
+            popup.title = f"le roi {name_} est mis en échec"
             btn.text= " Ok "
             btn.bind(on_press=popup.dismiss)
             popup.open()
             self.game_status = GameStatus.ACTIVE
         elif self.game_status == GameStatus.STALEMATE: 
             Connection.Connection.draw()
-            popup.title = "Game is Over, draw by Stalemate"
-            btn.text= "EXIT"
+            popup.title = "La partie est terminée, match nul par 'Stalemate'."
+            btn.text= "Exit"
             def clicked():
                 popup.dismiss()
                 App.get_running_app().root.current = 'home'
@@ -241,8 +231,8 @@ class Game:
             
         elif self.game_status == GameStatus.INSUFFICIENT_MATERIAL: 
             Connection.Connection.draw()
-            popup.title = "Game is Over, draw by insufficient material"
-            btn.text= "EXIT"
+            popup.title = "La partie est terminée, match nul par manque de matériel"
+            btn.text= "Exit"
             def clicked():
                 popup.dismiss()
                 App.get_running_app().root.current = 'home'

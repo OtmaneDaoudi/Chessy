@@ -88,9 +88,9 @@ class ChessBoard(GridLayout):
             GameUi.diff = ChessBoard.loaded_game.diff
 
             GameUi.playAs = ChessBoard.loaded_game.playas
-            print("play as ",ChessBoard.loaded_game.playas)
+            # print("play as ",ChessBoard.loaded_game.playas)
 
-            print("turn ",ChessBoard.loaded_game.turn)
+            # print("turn ",ChessBoard.loaded_game.turn)
 
             turn = "w" if ChessBoard.loaded_game.turn == "b" else "b"
             self.game = Game(self, turn)
@@ -199,12 +199,12 @@ class ChessBoard(GridLayout):
     def showHome(self):
         box = BoxLayout(orientation = "vertical")
         vbox = BoxLayout()
-        lbl = Label(text="Are you sure?", size_hint = (1, 0.2), bold = True)
+        lbl = Label(text="Vous êtes sûr?", size_hint = (1, 0.2), bold = True)
         vbox.add_widget(lbl)
 
         Boxed_layout= BoxLayout(orientation = "horizontal")
-        btn1 = Button(text="Yes", size_hint=(1, .4), bold = True)
-        btn2 = Button(text="no", size_hint=(1, .4) , bold = True)
+        btn1 = Button(text="Oui", size_hint=(1, .4), bold = True)
+        btn2 = Button(text="Non", size_hint=(1, .4) , bold = True)
         Boxed_layout.add_widget(btn1)
         Boxed_layout.add_widget(btn2)
  
@@ -224,12 +224,12 @@ class ChessBoard(GridLayout):
             show_popup()
         else:
             #show confirmation diallogue
-            btn1 = Button(text="Yes", size_hint=(1, None), height = 80)
-            btn2 = Button(text="no", size_hint=(1, None), height = 80)
+            btn1 = Button(text="Oui", size_hint=(1, None), height = 80)
+            btn2 = Button(text="Non", size_hint=(1, None), height = 80)
             Boxed_layout= BoxLayout(orientation = "horizontal")
             Boxed_layout.add_widget(btn1)
             Boxed_layout.add_widget(btn2)
-            pop = Popup(title="Are you sure?",content=Boxed_layout, size_hint=(.5,.25))
+            pop = Popup(title="Vous êtes sûr?",content=Boxed_layout, size_hint=(.5,.25))
             btn1.bind(on_release=partial(self.apply_exiting, pop))
             # btn1.bind(on_release=partial(doit, pop)) # bind to whatever action is being confiirmed
             btn2.bind(on_release=pop.dismiss)
@@ -244,11 +244,11 @@ class ChessBoard(GridLayout):
 
     
     def redo(self, *args):
-        print("redoing...")
+        # print("redoing...")
         if len(self.redo_stack) > 0:
             redo_entry = self.redo_stack.pop()
             self.undo_stack.append({"board" : deepcopy(self.game.game_board), "game_state" : self.game.game_status})
-            print("available redo : ")
+            # print("available redo : ")
             self.game.game_board = redo_entry["board"]
             self.game.game_status = redo_entry["game_state"]
 
@@ -272,7 +272,7 @@ class ChessBoard(GridLayout):
 
             self.update_board()
 
-            print("done redoing")
+            # print("done redoing")
             if len(self.redo_stack) == 0:
                 self.redo_btn.disabled = True
 
@@ -306,9 +306,9 @@ class ChessBoard(GridLayout):
                 white_banner.background_color = red
             self.update_board()
 
-            print("done undoing")
+            # print("done undoing")
             if len(self.undo_stack) == 0:
-                print('btn disabled')
+                # print('btn disabled')
                 self.undo_btn.disabled = True
             self.redo_btn.disabled = False
 
@@ -316,10 +316,10 @@ class ChessBoard(GridLayout):
             if (self.game.turn == "w" and isinstance(self.game.white_player, AiPlayer)) or (self.game.turn == "b" and isinstance(self.game.black_player, AiPlayer)):
                 self.undo()
         elif self.game.turn == "b" and isinstance(self.game.black_player, AiPlayer):
-            print("scheduling ai move")
+            # print("scheduling ai move")
             Clock.schedule_once(self.AiMoveThread, 1)
         elif self.game.turn == "w" and isinstance(self.game.white_player, AiPlayer):
-            print("scheduling ai move")
+            # print("scheduling ai move")
             Clock.schedule_once(self.AiMoveThread, 1)
 
     def AiMoveThread(self, *args):
@@ -328,7 +328,7 @@ class ChessBoard(GridLayout):
         myThread.start()
             
     def AiMove(self, *args):
-        print("move thread started")
+        # print("move thread started")
         move = []
         if self.game.turn == "w":
             move = self.game.white_player.getMove(self.game.game_board)
@@ -430,7 +430,7 @@ class ChessBoard(GridLayout):
                 for target in PossibleMoves:
                     self.cells[target[0]][target[1]].state = "down"
 
-        print("game status : ",self.game.game_status.name)
+        # print("game status : ",self.game.game_status.name)
 
     def on_exit(self):
         pass
@@ -442,19 +442,19 @@ class WindowManager(ScreenManager):
 def show_popup(*args):
     if App.get_running_app().root.current == 'gameUi'  and GameUi.gameMode == "PvM" :
         show = ContentPopup()
-        window = Popup(title="Exit Chess Game", content=show,
+        window = Popup(title="Exit", content=show,
                     size_hint=(None, None), size=(400, 400))
         show.popup = window
         window.open()
     else:   
         box = BoxLayout(orientation = "vertical")
         vbox = BoxLayout()
-        lbl = Label(text="Are you sure?", size_hint = (1, 0.2), bold = True)
+        lbl = Label(text="Vous êtes sûr?", size_hint = (1, 0.2), bold = True)
         vbox.add_widget(lbl)
 
         Boxed_layout= BoxLayout(orientation = "horizontal")
-        btn1 = Button(text="Yes", size_hint=(1, .4), bold = True)
-        btn2 = Button(text="no", size_hint=(1, .4) , bold = True)
+        btn1 = Button(text="Oui", size_hint=(1, .4), bold = True)
+        btn2 = Button(text="Non", size_hint=(1, .4) , bold = True)
         Boxed_layout.add_widget(btn1)
         Boxed_layout.add_widget(btn2)
  

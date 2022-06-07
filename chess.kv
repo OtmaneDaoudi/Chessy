@@ -11,24 +11,24 @@ WindowManager:
     orientation:"vertical"
     BoxLayout:
         Label:
-            text:"Do you want to save the Game ?"
+            text:"Voulez-vous sauver le match?"
             bold:True
             size_hint:1,0.2
     BoxLayout:
         Button:
-            text:"Save"
+            text:"sauvegarder"
             size_hint:1,0.3
             bold:True
             on_press:
                 root.withSave()
         Button:
-            text:"No"
+            text:"Non"
             size_hint:1,0.3
             bold:True
             on_press:
                 root.withoutSave()
         Button:
-            text:"Cancel"
+            text:"Annuler"
             size_hint:1,0.3
             bold:True
             on_press: root.closePop()
@@ -38,13 +38,13 @@ WindowManager:
     BoxLayout:
         orientation:"vertical"
         Label : 
-            text:"Do you want to save the game ?"
+            text:"Voulez-vous sauvegarder le match?"
         BoxLayout:
             orientation:"horizontal"
             Button:
-                text:"No"
+                text:"Non"
             Button:
-                text:"Save"
+                text:"sauvegarder"
 <GameUi>:
     spacing: 0
     orientation: 'horizontal'
@@ -159,7 +159,7 @@ WindowManager:
             pos: self.pos
     orientation: 'vertical'
     Label:
-        text: "Black's captured \n Pieces"
+        text: "pièces blanches \n      capturées"
         color: (0,0,0,1)
     BoxLayout:
         orientation: "horizontal"
@@ -226,7 +226,7 @@ WindowManager:
             size: self.size
             pos: self.pos
     Label:
-        text: "White's captured\n      Pieces"
+        text: "pièces noires\n    capturées"
     BoxLayout:
         orientation: "horizontal"
         Image:
@@ -286,7 +286,7 @@ WindowManager:
         height: 25
         Label:
             id: black_player_banner
-            text: "Black Player"
+            text: "Joueur noir"
             color: (0,0,0,1)
             size_hint: 2,None
             background_color: (1,0,0,1)
@@ -342,7 +342,7 @@ WindowManager:
             height: 26
         Label:
             id: white_player_banner
-            text: "White player"
+            text: "Joueur blanc"
             size_hint: 2,None
             background_color: (120/255,238/255,62/255,1)
             canvas.before:
@@ -394,7 +394,7 @@ WindowManager:
             # size_hint: 1,None
             # height: 80
             id: go_home
-            text: 'Home'
+            text: 'Accueil'
             # Image:
             #     source: "./Assets/images/exit.png"
             #     allow_stretch: True
@@ -433,7 +433,7 @@ WindowManager:
                 size_hint_y: self.texture_size[1]
 
             Label:
-                text: "Match Settings"
+                text: "Paramètres du match"
                 font_size:20
         BoxLayout:   
             size_hint:1,0.2
@@ -443,7 +443,7 @@ WindowManager:
             size_hint:.5,.1
             spacing:30
             Label:
-                text:" Difficulty"
+                text:" Difficulté: "
                 bold:"true"
                 size_hint_x:.1
                 font_size:20
@@ -451,7 +451,7 @@ WindowManager:
                 size_hint:.25,1
                 spacing:5
                 Button:
-                    text:"Easy"
+                    text:"Facile"
                     size_hint_x:.1
                     bold:"true"
                     font_size:15
@@ -459,7 +459,7 @@ WindowManager:
                     disabled:root.level_clicked1
                     #color : 0,.7,0,1
                 Button:
-                    text:"Medium"
+                    text:"Moyenne"
                     size_hint_x:.1
                     bold:"true"
                     font_size:15
@@ -467,7 +467,7 @@ WindowManager:
                     disabled:root.level_clicked2
                     #color : .8,.8,0,1
                 Button:
-                    text:"Hard"
+                    text:"Difficile"
                     size_hint_x:.1
                     bold:"true"
                     font_size:15
@@ -480,7 +480,7 @@ WindowManager:
             size_hint:.5,.15
             spacing:30
             Label:
-                text:"Play As"
+                text:"Jouer en tant que: "
                 bold:"true"
                 size_hint_x:.1
                 font_size:20
@@ -488,7 +488,7 @@ WindowManager:
                 size_hint:.25,1
                 spacing:10
                 Button:
-                    text:"White"
+                    # text:"White"
                     size_hint:.3,1
                     bold:"true"
                     disabled : root.color_clicked
@@ -507,7 +507,7 @@ WindowManager:
 
                         #allow_stretch: True
                 Button:
-                    text:"Black"
+                    # text:"Black"
                     size_hint:.3,1
                     bold:"true"
                     disabled : not root.color_clicked
@@ -533,7 +533,7 @@ WindowManager:
             pos_hint: {"center_x": 0.5, "y": 0.8}
             spacing:400
             Button:
-                text:"Back"
+                text:"Retour"
                 bold:"true"
                 size_hint_x:.1
                 on_press:
@@ -542,14 +542,10 @@ WindowManager:
             Button:
                 size_hint_x:.1
                 bold:"true"
-                text:"Play"
+                text:"Jouer"
                 on_press: root.init_game()
         
-                
-               
-
-
-                                                         
+                                                                         
             # +--------- Player VS Player Screen ---------+
 
 <PvspScreen>:
@@ -575,7 +571,7 @@ WindowManager:
                 size_hint_y: self.texture_size[1]
 
             Label:
-                text: "Match Settings"
+                text: "Paramètres du match"
                 font_size:20
         BoxLayout:   
             size_hint:1,0.25
@@ -585,7 +581,7 @@ WindowManager:
             size_hint:.5,.2
             spacing:30
             Label:
-                text:"Play As"
+                text:"Jouer en tant que: "
                 bold:"true"
                 size_hint_x:.1
                 font_size:20
@@ -593,7 +589,7 @@ WindowManager:
                 size_hint:.2,1
                 spacing:10
                 Button:
-                    text:"White"
+                    # text:"White"
                     size_hint:.3,1
                     bold:"true"
                     disabled : root.color_clicked
@@ -609,7 +605,7 @@ WindowManager:
                         center_y: self.parent.center_y
                         
                 Button:
-                    text:"Black"
+                    # text:"Black"
                     size_hint:.3,1
                     bold:"true"
                     disabled : not root.color_clicked
@@ -634,7 +630,7 @@ WindowManager:
             pos_hint: {"center_x": 0.5, "center_y": 0.3}
             spacing:400
             Button:
-                text:"Back"
+                text:"Retour"
                 bold:"true"
                 size_hint_x:.1
                 on_press:
@@ -643,7 +639,7 @@ WindowManager:
             Button:
                 size_hint_x:.1
                 bold:"true"
-                text:"Play"
+                text:"Jouer"
                 on_press: root.init_game()
         
 
@@ -702,7 +698,7 @@ WindowManager:
             size_hint: .6, 1
             id:stat
             disabled:True
-            text:"Statistics"
+            text:"Statistiques"
             bold:"true"
             font_name: "./fonts/IndieFlower-Regular.ttf"
             font_size: 30
@@ -749,7 +745,7 @@ WindowManager:
     BoxLayout:
         orientation: "vertical"
         Label:
-            text: "Game Stats"
+            text: "Statistiques du jeu"
             font_size: 40
             size_hint: 1, .3
         BoxLayout:
@@ -766,7 +762,7 @@ WindowManager:
                 BoxLayout:
                     Label:
                         size_hint: .8, 1
-                        text: "Total Played :"
+                        text: "Total joué :"
                         halign: 'right'
                         valign: 'middle'
                     Label:
@@ -775,7 +771,7 @@ WindowManager:
                 BoxLayout:
                     Label:
                         size_hint: .8, 1
-                        text: "Wins :"
+                        text: "Victoires :"
                     Label:
                         size_hint: .2, 1
                         text: str(root.PVPwins)
@@ -789,7 +785,7 @@ WindowManager:
                 BoxLayout:
                     Label:
                         size_hint: .8, 1
-                        text: "Lost :"
+                        text: "Perdus :"
                     Label:
                         size_hint: .2, 1
                         text: str(root.PVPlost)
@@ -803,7 +799,7 @@ WindowManager:
                 BoxLayout:
                     Label:
                         size_hint: .8, 1
-                        text: "Draws :"
+                        text: "Matchs nuls :"
                     Label:
                         size_hint: .2, 1
                         text: str(root.PVPdraw)
@@ -817,14 +813,14 @@ WindowManager:
                 BoxLayout:
                     Label:
                         size_hint: .8, 1
-                        text: "Best Score : "
+                        text: "Meilleur score : "
                     Label:
                         size_hint: .2, 1
                         text: str(root.PVPbestScore)+"pts | "+str(divmod(root.PVPbestScoreTime, 60)[0])+"m"+str(divmod(root.PVPbestScoreTime, 60)[1])+"s"
                 BoxLayout:
                     Label:
                         size_hint: .8, 1
-                        text: "Best Time : "
+                        text: "Meilleur temps : "
                     Label:
                         size_hint: .2, 1
                         text: str(divmod(root.PVPbestTime, 60)[0])+"m"+str(divmod(root.PVPbestTime, 60)[1])+"s"
@@ -840,7 +836,7 @@ WindowManager:
                 BoxLayout:
                     Label:
                         size_hint: .8, 1
-                        text: "Total Played :"
+                        text: "Total joué :"
                         halign: 'right'
                         valign: 'middle'
                     Label:
@@ -849,7 +845,7 @@ WindowManager:
                 BoxLayout:
                     Label:
                         size_hint: .8, 1
-                        text: "Wins :"
+                        text: "Victoires :"
                     Label:
                         size_hint: .2, 1
                         text: str(root.PVMwins)
@@ -863,7 +859,7 @@ WindowManager:
                 BoxLayout:
                     Label:
                         size_hint: .8, 1
-                        text: "Lost :"
+                        text: "Perdus :"
                     Label:
                         size_hint: .2, 1
                         text: str(root.PVMlost)
@@ -877,7 +873,7 @@ WindowManager:
                 BoxLayout:
                     Label:
                         size_hint: .8, 1
-                        text: "Draws :"
+                        text: "Matchs nuls :"
                     Label:
                         size_hint: .2, 1
                         text: str(root.PVMdraw)
@@ -891,21 +887,21 @@ WindowManager:
                 BoxLayout:
                     Label:
                         size_hint: .8, 1
-                        text: "Best Score : "
+                        text: "Meilleur score : "
                     Label:
                         size_hint: .2, 1
                         text: str(root.PVMbestScore)+"pts | "+str(divmod(root.PVMbestScoreTime, 60)[0])+"m"+str(divmod(root.PVMbestScoreTime, 60)[1])+"s"
                 BoxLayout:
                     Label:
                         size_hint: .8, 1
-                        text: "Best Time : "
+                        text: "Meilleur temps : "
                     Label:
                         size_hint: .2, 1
                         text: str(divmod(root.PVMbestTime, 60)[0])+"m"+str(divmod(root.PVMbestTime, 60)[1])+"s"
             
 
         Button:
-            text: "Back"
+            text: "Retour"
             size_hint: .3, .2
             pos_hint: {"center_x": .5}
             on_press:
@@ -932,7 +928,7 @@ WindowManager:
             spacing:"100dp"
             pos_hint: {"center_x": 0.5, "y": 0.25}
             Label:
-                text: "Login"
+                text: "Connexion"
                 font_name: "./fonts/Caveat-VariableFont_wght.ttf"
                 font_size:150
                 color:1,1,1,1
@@ -949,7 +945,7 @@ WindowManager:
                 MDTextFieldRound:
                     focus: True
                     id: username
-                    hint_text:'Enter your username'
+                    hint_text:"Entrez votre nom d'utilisateur"
                     pos_hint: {'center_x': 0.5, 'center_y': 0.705}
                     size_hint: 1, None
                     font_size: 25
@@ -960,7 +956,7 @@ WindowManager:
 
                 MDTextFieldRound:
                     id: psw
-                    hint_text:'Enter your password'
+                    hint_text:'Entrez votre mot de passe'
                     password: True
                     pos_hint: {'center_x': 0.5, 'center_y': 0.705}
                     size_hint: 1, None
@@ -989,7 +985,7 @@ WindowManager:
             spacing: 20
 
             Button:
-                text: "Back"
+                text: "Retour"
                 bold:"true"
                 bold:"true"
                 font_name: "./fonts/IndieFlower-Regular.ttf"
@@ -999,13 +995,13 @@ WindowManager:
                     root.manager.current = "home"
 
             Button:
-                text: "Sign Up"
+                text: "S'inscrire"
                 bold:"true"
                 font_name: "./fonts/IndieFlower-Regular.ttf"
                 font_size: 30
                 on_press:root.signUp()
             Button:
-                text: "Sign In"
+                text: "Se connecter"
                 bold:"true"
                 font_name: "./fonts/IndieFlower-Regular.ttf"
                 font_size: 30
@@ -1016,7 +1012,7 @@ WindowManager:
     orientation:"vertical"
     BoxLayout:
         Label:
-            text:"Players Auth type:"
+            text:"Mode de jeu:"
             bold:True
             size_hint:1,0.2
     BoxLayout:

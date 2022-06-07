@@ -12,10 +12,10 @@ class PvsmScreen(Screen):
 
     def on_color_button_click(self, widget):
         if widget.text == "Black":
-            print("play as black")
+            # print("play as black")
             GameUi.playAs = "b"
         else:
-            print("play as white")
+            # print("play as white")
             GameUi.playAs = "w"
         if widget.state == "down":
             if self.color_clicked == False:
@@ -27,7 +27,6 @@ class PvsmScreen(Screen):
         if widget.state == "down":
             if id == 1:
                 GameUi.diff = 1
-                print("diff updated to 1")
                 if self.level_clicked1 == False:
                     self.level_clicked1 = True
                     self.level_clicked2 = False
@@ -38,7 +37,6 @@ class PvsmScreen(Screen):
                     self.level_clicked3 = True
             elif id == 2:
                 GameUi.diff = 2
-                print("diff updated to 2")
                 if self.level_clicked2 == False:
                     self.level_clicked2 = True
                     self.level_clicked1 = False
@@ -49,7 +47,6 @@ class PvsmScreen(Screen):
                     self.level_clicked3 = True
             else:
                 GameUi.diff = 3
-                print("diff updated to 3")
                 if self.level_clicked3 == False:
                     self.level_clicked3 = True
                     self.level_clicked1 = False
@@ -67,14 +64,7 @@ class PvsmScreen(Screen):
 
         gameui = GameUi()
         GameUi.current_gameui = gameui
-        print("done initialising")
         gameui.name = 'gameUi'
         gameui.id = 'gameUi'
         self.parent.add_widget(gameui)
         self.parent.current = 'gameUi'
-    #     Clock.schedule_once(self.setCurrent, .2)
-
-    # def setCurrent(self, *args):
-    #     self.parent.current = 'gameUi'
-
-    #============================================

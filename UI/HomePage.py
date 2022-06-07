@@ -14,6 +14,7 @@ import os
 from kivy.storage.jsonstore import JsonStore
 import UI.StatsScreen
 from UI.gameUI import ChessBoard, GameUi
+from kivy.uix.label import Label
 
 class ContentPopChoice(BoxLayout):
     def __init__(self, pop, **kwargs):
@@ -46,12 +47,21 @@ class HomePage(Screen):
         if os.path.exists("GameObject"):
             if os.path.getsize("GameObject") != 0: #file is not empty
                 #show a pop up
-                btn1 = Button(text="Yes", size_hint=(1, None), height = 80)
-                btn2 = Button(text="no", size_hint=(1, None), height = 80)
+                box = BoxLayout(orientation = "vertical")
+                vbox = BoxLayout()
+                lbl = Label(text="Do you want to load that last saved game?", size_hint = (1, 0.2), bold = True)
+                vbox.add_widget(lbl)
+
                 Boxed_layout= BoxLayout(orientation = "horizontal")
+                btn1 = Button(text="Yes", size_hint=(1, .4), bold = True)
+                btn2 = Button(text="no", size_hint=(1, .4) , bold = True)
                 Boxed_layout.add_widget(btn1)
                 Boxed_layout.add_widget(btn2)
-                pop = Popup(title="Do you want to load the last saved game?",content=Boxed_layout, size_hint=(.9,.3))
+        
+                box.add_widget(vbox)
+                box.add_widget(Boxed_layout)
+
+                pop = Popup(title="Load Previous game",content=box, size_hint=(None, None), size=(400, 300))
                 btn1.bind(on_release=partial(self.loadSavedGame, pop))
                 # btn1.bind(on_release=partial(doit, pop)) # bind to whatever action is being confiirmed
                 btn2.bind(on_release=pop.dismiss)
