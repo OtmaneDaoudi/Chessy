@@ -1,4 +1,4 @@
-from kivy.app import App
+from kivymd.app import MDApp
 from UI.HomePage import HomePage
 from UI.PvspScreen import PvspScreen
 from UI.PvsmScreen import PvsmScreen
@@ -16,8 +16,10 @@ Config.set('kivy', 'keyboard_mode', 'system')
 Config.write()
 
 
-class ChessApp(App):
+class ChessApp(MDApp):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.theme_cls.theme_style = "Dark"
+        self.theme_cls.primary_palette = "BlueGray"
         Connection.Connect() #initialise database connection
 ChessApp().run() 

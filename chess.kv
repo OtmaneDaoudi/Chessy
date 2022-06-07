@@ -925,73 +925,93 @@ WindowManager:
             source: './Assets/images/04.jpg'
 
     BoxLayout:
-        orientation:"vertical"
-        size_hint:.6,.7
-        spacing:"100dp"
-        pos_hint: {"center_x": 0.5, "y": 0.25}
-        Label:
-            text:"Connection Screen"
-            bold:"true"
-            font_size:50
-            color:0,0,0,1
-            
+        orientation: 'vertical'
         BoxLayout:
             orientation:"vertical"
-            spacing:"30dp"
-            size_hint_x:.95
-            #size: root.size
-            pos_hint:{"center_x":0.52}
-            
-            TextInput:
-                id: username
-                hint_text:'Enter your username'
-                pos_hint: {'center_x': 0.5, 'center_y': 0.705}
-                size_hint: 1, 1
-                multiline:False
-                
-            TextInput:
-                id: psw
-                hint_text:'Enter your password'
-                pos_hint: {'center_x': 0.5, 'center_y': 0.705}
-                size_hint: 1, 1
-                multiline:False
+            size_hint:.6,.7
+            spacing:"100dp"
+            pos_hint: {"center_x": 0.5, "y": 0.25}
+            Label:
+                text: "Login"
+                font_name: "./fonts/Caveat-VariableFont_wght.ttf"
+                font_size:150
+                color:1,1,1,1
+                bold:"true"
+                size_hint_y: self.texture_size[1]
 
             BoxLayout:
-                size_hint:1,.1 
-                Label:
-                    id: noti
-                    text:""
-                    color:8,8,0,1
-                    bold:True
-                    font_size:20
-    
-    BoxLayout:
-        orientation:"horizontal"
-        size_hint:.8,.1
-        pos_hint:{"center_x":.55,"y":.08}
-        spacing:30
+                orientation:"vertical"
+                spacing:"30dp"
+                size_hint_x:.95
+                #size: root.size
+                pos_hint:{"center_x":0.52}
 
-        Button:
-            text: "Back"
-            bold:"true"
-            font_size:18
-            size_hint_x:.5
-            on_press:
-                root.manager.transition.direction= "right"
-                root.manager.current = "home"
-        
-        Button:
-            text: "Sign Up"
-            bold:"true"
-            font_size:18
-            on_press:root.signUp()
-        Button:
-            text: "Sign In"
-            bold:"true"
-            font_size:18
-            on_press:root.signIn()
+                MDTextFieldRound:
+                    focus: True
+                    id: username
+                    hint_text:'Enter your username'
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.705}
+                    size_hint: 1, None
+                    font_size: 25
+                    font_name: "./fonts/IndieFlower-Regular.ttf"
+                    height: 50
+                    multiline:False
+                    icon_right: "account"
 
-        #+---------------PopUpChoice -------------------+
+                MDTextFieldRound:
+                    id: psw
+                    hint_text:'Enter your password'
+                    password: True
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.705}
+                    size_hint: 1, None
+                    font_size: 25
+                    font_name: "./fonts/IndieFlower-Regular.ttf"
+                    height: 50
+                    multiline:False
+                    icon_right: "eye-off"
+
+                BoxLayout:
+                    size_hint:1,.1 
+                    Label:
+                        id: noti
+                        text:""
+                        color:8,8,0,1
+                        bold:True
+                        font_size:20
+
+        BoxLayout:
+            orientation:"horizontal"
+            # size_hint:1
+            # pos_hint:{"center_x":.55,"y":.08}
+            pos_hint:{"center_x":0.52}
+            size_hint: 1, .25
+            padding: 50
+            spacing: 20
+
+            Button:
+                text: "Back"
+                bold:"true"
+                bold:"true"
+                font_name: "./fonts/IndieFlower-Regular.ttf"
+                font_size: 30
+                on_press:
+                    root.manager.transition.direction= "right"
+                    root.manager.current = "home"
+
+            Button:
+                text: "Sign Up"
+                bold:"true"
+                font_name: "./fonts/IndieFlower-Regular.ttf"
+                font_size: 30
+                on_press:root.signUp()
+            Button:
+                text: "Sign In"
+                bold:"true"
+                font_name: "./fonts/IndieFlower-Regular.ttf"
+                font_size: 30
+                on_press:root.signIn()
+
+            #+---------------PopUpChoice -------------------+
 <ContentPopChoice>:
     orientation:"vertical"
     BoxLayout:
