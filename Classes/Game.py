@@ -212,7 +212,7 @@ class Game:
             self.clear_data()
         elif self.game_status in  (GameStatus.WHITE_KING_CHECKED,GameStatus.BLACK_KING_CHECKED): 
             name_ = 'blanc' if self.game_status == GameStatus.WHITE_KING_CHECKED else 'noir'
-            popup.title = f"le roi {name_} est mis en échec"
+            popup.title = f"Le roi {name_} est mis en échec"
             btn.text= " Ok "
             btn.bind(on_press=popup.dismiss)
             popup.open()
