@@ -342,7 +342,7 @@ class ChessBoard(GridLayout):
             self.game.playMove(move[0], move[1], self)
             self.update_board()
             self.move_piece_sound.play()
-            print("move thread ended")
+            ChessBoard.thread_flag = "ENDED"
 
     def update_board(self, *args):
         for rank in reversed(range(8)):
@@ -382,6 +382,10 @@ class ChessBoard(GridLayout):
         ani.start(start_cell.img)
    
     def selected(self, rank, column, cell: Cell):
+        if ChessBoard.thread_flag == "STARTED":
+            print("revoke")
+            cell.state = "normal"
+            return
         if cell.piece is None:
             if (rank,column) in self.marked_moved:
                 self.undo_stack.append({"board" : deepcopy(self.game.game_board) , "game_state" : self.game.game_status})

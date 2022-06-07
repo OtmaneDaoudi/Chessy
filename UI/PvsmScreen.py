@@ -1,6 +1,7 @@
 from kivy.uix.screenmanager import  Screen
 from kivy.properties import BooleanProperty
 from kivy.properties import BooleanProperty
+from kivy.uix.button import Button
 
 from UI.gameUI import GameUi
 
@@ -10,8 +11,8 @@ class PvsmScreen(Screen):
     level_clicked2 = BooleanProperty(False)
     level_clicked3 = BooleanProperty(False)
 
-    def on_color_button_click(self, widget):
-        if widget.text == "Black":
+    def on_color_button_click(self, widget: Button):
+        if widget.echo == "Black":
             # print("play as black")
             GameUi.playAs = "b"
         else:
