@@ -674,6 +674,7 @@ WindowManager:
             font_name: "./fonts/Caveat-VariableFont_wght.ttf"
             color:1,1,1,1
         Button:
+            id : btn
             size_hint: .6, 1
             pos_hint: {"center_x": .5}
             text:"Joueur VS. Joueur"
@@ -682,6 +683,10 @@ WindowManager:
             on_press : 
                 root.playerVsPlayerInit() 
             bold:"true"
+            # Image: 
+            #     source:'./Assets/images/pvp.png'
+            #     size: 50, 50
+            #     pos: btn.pos
         Button:
             pos_hint: {"center_x": .5}
             size_hint: .6, 1
