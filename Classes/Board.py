@@ -260,11 +260,12 @@ class Board:
             return
         else:
             color = self.board[position[0]][position[1]].color
-            view = ModalView(size_hint=(.6, .5))
+            view = ModalView(size_hint=(.4, .5))
             
             bx_lywt2 = BoxLayout(orientation="horizontal")
-            # bx_lywt2.size_hint = (1,None)
-            # bx_lywt2.height = 105
+            bx_lywt2.size_hint = (.97,.9)
+            bx_lywt2.pos_hint = {"center_x": .5}
+            # bx_lywt2.height = 10
             # bx_lywt2.padding = 5
             bx_lywt1 = BoxLayout(orientation="vertical")
             bx_lywt1.add_widget(Label(text='Select whiche piece to promote pawn to:'))
@@ -272,8 +273,10 @@ class Board:
             # selection = "q"        
             queen = ToggleButton(
                 background_normal = f'./Assets/images/{color}_queen.png',
+                background_down = './Assets/images/selected.png',
                 pos_hint = {"x":0.35, "y":0.3},
-                group = "promotion"
+                group = "promotion",
+                size_hint = (.8, .8)
             ) 
                 
             queen.state = "down"
@@ -281,22 +284,25 @@ class Board:
             bishop = ToggleButton(
                 background_normal = f'./Assets/images/{color}_bishop.png',
                 pos_hint = {"x":0.35, "y":0.3},
-                group = "promotion"
+                group = "promotion",
+                size_hint = (.8, .8)
             ) 
         
             knight = ToggleButton(
-                    background_normal = f'./Assets/images/{color}_knight.png',
-                    pos_hint = {"x":0.35, "y":0.3},
-                    group = "promotion"
-                   ) 
+                background_normal = f'./Assets/images/{color}_knight.png',
+                pos_hint = {"x":0.35, "y":0.3},
+                group = "promotion",
+                size_hint = (.8, .8)
+            ) 
         
             rook = ToggleButton(
-                    background_normal = f'./Assets/images/{color}_rook.png',
-                    pos_hint = {"x":0.35, "y":0.3},
-                    group = "promotion"
-                   ) 
+                background_normal = f'./Assets/images/{color}_rook.png',
+                pos_hint = {"x":0.35, "y":0.3},
+                group = "promotion",
+                size_hint = (.8, .8)
+            ) 
 
-            submit = Button(text = "Promote")
+            submit = Button(text = "Promote", size_hint = (.97, .6), pos_hint = {"center_x": .5})
             # submit.size_hint = (1,None)
             # submit.height = 100
 
