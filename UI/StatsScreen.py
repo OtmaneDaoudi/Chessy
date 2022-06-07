@@ -2,6 +2,7 @@ from kivy.uix.screenmanager import Screen
 from kivy.properties import NumericProperty, StringProperty
 from DB.connection import Connection
 from kivy.storage.jsonstore import JsonStore
+from kivy.clock import Clock
 
 class StatsScreen(Screen):
     PVPtotalPLayed = NumericProperty(0)
@@ -29,9 +30,11 @@ class StatsScreen(Screen):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.fetch_stats()
+        print("stats constructed")
+        Clock.schedule_once(self.fetch_stats)
         
     def fetch_stats(self, *args):
+        
         stored_data = JsonStore("data.json")
         if stored_data.exists('user1'):
             data = Connection.getStats()

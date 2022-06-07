@@ -111,3 +111,4 @@ class HomePage(Screen):
 
     def init_stats_screen(self):
         App.get_running_app().root.add_widget(UI.StatsScreen.StatsScreen())
+        # App.get_running_app().root.get_screen('stats').fetch_stats()

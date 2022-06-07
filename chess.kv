@@ -741,18 +741,26 @@ WindowManager:
         Rectangle:
             pos: self.pos
             size: self.size
-            source: './Assets/images/03.jpg'
+            source: './Assets/images/c.jpg'
     BoxLayout:
         padding: 0, 0, 0, 10
         orientation: "vertical"
         Label:
-            text: "Statistiques du jeu"
-            font_size: 40
-            size_hint: 1, .3
+            text: "Chess game"
+            font_name: "./fonts/Caveat-VariableFont_wght.ttf"
+            font_size:90
+            color:1,1,1,1
+            bold:"true"
+            size_hint: 1, .2
+            # size_hint_y: self.texture_size[1]
         Label:
-            text: "Joueur : "+root.playerName
+            text: "Statistiques du jeu, Joueur : "+root.playerName
             font_size: 20
             size_hint: 1, .1
+        # Label:
+        #     text: "Joueur : "+root.playerName
+        #     font_size: 20
+        #     size_hint: 1, .3
         BoxLayout:
             orientation: "horizontal"
             BoxLayout:
