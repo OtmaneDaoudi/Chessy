@@ -197,13 +197,21 @@ class ChessBoard(GridLayout):
         self.undo_btn.disabled = True
 
     def showHome(self):
-        # GameUi.diff = 1
-        btn1 = Button(text="Yes", size_hint=(1, None), height = 80)
-        btn2 = Button(text="no", size_hint=(1, None), height = 80)
+        box = BoxLayout(orientation = "vertical")
+        vbox = BoxLayout()
+        lbl = Label(text="Are you sure?", size_hint = (1, 0.2), bold = True)
+        vbox.add_widget(lbl)
+
         Boxed_layout= BoxLayout(orientation = "horizontal")
+        btn1 = Button(text="Yes", size_hint=(1, .4), bold = True)
+        btn2 = Button(text="no", size_hint=(1, .4) , bold = True)
         Boxed_layout.add_widget(btn1)
         Boxed_layout.add_widget(btn2)
-        pop = Popup(title="Are you sure?",content=Boxed_layout, size_hint=(.5,.25))
+ 
+        box.add_widget(vbox)
+        box.add_widget(Boxed_layout)
+
+        pop = Popup(title="Exit?",content=box, size_hint=(None, None), size = (400, 300), auto_dismiss = False)
         btn1.bind(on_release=partial(self.apply_exiting, pop))
         btn2.bind(on_release=pop.dismiss)
         pop.open()
@@ -439,12 +447,20 @@ def show_popup(*args):
         show.popup = window
         window.open()
     else:   
-        btn1 = Button(text="Yes", size_hint=(1, None), height = 80)
-        btn2 = Button(text="no", size_hint=(1, None), height = 80)
+        box = BoxLayout(orientation = "vertical")
+        vbox = BoxLayout()
+        lbl = Label(text="Are you sure?", size_hint = (1, 0.2), bold = True)
+        vbox.add_widget(lbl)
+
         Boxed_layout= BoxLayout(orientation = "horizontal")
+        btn1 = Button(text="Yes", size_hint=(1, .4), bold = True)
+        btn2 = Button(text="no", size_hint=(1, .4) , bold = True)
         Boxed_layout.add_widget(btn1)
         Boxed_layout.add_widget(btn2)
-        pop = Popup(title="Are you sure?",content=Boxed_layout, size_hint=(.5,.25))
+ 
+        box.add_widget(vbox)
+        box.add_widget(Boxed_layout)
+        pop = Popup(title="Exit",content=box, size_hint=(None, None), size=(400, 300))
         pop.auto_dismiss = False
         def closeApp(*args):
             ChessBoard.thread_flag = "ENDED"
