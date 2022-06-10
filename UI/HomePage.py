@@ -49,7 +49,7 @@ class HomePage(Screen):
                 #show a pop up
                 box = BoxLayout(orientation = "vertical")
                 vbox = BoxLayout()
-                lbl = Label(text="Do you want to load that last saved game?", size_hint = (1, 0.2), bold = True)
+                lbl = Label(text="Voulez-vous charger la dernière partie sauvegardée?", size_hint = (1, 0.2), bold = True)
                 vbox.add_widget(lbl)
 
                 Boxed_layout= BoxLayout(orientation = "horizontal")
@@ -61,7 +61,7 @@ class HomePage(Screen):
                 box.add_widget(vbox)
                 box.add_widget(Boxed_layout)
 
-                pop = Popup(title="Load Previous game",content=box, size_hint=(None, None), size=(400, 300))
+                pop = Popup(title="Chargement du jeu précédent",content=box, size_hint=(None, None), size=(400, 300))
                 btn1.bind(on_release=partial(self.loadSavedGame, pop))
                 # btn1.bind(on_release=partial(doit, pop)) # bind to whatever action is being confiirmed
                 btn2.bind(on_release=pop.dismiss)
@@ -103,7 +103,7 @@ class HomePage(Screen):
             self.show_choice_pop(); 
 
     def show_choice_pop(self):
-        window = Popup(title="Player VS Player", size_hint=(None, None), size=(300, 300))
+        window = Popup(title="Joueur VS. Joueur", size_hint=(None, None), size=(300, 300))
         show = ContentPopChoice(window)
         window.content = show
         window.open()
