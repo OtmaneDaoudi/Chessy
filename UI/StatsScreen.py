@@ -30,7 +30,6 @@ class StatsScreen(Screen):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        print("stats constructed")
         Clock.schedule_once(self.fetch_stats)
         
     def fetch_stats(self, *args):
@@ -39,7 +38,7 @@ class StatsScreen(Screen):
         if stored_data.exists('user1'):
             data = Connection.getStats()
             StatsScreen.playerName = str(stored_data.get('user1')['userName'])
-            print("fetched data = ", data)
+            # print("fetched data = ", data)
             pvp = data[0]
             pvm = data[1]
             #pvp data
