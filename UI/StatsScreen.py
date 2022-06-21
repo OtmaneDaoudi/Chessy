@@ -65,6 +65,7 @@ class StatsScreen(Screen):
             PVMdraw =  App.get_running_app().root.get_screen('stats').ids.PVMdraw
             PVMdrawPG =  App.get_running_app().root.get_screen('stats').ids.PVMdrawPG
             PVMdrawPercentage =  App.get_running_app().root.get_screen('stats').ids.PVMdrawPercentage
+            PVMbestScore =  App.get_running_app().root.get_screen('stats').ids.PVMbestScore
 
             # print("fetched data = ", data)
             pvp = data[0]
