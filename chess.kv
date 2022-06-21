@@ -754,7 +754,7 @@ WindowManager:
             size_hint: 1, .2
             # size_hint_y: self.texture_size[1]
         Label:
-            text: "Statistiques du jeu, Joueur : "+root.playerName
+            id: playerName
             font_size: 20
             size_hint: 1, .1
         # Label:
@@ -778,64 +778,76 @@ WindowManager:
                         halign: 'right'
                         valign: 'middle'
                     Label:
+                        id : PVPtotalPLayed
                         size_hint: .2, 1
-                        text: str(root.PVPtotalPLayed)
+                        # text: str(root.PVPtotalPLayed)
                 BoxLayout:
                     Label:
                         size_hint: .8, 1
                         text: "Victoires :"
                     Label:
+                        id : PVPwins
                         size_hint: .2, 1
-                        text: str(root.PVPwins)
+                        # text: str(root.PVPwins)
                 BoxLayout:
                     ProgressBar:
+                        id : PVPwinsPercentagePB
                         size_hint: .8, 1
-                        value: root.PVPwinsPercentage
+                        # value: root.PVPwinsPercentage
                     Label:
+                        id : PVPwinsPercentage
                         size_hint: .2, 1
-                        text: str(int(root.PVPwinsPercentage))+"%"
+                        # text: str(int(root.PVPwinsPercentage))+"%"
                 BoxLayout:
                     Label:
                         size_hint: .8, 1
                         text: "Perdus :"
                     Label:
+                        id : PVPlost
                         size_hint: .2, 1
-                        text: str(root.PVPlost)
+                        # text: str(root.PVPlost)
                 BoxLayout:
                     ProgressBar:
+                        id : PVPlostPB
                         size_hint: .8, 1
-                        value: root.PVPlostPercentage
+                        # value: root.PVPlostPercentage
                     Label:
+                        id : PVPlostPercentage
                         size_hint: .2, 1
-                        text: str(int(root.PVPlostPercentage))+"%"
+                        # text: str(int(root.PVPlostPercentage))+"%"
                 BoxLayout:
                     Label:
                         size_hint: .8, 1
                         text: "Matchs nuls :"
                     Label:
+                        id : PVPdraw
                         size_hint: .2, 1
-                        text: str(root.PVPdraw)
+                        # text: str(root.PVPdraw)
                 BoxLayout:
                     ProgressBar:
+                        id : PVPdrawPB
                         size_hint: .8, 1
-                        value: root.PVPdrawPercentage
+                        # value: root.PVPdrawPercentage
                     Label:
+                        id : PVPdrawPercentage
                         size_hint: .2, 1
-                        text: str(int(root.PVPdrawPercentage))+"%"
+                        # text: str(int(root.PVPdrawPercentage))+"%"
                 BoxLayout:
                     Label:
                         size_hint: .8, 1
                         text: "Meilleur score : "
                     Label:
+                        id : PVPbestScore
                         size_hint: .2, 1
-                        text: str(root.PVPbestScore)+"pts | "+str(divmod(root.PVPbestScoreTime, 60)[0])+"m"+str(divmod(root.PVPbestScoreTime, 60)[1])+"s"
+                        # text: str(root.PVPbestScore)+"pts | "+str(divmod(root.PVPbestScoreTime, 60)[0])+"m"+str(divmod(root.PVPbestScoreTime, 60)[1])+"s"
                 BoxLayout:
                     Label:
                         size_hint: .8, 1
                         text: "Meilleur temps : "
                     Label:
+                        id : PVPbestTime
                         size_hint: .2, 1
-                        text: str(divmod(root.PVPbestTime, 60)[0])+"m"+str(divmod(root.PVPbestTime, 60)[1])+"s"
+                        # text: str(divmod(root.PVPbestTime, 60)[0])+"m"+str(divmod(root.PVPbestTime, 60)[1])+"s"
             BoxLayout:
                 #pvm stats
                 padding: 10
@@ -852,66 +864,76 @@ WindowManager:
                         halign: 'right'
                         valign: 'middle'
                     Label:
+                        id : PVMtotalPLayed
                         size_hint: .2, 1
-                        text: str(root.PVMtotalPLayed)
+                        # text: str(root.PVMtotalPLayed)
                 BoxLayout:
                     Label:
                         size_hint: .8, 1
                         text: "Victoires :"
                     Label:
+                        id : PVMwins
                         size_hint: .2, 1
-                        text: str(root.PVMwins)
+                        # text: str(root.PVMwins)
                 BoxLayout:
                     ProgressBar:
+                        id : PVMwinsPB
                         size_hint: .8, 1
-                        value: root.PVMwinsPercentage
+                        # value: root.PVMwinsPercentage
                     Label:
+                        id : PVMwinsPercentage
                         size_hint: .2, 1
-                        text: str(int(root.PVMwinsPercentage))+"%"
+                        # text: str(int(root.PVMwinsPercentage))+"%"
                 BoxLayout:
                     Label:
                         size_hint: .8, 1
                         text: "Perdus :"
                     Label:
+                        id : PVMlost
                         size_hint: .2, 1
-                        text: str(root.PVMlost)
+                        # text: str(root.PVMlost)
                 BoxLayout:
                     ProgressBar:
+                        id : PVMlostPB
                         size_hint: .8, 1
-                        value: root.PVMlostPercentage
-                    Label:
+                        # value: root.PVMlostPercentage
+                    Label:  
+                        id : PVMlostPercentage
                         size_hint: .2, 1
-                        text: str(int(root.PVMlostPercentage))+"%"
+                        # text: str(int(root.PVMlostPercentage))+"%"
                 BoxLayout:
                     Label:
                         size_hint: .8, 1
                         text: "Matchs nuls :"
                     Label:
+                        id : PVMdraw
                         size_hint: .2, 1
-                        text: str(root.PVMdraw)
+                        # text: str(root.PVMdraw)
                 BoxLayout:
                     ProgressBar:
+                        id : PVMdrawPG
                         size_hint: .8, 1
-                        value: root.PVMdrawPercentage
+                        # value: root.PVMdrawPercentage
                     Label:
+                        id : PVMdrawPercentage
                         size_hint: .2, 1
-                        text: str(int(root.PVMdrawPercentage))+"%"
+                        # text: str(int(root.PVMdrawPercentage))+"%"
                 BoxLayout:
                     Label:
                         size_hint: .8, 1
                         text: "Meilleur score : "
                     Label:
+                        id : PVMbestScore
                         size_hint: .2, 1
-                        text: str(root.PVMbestScore)+"pts | "+str(divmod(root.PVMbestScoreTime, 60)[0])+"m"+str(divmod(root.PVMbestScoreTime, 60)[1])+"s"
+                        # text: str(root.PVMbestScore)+"pts | "+str(divmod(root.PVMbestScoreTime, 60)[0])+"m"+str(divmod(root.PVMbestScoreTime, 60)[1])+"s"
                 BoxLayout:
                     Label:
                         size_hint: .8, 1
                         text: "Meilleur temps : "
                     Label:
+                        id : PVMbestTime
                         size_hint: .2, 1
-                        text: str(divmod(root.PVMbestTime, 60)[0])+"m"+str(divmod(root.PVMbestTime, 60)[1])+"s"
-            
-
+                        # text: str(divmod(root.PVMbestTime, 60)[0])+"m"+str(divmod(root.PVMbestTime, 60)[1])+"s"
         Button:
             text: "Retour"
             size_hint: .3, .2

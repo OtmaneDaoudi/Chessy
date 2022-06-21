@@ -2,7 +2,8 @@ from kivy.uix.screenmanager import Screen
 from kivy.properties import NumericProperty, StringProperty
 from DB.connection import Connection
 from kivy.storage.jsonstore import JsonStore
-from kivy.clock import Clock
+from kivy.clock import mainthread, Clock
+from kivy.app import App
 
 class StatsScreen(Screen):
     PVPtotalPLayed = NumericProperty(0)
@@ -30,14 +31,41 @@ class StatsScreen(Screen):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        Clock.schedule_once(self.fetch_stats)
+        Clock.schedule_once(self.fetch_stats); 
+        # Clock.schedule_once(self.fetch_stats, 2)
         
+    @mainthread
     def fetch_stats(self, *args):
-        
+        print("stats fetched"); 
         stored_data = JsonStore("data.json")
         if stored_data.exists('user1'):
             data = Connection.getStats()
-            StatsScreen.playerName = str(stored_data.get('user1')['userName'])
+            # StatsScreen.playerName = str(stored_data.get('user1')['userName'])
+            playerName = App.get_running_app().root.get_screen('stats').ids.playerName
+            playerName.text = str(stored_data.get('user1')['userName'])
+            PVPtotalPLayed =  App.get_running_app().root.get_screen('stats').ids.PVPtotalPLayed
+            PVPwins =  App.get_running_app().root.get_screen('stats').ids.PVPwins
+            PVPwinsPercentagePB =  App.get_running_app().root.get_screen('stats').ids.PVPwinsPercentagePB
+            PVPwinsPercentage =  App.get_running_app().root.get_screen('stats').ids.PVPwinsPercentage
+            PVPlost =  App.get_running_app().root.get_screen('stats').ids.PVPlost
+            PVPlostPB =  App.get_running_app().root.get_screen('stats').ids.PVPlostPB
+            PVPlostPercentage =  App.get_running_app().root.get_screen('stats').ids.PVPlostPercentage
+            PVPdraw =  App.get_running_app().root.get_screen('stats').ids.PVPdraw
+            PVPdrawPB =  App.get_running_app().root.get_screen('stats').ids.PVPdrawPB
+            PVPdrawPercentage =  App.get_running_app().root.get_screen('stats').ids.PVPdrawPercentage
+            PVPbestScore =  App.get_running_app().root.get_screen('stats').ids.PVPbestScore
+            PVPbestTime =  App.get_running_app().root.get_screen('stats').ids.PVPbestTime
+
+            PVMtotalPLayed =  App.get_running_app().root.get_screen('stats').ids.PVMtotalPLayed
+            PVMwins =  App.get_running_app().root.get_screen('stats').ids.PVMwins
+            PVMwinsPB =  App.get_running_app().root.get_screen('stats').ids.PVMwinsPB
+            PVMwinsPercentage =  App.get_running_app().root.get_screen('stats').ids.PVMwinsPercentage
+            PVMlostPB =  App.get_running_app().root.get_screen('stats').ids.PVMlostPB
+            PVMlostPercentage =  App.get_running_app().root.get_screen('stats').ids.PVMlostPercentage
+            PVMdraw =  App.get_running_app().root.get_screen('stats').ids.PVMdraw
+            PVMdrawPG =  App.get_running_app().root.get_screen('stats').ids.PVMdrawPG
+            PVMdrawPercentage =  App.get_running_app().root.get_screen('stats').ids.PVMdrawPercentage
+
             # print("fetched data = ", data)
             pvp = data[0]
             pvm = data[1]
