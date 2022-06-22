@@ -6,29 +6,6 @@ from kivy.clock import mainthread, Clock
 from kivy.app import App
 
 class StatsScreen(Screen):
-    PVPtotalPLayed = NumericProperty(0)
-    PVPwins = NumericProperty(0)
-    PVPwinsPercentage = NumericProperty(0)
-    PVPlost = NumericProperty(0)
-    PVPlostPercentage = NumericProperty(0)
-    PVPdraw = NumericProperty(0)
-    PVPdrawPercentage = NumericProperty(0)
-    PVPbestScore = NumericProperty(0)
-    PVPbestScoreTime = NumericProperty(0)
-    PVPbestTime = NumericProperty(0)
-
-    PVMtotalPLayed = NumericProperty(0)
-    PVMwins = NumericProperty(0)
-    PVMwinsPercentage = NumericProperty(0)
-    PVMlost = NumericProperty(0)
-    PVMlostPercentage = NumericProperty(0)
-    PVMdraw = NumericProperty(0)
-    PVMdrawPercentage = NumericProperty(0)
-    PVMbestScore = NumericProperty(0)
-    PVMbestScoreTime = NumericProperty(0)
-    PVMbestTime = NumericProperty(0)
-    playerName = StringProperty("")
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         Clock.schedule_once(self.fetch_stats); 
