@@ -53,8 +53,8 @@ class HomePage(Screen):
                 vbox.add_widget(lbl)
 
                 Boxed_layout= BoxLayout(orientation = "horizontal")
-                btn1 = Button(text="Yes", size_hint=(1, .4), bold = True)
-                btn2 = Button(text="no", size_hint=(1, .4) , bold = True)
+                btn1 = Button(text="Oui", size_hint=(1, .4), bold = True)
+                btn2 = Button(text="Non", size_hint=(1, .4) , bold = True)
                 Boxed_layout.add_widget(btn1)
                 Boxed_layout.add_widget(btn2)
         

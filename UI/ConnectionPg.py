@@ -3,6 +3,8 @@ from kivy.uix.screenmanager import Screen
 from DB.connection import Connection
 from kivy.storage.jsonstore import JsonStore
 
+from UI.gameUI import GameUi
+
 class ConnectionPg(Screen): 
     def __init__(self, **kwargs):
             super().__init__(**kwargs)
@@ -63,3 +65,9 @@ class ConnectionPg(Screen):
                 self.parent.current = "home"
             else:
                 App.get_running_app().root.get_screen('connect').ids.noti.text = "Le nom d'utilisateur ou le mot de passe est invalide !"
+
+
+
+    def fix(self):
+        print("fixed")
+        GameUi.authType = "Anonymous"
