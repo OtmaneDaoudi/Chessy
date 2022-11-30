@@ -1,5 +1,2 @@
-# ChessProject
-Creating a chess game using search algorithms.
-
-## Project Notes
-*this project is made using python 3.10*
+A first attempt to create a chess game using python and the kivy library.
+The game uses the famous MinMax algorithm in addition to the Alpha-Beta pruning optimization. 
