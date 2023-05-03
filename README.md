@@ -1,2 +1,2 @@
-A first attempt to create a chess game using python and the kivy library.
+A chess game using python and the kivy library.
 The game uses the famous MinMax algorithm in addition to the Alpha-Beta pruning optimization. 
